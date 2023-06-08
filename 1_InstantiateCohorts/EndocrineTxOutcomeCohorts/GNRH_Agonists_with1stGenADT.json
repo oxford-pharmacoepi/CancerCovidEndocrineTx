@@ -1,0 +1,771 @@
+{
+  "ConceptSets": [
+    {
+      "id": 0,
+      "name": "GnRH_agonists_with_1stGen_ADT",
+      "expression": {
+        "items": [
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Ingredient",
+              "CONCEPT_CODE": "50610",
+              "CONCEPT_ID": 1366310,
+              "CONCEPT_NAME": "goserelin",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm"
+            },
+            "includeDescendants": true
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Ingredient",
+              "CONCEPT_CODE": "50975",
+              "CONCEPT_ID": 1366773,
+              "CONCEPT_NAME": "histrelin",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm"
+            },
+            "includeDescendants": true
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "ATC 5th",
+              "CONCEPT_CODE": "L02AE02",
+              "CONCEPT_ID": 21603825,
+              "CONCEPT_NAME": "leuprorelin; implant, parenteral",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "C",
+              "STANDARD_CONCEPT_CAPTION": "Classification",
+              "VOCABULARY_ID": "ATC"
+            },
+            "includeDescendants": true
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Ingredient",
+              "CONCEPT_CODE": "38782",
+              "CONCEPT_ID": 1343039,
+              "CONCEPT_NAME": "triptorelin",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm"
+            },
+            "includeDescendants": true
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Marketed Product",
+              "CONCEPT_CODE": "OMOP2748440",
+              "CONCEPT_ID": 35746979,
+              "CONCEPT_NAME": "Triptorelin 11.25 MG Injectable Solution [Decapeptyl SR] by Ipsen",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            },
+            "includeDescendants": true
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Clinical Drug",
+              "CONCEPT_CODE": "OMOP1078477",
+              "CONCEPT_ID": 44083846,
+              "CONCEPT_NAME": "Triptorelin 11.25 MG Injectable Suspension",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            },
+            "includeDescendants": true
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Marketed Product",
+              "CONCEPT_CODE": "OMOP4730496",
+              "CONCEPT_ID": 40726621,
+              "CONCEPT_NAME": "Triptorelin 11.25 MG Injectable Suspension [Salvacyl] by Ipsen",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            },
+            "includeDescendants": true
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Clinical Drug",
+              "CONCEPT_CODE": "OMOP3099468",
+              "CONCEPT_ID": 36407426,
+              "CONCEPT_NAME": "Triptorelin 22.5 MG Injectable Solution",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            },
+            "includeDescendants": true
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Marketed Product",
+              "CONCEPT_CODE": "OMOP2760922",
+              "CONCEPT_ID": 35759461,
+              "CONCEPT_NAME": "Triptorelin 22.5 MG Injectable Suspension [Decapeptyl SR] by Ipsen",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            },
+            "includeDescendants": true
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Clinical Drug",
+              "CONCEPT_CODE": "OMOP1003222",
+              "CONCEPT_ID": 36885850,
+              "CONCEPT_NAME": "Triptorelin 3 MG Injectable Suspension",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            },
+            "includeDescendants": true
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Marketed Product",
+              "CONCEPT_CODE": "OMOP2765129",
+              "CONCEPT_ID": 35763668,
+              "CONCEPT_NAME": "Triptorelin 3 MG Injectable Suspension [Decapeptyl SR] by Ipsen",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            },
+            "includeDescendants": true
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Clinical Drug",
+              "CONCEPT_CODE": "OMOP2062948",
+              "CONCEPT_ID": 40864986,
+              "CONCEPT_NAME": "Triptorelin 3.75 MG Injectable Solution",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            },
+            "includeDescendants": true
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Marketed Product",
+              "CONCEPT_CODE": "OMOP4730504",
+              "CONCEPT_ID": 40726613,
+              "CONCEPT_NAME": "Triptorelin 3.75 MG Injectable Suspension [GONAPEPTYL] by Ferring",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            },
+            "includeDescendants": true
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Ingredient",
+              "CONCEPT_CODE": "42375",
+              "CONCEPT_ID": 1351541,
+              "CONCEPT_NAME": "leuprolide",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm"
+            },
+            "includeDescendants": true
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Clinical Drug",
+              "CONCEPT_CODE": "OMOP3052970",
+              "CONCEPT_ID": 44176247,
+              "CONCEPT_NAME": "Leuprolide 11.3 MG Injectable Solution",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            },
+            "includeDescendants": true
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Marketed Product",
+              "CONCEPT_CODE": "OMOP3098420",
+              "CONCEPT_ID": 36406378,
+              "CONCEPT_NAME": "Leuprolide 11.3 MG Injectable Solution [Prostap] by DE",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            },
+            "includeDescendants": true
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Clinical Drug",
+              "CONCEPT_CODE": "OMOP1117830",
+              "CONCEPT_ID": 44123199,
+              "CONCEPT_NAME": "Leuprolide 11.3 MG Injectable Suspension",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            },
+            "includeDescendants": true
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Marketed Product",
+              "CONCEPT_CODE": "OMOP2775718",
+              "CONCEPT_ID": 35774257,
+              "CONCEPT_NAME": "Leuprolide 11.3 MG Injectable Suspension [Prostap] by Takeda",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            },
+            "includeDescendants": true
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Marketed Product",
+              "CONCEPT_CODE": "OMOP2767116",
+              "CONCEPT_ID": 35765655,
+              "CONCEPT_NAME": "Leuprolide 22.5 MG Injectable Suspension [Lutrate] by AMCo",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            },
+            "includeDescendants": true
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Clinical Drug",
+              "CONCEPT_CODE": "OMOP2220294",
+              "CONCEPT_ID": 41022332,
+              "CONCEPT_NAME": "Leuprolide 3.75 MG Injectable Solution",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            },
+            "includeDescendants": true
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Marketed Product",
+              "CONCEPT_CODE": "OMOP2750552",
+              "CONCEPT_ID": 35749091,
+              "CONCEPT_NAME": "Leuprolide 3.75 MG Injectable Solution [Prostap] by Takeda",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            },
+            "includeDescendants": true
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Clinical Drug",
+              "CONCEPT_CODE": "OMOP1040171",
+              "CONCEPT_ID": 44045540,
+              "CONCEPT_NAME": "Leuprolide 3.75 MG Injectable Suspension",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            },
+            "includeDescendants": true
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Marketed Product",
+              "CONCEPT_CODE": "OMOP4714436",
+              "CONCEPT_ID": 40742707,
+              "CONCEPT_NAME": "Leuprolide 3.75 MG Injectable Suspension [Prostap] by Takeda",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            },
+            "includeDescendants": true
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Clinical Pack",
+              "CONCEPT_CODE": "OMOP2721740",
+              "CONCEPT_ID": 42731826,
+              "CONCEPT_NAME": "{28 (bicalutamide 50 MG Oral Tablet) / 1 (Goserelin 10.8 MG Drug Implant) } Pack",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            }
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Branded Pack",
+              "CONCEPT_CODE": "OMOP993018",
+              "CONCEPT_ID": 36897742,
+              "CONCEPT_NAME": "{28 (bicalutamide 50 MG Oral Tablet) / 1 (Goserelin 10.8 MG Drug Implant) } Pack [Zolacos]",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            }
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Branded Pack Box",
+              "CONCEPT_CODE": "OMOP573012",
+              "CONCEPT_ID": 43298256,
+              "CONCEPT_NAME": "{28 (bicalutamide 50 MG Oral Tablet) / 1 (Goserelin 10.8 MG Drug Implant) } Pack [Zolacos] box of 1",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            }
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Clinical Pack Box",
+              "CONCEPT_CODE": "OMOP573097",
+              "CONCEPT_ID": 43298367,
+              "CONCEPT_NAME": "{28 (bicalutamide 50 MG Oral Tablet) / 1 (Goserelin 10.8 MG Drug Implant) } Pack box of 1",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            }
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Clinical Pack",
+              "CONCEPT_CODE": "OMOP2729973",
+              "CONCEPT_ID": 42731869,
+              "CONCEPT_NAME": "{28 (bicalutamide 50 MG Oral Tablet) / 1 (Goserelin 3.6 MG Drug Implant) } Pack",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            }
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Branded Pack",
+              "CONCEPT_CODE": "OMOP993485",
+              "CONCEPT_ID": 36897743,
+              "CONCEPT_NAME": "{28 (bicalutamide 50 MG Oral Tablet) / 1 (Goserelin 3.6 MG Drug Implant) } Pack [Zolacos]",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            }
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Branded Pack Box",
+              "CONCEPT_CODE": "OMOP573478",
+              "CONCEPT_ID": 43298660,
+              "CONCEPT_NAME": "{28 (bicalutamide 50 MG Oral Tablet) / 1 (Goserelin 3.6 MG Drug Implant) } Pack [Zolacos] box of 1",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            }
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Clinical Pack Box",
+              "CONCEPT_CODE": "OMOP573141",
+              "CONCEPT_ID": 43298268,
+              "CONCEPT_NAME": "{28 (bicalutamide 50 MG Oral Tablet) / 1 (Goserelin 3.6 MG Drug Implant) } Pack box of 1",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            }
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Clinical Pack",
+              "CONCEPT_CODE": "OMOP2809935",
+              "CONCEPT_ID": 43522820,
+              "CONCEPT_NAME": "{28 (bicalutamide 50 MG Oral Tablet) / 1 (Leuprolide 22.5 MG Injection) } Pack",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            }
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Branded Pack",
+              "CONCEPT_CODE": "OMOP2809919",
+              "CONCEPT_ID": 43522804,
+              "CONCEPT_NAME": "{28 (bicalutamide 50 MG Oral Tablet) / 1 (Leuprolide 22.5 MG Injection) } Pack [Eligard]",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            }
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Branded Pack Box",
+              "CONCEPT_CODE": "OMOP2809733",
+              "CONCEPT_ID": 43522618,
+              "CONCEPT_NAME": "{28 (bicalutamide 50 MG Oral Tablet) / 1 (Leuprolide 22.5 MG Injection) } Pack [Eligard] box of 1",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            }
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Marketed Product",
+              "CONCEPT_CODE": "OMOP2809693",
+              "CONCEPT_ID": 43522578,
+              "CONCEPT_NAME": "{28 (bicalutamide 50 MG Oral Tablet) / 1 (Leuprolide 22.5 MG Injection) } Pack [Eligard] box of 1 by Tolmar",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            }
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Clinical Pack Box",
+              "CONCEPT_CODE": "OMOP2809816",
+              "CONCEPT_ID": 43522701,
+              "CONCEPT_NAME": "{28 (bicalutamide 50 MG Oral Tablet) / 1 (Leuprolide 22.5 MG Injection) } Pack box of 1",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            }
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Clinical Pack",
+              "CONCEPT_CODE": "OMOP2809934",
+              "CONCEPT_ID": 43522819,
+              "CONCEPT_NAME": "{28 (bicalutamide 50 MG Oral Tablet) / 1 (Leuprolide 7.5 MG Injection) } Pack",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            }
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Branded Pack",
+              "CONCEPT_CODE": "OMOP2809695",
+              "CONCEPT_ID": 43522580,
+              "CONCEPT_NAME": "{28 (bicalutamide 50 MG Oral Tablet) / 1 (Leuprolide 7.5 MG Injection) } Pack [Eligard]",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            }
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Branded Pack Box",
+              "CONCEPT_CODE": "OMOP2809682",
+              "CONCEPT_ID": 43522567,
+              "CONCEPT_NAME": "{28 (bicalutamide 50 MG Oral Tablet) / 1 (Leuprolide 7.5 MG Injection) } Pack [Eligard] box of 1",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            }
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Marketed Product",
+              "CONCEPT_CODE": "OMOP2810045",
+              "CONCEPT_ID": 43522930,
+              "CONCEPT_NAME": "{28 (bicalutamide 50 MG Oral Tablet) / 1 (Leuprolide 7.5 MG Injection) } Pack [Eligard] box of 1 by Tolmar",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            }
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Clinical Pack Box",
+              "CONCEPT_CODE": "OMOP2810011",
+              "CONCEPT_ID": 43522896,
+              "CONCEPT_NAME": "{28 (bicalutamide 50 MG Oral Tablet) / 1 (Leuprolide 7.5 MG Injection) } Pack box of 1",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            }
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Clinical Pack",
+              "CONCEPT_CODE": "OMOP2731326",
+              "CONCEPT_ID": 42731702,
+              "CONCEPT_NAME": "{84 (bicalutamide 50 MG Oral Tablet) / 1 (Goserelin 10.8 MG Drug Implant) } Pack",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            }
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Branded Pack",
+              "CONCEPT_CODE": "OMOP1005265",
+              "CONCEPT_ID": 36897627,
+              "CONCEPT_NAME": "{84 (bicalutamide 50 MG Oral Tablet) / 1 (Goserelin 10.8 MG Drug Implant) } Pack [Zolacos]",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            }
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Branded Pack Box",
+              "CONCEPT_CODE": "OMOP573196",
+              "CONCEPT_ID": 43298378,
+              "CONCEPT_NAME": "{84 (bicalutamide 50 MG Oral Tablet) / 1 (Goserelin 10.8 MG Drug Implant) } Pack [Zolacos] box of 1",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            }
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Clinical Pack Box",
+              "CONCEPT_CODE": "OMOP573026",
+              "CONCEPT_ID": 43298526,
+              "CONCEPT_NAME": "{84 (bicalutamide 50 MG Oral Tablet) / 1 (Goserelin 10.8 MG Drug Implant) } Pack box of 1",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            }
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Clinical Pack",
+              "CONCEPT_CODE": "OMOP2809926",
+              "CONCEPT_ID": 43522811,
+              "CONCEPT_NAME": "{84 (bicalutamide 50 MG Oral Tablet) / 1 (Leuprolide 22.5 MG Injection) } Pack",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            }
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Branded Pack",
+              "CONCEPT_CODE": "OMOP2809821",
+              "CONCEPT_ID": 43522706,
+              "CONCEPT_NAME": "{84 (bicalutamide 50 MG Oral Tablet) / 1 (Leuprolide 22.5 MG Injection) } Pack [Eligard]",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            }
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Branded Pack Box",
+              "CONCEPT_CODE": "OMOP2810036",
+              "CONCEPT_ID": 43522921,
+              "CONCEPT_NAME": "{84 (bicalutamide 50 MG Oral Tablet) / 1 (Leuprolide 22.5 MG Injection) } Pack [Eligard] box of 1",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            }
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Marketed Product",
+              "CONCEPT_CODE": "OMOP2809643",
+              "CONCEPT_ID": 43522528,
+              "CONCEPT_NAME": "{84 (bicalutamide 50 MG Oral Tablet) / 1 (Leuprolide 22.5 MG Injection) } Pack [Eligard] box of 1 by Tolmar",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            }
+          },
+          {
+            "concept": {
+              "CONCEPT_CLASS_ID": "Clinical Pack Box",
+              "CONCEPT_CODE": "OMOP2809763",
+              "CONCEPT_ID": 43522648,
+              "CONCEPT_NAME": "{84 (bicalutamide 50 MG Oral Tablet) / 1 (Leuprolide 22.5 MG Injection) } Pack box of 1",
+              "DOMAIN_ID": "Drug",
+              "INVALID_REASON": "V",
+              "INVALID_REASON_CAPTION": "Valid",
+              "STANDARD_CONCEPT": "S",
+              "STANDARD_CONCEPT_CAPTION": "Standard",
+              "VOCABULARY_ID": "RxNorm Extension"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "PrimaryCriteria": {
+    "CriteriaList": [
+      {
+        "DrugExposure": {
+          "CodesetId": 0
+        }
+      }
+    ],
+    "ObservationWindow": {
+      "PriorDays": 0,
+      "PostDays": 0
+    },
+    "PrimaryCriteriaLimit": {
+      "Type": "First"
+    }
+  },
+  "QualifiedLimit": {
+    "Type": "First"
+  },
+  "ExpressionLimit": {
+    "Type": "First"
+  },
+  "InclusionRules": [],
+  "EndStrategy": {
+    "DateOffset": {
+      "DateField": "StartDate",
+      "Offset": 0
+    }
+  },
+  "CensoringCriteria": [],
+  "CollapseSettings": {
+    "CollapseType": "ERA",
+    "EraPad": 0
+  },
+  "CensorWindow": {},
+  "cdmVersionRange": ">=5.0.0"
+}
