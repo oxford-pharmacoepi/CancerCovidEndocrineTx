@@ -8,6 +8,8 @@ if (!file.exists(output.folder1)){
 if (!file.exists(output.folder2)){
   dir.create(output.folder2, recursive = TRUE)}
 
+if (!file.exists(output.folder3)){
+  dir.create(output.folder3, recursive = TRUE)}
 
 # table names----
 
@@ -31,12 +33,12 @@ info(logger, 'GOT STUDY COHORTS')
 
 # Run incidence analysis of endocrine treatments in denominator population ----
 info(logger, 'RUNNING INCIDENCE ANALYSIS OF ENDOCRINE TREATMENTS IN DENOMINATOR POPULATION')
-source(here("2_Analysis","IncPrevCancer.R"))
+source(here("2_Analysis","IncPrevEndocrineDenom.R"))
 info(logger, 'INCIDENCE ANALYSIS OF ENDOCRINE TREATMENTS IN DENOMINATOR POPULATION RAN')
 
 # Run incidence analysis of endocrine treatments ----
 info(logger, 'RUNNING INCIDENCE ANALYSIS OF ENDOCRINE TREATMENTS IN BREAST AND PROSTATE CANCERS')
-source(here("2_Analysis","IncPrevEndocrineTx.R"))
+source(here("2_Analysis","IncPrevEndocrineTxCancer.R"))
 info(logger, 'INCIDENCE ANALYSIS OF ENDOCRINE TREATMENTS IN BREAST AND PROSTATE CANCERS RAN')
 
 # Run incidence analysis of endocrine-treatment related outcomes ----
