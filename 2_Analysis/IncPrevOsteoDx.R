@@ -126,7 +126,7 @@ ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_yrs
 
 # INCIDENCE IN MONTHS FOR ALL AGE STRATA
 
-inc_mpnths_plot <- IncTxOutcomesBreastAI %>%  
+inc_months_plot <- IncTxOutcomesBreastAI %>%  
   filter(denominator_cohort_id == 1) %>%
   filter(analysis_outcome_washout == 0) %>% 
   filter(analysis_interval == "months") %>%
@@ -150,7 +150,7 @@ inc_months_plot <-
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red")
 
-inc_yrs_plot
+inc_months_plot
 
 analysis.name <- "txOutcomes_inBreastAIPop"
 plotname <- paste0(analysis.name, db.name, "_inc_months")
