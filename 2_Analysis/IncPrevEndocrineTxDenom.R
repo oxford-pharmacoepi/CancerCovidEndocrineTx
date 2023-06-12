@@ -86,7 +86,7 @@ info(logger, "- Got incidence: endocrine tx in general population")
 print(paste0("- Exporting incidence: endocrine tx in general population"))
 info(logger, "- Exporting incidence: endocrine tx in general population")
 
-exportIncidencePrevalenceResults(resultList=list("incidence" = inc), 
+exportIncidencePrevalenceResults(resultList=list("inc" = inc), 
                                  zipName=paste0(db.name, "IncTxDenom"),
                                  outputFolder=here("Results", db.name, "1_EndocrineTxDenom")) 
 
@@ -105,7 +105,7 @@ info(logger, "- Plotting incidence: endocrine tx in general population")
 
 inc_yrs_plot <- inc %>%  
   filter(denominator_cohort_id == 1) %>%
-  filter(analysis_outcome_washout == NULL) %>% 
+  filter(analysis_outcome_washout == 90) %>% 
   filter(analysis_interval == "years") %>%
   mutate(outcome = case_when(outcome_cohort_name == "AromataseInhibitors" ~ "Aromatase Inhibitors",
                              outcome_cohort_name == "AromataseInhibitors_withGnRHAgonistsOrAntagonists" ~ "Aromatase Inhibitors with GnRH Agonists Or Antagonists",
@@ -142,7 +142,7 @@ ggsave(here("Results", db.name , "1_EndocrineTxDenom", paste0(EndocrineTxDenom_i
 
 inc_months_plot <- inc %>%  
   filter(denominator_cohort_id == 1) %>%
-  filter(analysis_outcome_washout == NULL) %>% 
+  filter(analysis_outcome_washout == 90) %>% 
   filter(analysis_interval == "months") %>%
   mutate(outcome = case_when(outcome_cohort_name == "AromataseInhibitors" ~ "Aromatase Inhibitors",
                              outcome_cohort_name == "AromataseInhibitors_withGnRHAgonistsOrAntagonists" ~ "Aromatase Inhibitors with GnRH Agonists Or Antagonists",
@@ -170,6 +170,7 @@ inc_months_plot <-
 inc_months_plot
 
 
+
 # Save the plot as jpg
 ggsave(here("Results", db.name , "1_EndocrineTxDenom", paste0(EndocrineTxDenom_inc_months_plot, ".jpg")), inc_months_plot, dpi=600, scale = 1, width = 12, height = 9)
 
@@ -179,7 +180,7 @@ ggsave(here("Results", db.name , "1_EndocrineTxDenom", paste0(EndocrineTxDenom_i
 
 inc_qrs_plot <- inc %>%  
   filter(denominator_cohort_id == 1) %>%
-  filter(analysis_outcome_washout == NULL) %>% 
+  filter(analysis_outcome_washout == 0) %>% 
   filter(analysis_interval == "quarters") %>%
   mutate(outcome = case_when(outcome_cohort_name == "AromataseInhibitors" ~ "Aromatase Inhibitors",
                              outcome_cohort_name == "AromataseInhibitors_withGnRHAgonistsOrAntagonists" ~ "Aromatase Inhibitors with GnRH Agonists Or Antagonists",

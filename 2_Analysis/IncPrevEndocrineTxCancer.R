@@ -20,16 +20,15 @@ cdm <- generateDenominatorCohortSet(
   cohortDateRange = as.Date(c("2017-01-01","2022-07-01")),
   strataTable = strata_table_name_1,
   strataCohortId = 1,
-  strataCohortName = "BreastCancerStrata",
   ageGroup = list(c(0,150), c(20,39), c(40,59), c(60,79), c(80,150)),
   sex = c("Both","Female","Male"),
   daysPriorHistory = 365,
   temporary = TRUE
 )
 
-cohortCount(cdm$BreastCancerStrata)
+cohortCount(cdm$denominator)
 
-cohortSet(cdm$BreastCancerStrata) 
+cohortSet(cdm$denominator) 
 
 print(paste0("- Got denominator_breast"))
 info(logger, "- Got denominator_breast")
@@ -42,21 +41,21 @@ print(paste0("- Getting incidence endocrine tx in breast cancer populations"))
 info(logger, "- Getting incidence endocrine tx in breast cancer populations")
 
 
-IncTxBreast <- estimateIncidence(
+IncTxBreast_test <- estimateIncidence(
   cdm = cdm,
-  denominatorTable = "BreastCancerStrata",
+  denominatorTable = "denominator",
   outcomeTable = outcome_table_name_1, 
-  outcomeCohortId = c(1,2,8,9), # add a filter here to specify which outcome cohorts to focus on specific to breast cancer
+  outcomeCohortId = 1, # add a filter here to specify which outcome cohorts to focus on specific to breast cancer
   interval = c("months", "quarters", "years"),
   completeDatabaseIntervals = FALSE,
-  outcomeWashout = c(0, NULL, 90), 
+  outcomeWashout = c(0, 90), 
   repeatedEvents = TRUE,
-  minCellCount = 5,
+  minCellCount = 0,
   temporary = TRUE,
   returnParticipants = FALSE
 )
 
-IncTxBreast %>%
+IncTxBreast_test %>%
   glimpse()
 
 
@@ -72,8 +71,8 @@ info(logger, "- Got incidence: endocrine tx in breast cancer populations")
 print(paste0("- Exporting incidence and prevalence results: endocrine tx in breast cancer populations"))
 info(logger, "- Exporting incidence and Prevalence results: endocrine tx in breast cancer populations")
 
-exportIncidencePrevalenceResults(resultList=list("incidence" = IncTxBreast), 
-                                 zipName=paste0(db.name, "IncTxBreast"),
+exportIncidencePrevalenceResults(resultList=list("incidence" = IncTxBreast_test), 
+                                 zipName=paste0(db.name, "IncTxBreast_test"),
                                  outputFolder=here("Results", db.name, "2_EndocrineTxCancer")) 
 
 print(paste0("- Exported incidence and prevalence results: endocrine tx in breast cancer populations"))
