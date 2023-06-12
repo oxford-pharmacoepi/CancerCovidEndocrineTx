@@ -41,21 +41,21 @@ print(paste0("- Getting incidence endocrine tx in breast cancer populations"))
 info(logger, "- Getting incidence endocrine tx in breast cancer populations")
 
 
-IncTxBreast_test <- estimateIncidence(
+IncTxBreast <- estimateIncidence(
   cdm = cdm,
   denominatorTable = "denominator",
   outcomeTable = outcome_table_name_1, 
-  outcomeCohortId = 1, # add a filter here to specify which outcome cohorts to focus on specific to breast cancer
+  outcomeCohortId = NULL, # add a filter here to specify which outcome cohorts to focus on specific to breast cancer
   interval = c("months", "quarters", "years"),
   completeDatabaseIntervals = FALSE,
   outcomeWashout = c(0, 90), 
   repeatedEvents = TRUE,
-  minCellCount = 0,
+  minCellCount = 5,
   temporary = TRUE,
   returnParticipants = FALSE
 )
 
-IncTxBreast_test %>%
+IncTxBreast %>%
   glimpse()
 
 
@@ -71,8 +71,8 @@ info(logger, "- Got incidence: endocrine tx in breast cancer populations")
 print(paste0("- Exporting incidence and prevalence results: endocrine tx in breast cancer populations"))
 info(logger, "- Exporting incidence and Prevalence results: endocrine tx in breast cancer populations")
 
-exportIncidencePrevalenceResults(resultList=list("incidence" = IncTxBreast_test), 
-                                 zipName=paste0(db.name, "IncTxBreast_test"),
+exportIncidencePrevalenceResults(resultList=list("incidence" = IncTxBreast), 
+                                 zipName=paste0(db.name, "IncTxBreast"),
                                  outputFolder=here("Results", db.name, "2_EndocrineTxCancer")) 
 
 print(paste0("- Exported incidence and prevalence results: endocrine tx in breast cancer populations"))
@@ -91,7 +91,7 @@ info(logger, "- Plotting incidence and prevalence results: endocrine tx in breas
 
 inc_yrs_plot <- IncTxBreast %>%  
   filter(denominator_cohort_id == 1) %>%
-  filter(analysis_outcome_washout == NULL) %>% 
+  filter(analysis_outcome_washout == 0) %>% 
   filter(analysis_interval == "years") %>%
   mutate(outcome = case_when(outcome_cohort_name == "AromataseInhibitors" ~ "Aromatase Inhibitors",
                              outcome_cohort_name == "AromataseInhibitors_withGnRHAgonistsOrAntagonists" ~ "Aromatase Inhibitors with GnRH Agonists Or Antagonists",
@@ -105,17 +105,20 @@ inc_yrs_plot <-
                            ymax = incidence_100000_pys_95CI_upper, color=outcome, group=outcome)) +
   geom_point() + geom_line() +
   geom_errorbar(width=0) +
-  scale_y_continuous(limits = c(0, 150)) +
-  ggtitle("Incidence Rates of Endocrine Treatments in Years in Breast Cancer Patients Before and After COVID-19 Lockdown") +
+  #scale_y_continuous(limits = c(0, 150)) +
+  scale_x_date(date_labels="%Y",date_breaks  ="1 year") +
+    ggtitle("Incidence Rates of Endocrine Treatments in Years in Breast Cancer Patients Before and After COVID-19 Lockdown") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red")
 
 inc_yrs_plot
 
+analysis.name <- "endocrine_inBreastPop"
+plotname <- paste0(analysis.name, db.name, "_inc_yrs")
 
 # Save the plot as jpg
-ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(EndoTxBreastCancer_inc_yrs_plot, ".jpg")), inc_yrs_plot, dpi=600, scale = 1, width = 12, height = 9)
+ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(plotname, ".jpg")), inc_yrs_plot, dpi=600, scale = 1, width = 12, height = 9)
 
 
 
@@ -124,7 +127,7 @@ ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(EndoTxBreastCance
 
 inc_months_plot <- IncTxBreast %>%  
   filter(denominator_cohort_id == 1) %>%
-  filter(analysis_outcome_washout == NULL) %>% 
+  filter(analysis_outcome_washout == 0) %>% 
   filter(analysis_interval == "months") %>%
   mutate(outcome = case_when(outcome_cohort_name == "AromataseInhibitors" ~ "Aromatase Inhibitors",
                              outcome_cohort_name == "AromataseInhibitors_withGnRHAgonistsOrAntagonists" ~ "Aromatase Inhibitors with GnRH Agonists Or Antagonists",
@@ -138,7 +141,8 @@ inc_months_plot <-
                            ymax = incidence_100000_pys_95CI_upper, color=outcome, group=outcome)) +
   geom_point() + geom_line() +
   geom_errorbar(width=0) +
-  scale_y_continuous(limits = c(0, 150)) +
+  #scale_y_continuous(limits = c(0, 150)) +
+  scale_x_date(date_labels="%b %Y",date_breaks  ="6 months") +
   ggtitle("Incidence Rates of Endocrine Treatments in Months in Breast Cancer Patients Before and After COVID-19 Lockdown") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
@@ -147,8 +151,10 @@ inc_months_plot <-
 inc_months_plot
 
 
+plotname <- paste0(analysis.name, db.name, "_inc_months")
+
 # Save the plot as jpg
-ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(EndoTxBreastCancer_inc_months_plot, ".jpg")), inc_months_plot, dpi=600, scale = 1, width = 12, height = 9)
+ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(plotname, ".jpg")), inc_months_plot, dpi=600, scale = 1, width = 12, height = 9)
 
 
 
@@ -158,7 +164,7 @@ ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(EndoTxBreastCance
 
 inc_qrs_plot <- IncTxBreast %>%  
   filter(denominator_cohort_id == 1) %>%
-  filter(analysis_outcome_washout == NULL) %>% 
+  filter(analysis_outcome_washout == 0) %>% 
   filter(analysis_interval == "quarters") %>%
   mutate(outcome = case_when(outcome_cohort_name == "AromataseInhibitors" ~ "Aromatase Inhibitors",
                              outcome_cohort_name == "AromataseInhibitors_withGnRHAgonistsOrAntagonists" ~ "Aromatase Inhibitors with GnRH Agonists Or Antagonists",
@@ -172,7 +178,9 @@ inc_qrs_plot <-
                            ymax = incidence_100000_pys_95CI_upper, color=outcome, group=outcome)) +
   geom_point() + geom_line() +
   geom_errorbar(width=0) +
-  scale_y_continuous(limits = c(0, 150)) +
+ # scale_y_continuous(limits = c(0, 150)) +
+  scale_x_date(date_labels="%b %Y",date_breaks  ="3 months") +
+  
   ggtitle("Incidence Rates of Endocrine Treatments in Quarters in Breast Cancer Patients Before and After COVID-19 Lockdown") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
@@ -180,9 +188,10 @@ inc_qrs_plot <-
 
 inc_qrs_plot
 
+plotname <- paste0(analysis.name, db.name, "_inc_qrs")
 
 # Save the plot as jpg
-ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(EndoTxBreastCancer_inc_qrs_plot, ".jpg")), inc_qrs_plot, dpi=600, scale = 1, width = 12, height = 9)
+ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(plotname, ".jpg")), inc_qrs_plot, dpi=600, scale = 1, width = 12, height = 9)
 
 
 print(paste0("- Analysis of all Endocrine Treatments in breast cancer patients done"))
@@ -205,16 +214,15 @@ cdm <- generateDenominatorCohortSet(
   cohortDateRange = as.Date(c("2017-01-01","2022-07-01")),
   strataTable = strata_table_name_1,
   strataCohortId = 2,
-  strataCohortName = "ProstateCancerStrata",
   ageGroup = list(c(0,150), c(20,39), c(40,59), c(60,79), c(80,150)),
   sex = "Male",
   daysPriorHistory = 365,
   temporary = TRUE
 )
 
-cohortCount(cdm$ProstateCancerStrata)
+cohortCount(cdm$denominator)
 
-cohortSet(cdm$ProstateCancerStrata) 
+cohortSet(cdm$denominator) 
 
 print(paste0("- Got denominator_Prostate"))
 info(logger, "- Got denominator_Prostate")
@@ -229,12 +237,12 @@ info(logger, "- Getting incidence endocrine tx in Prostate cancer populations")
 
 IncTxProstate <- estimateIncidence(
   cdm = cdm,
-  denominatorTable = "ProstateCancerStrata",
+  denominatorTable = "denominator",
   outcomeTable = outcome_table_name_1, 
-  outcomeCohortId = c(3,4,5,6,7),
+  outcomeCohortId = NULL,
   interval = c("months", "quarters", "years"),
   completeDatabaseIntervals = FALSE,
-  outcomeWashout = c(0, NULL, 90), 
+  outcomeWashout = c(0, 90), 
   repeatedEvents = TRUE,
   minCellCount = 5,
   temporary = TRUE,
@@ -277,14 +285,19 @@ info(logger, "- Plotting incidence and prevalence results: endocrine tx in Prost
 
 inc_yrs_plot <- IncTxProstate %>%  
   filter(denominator_cohort_id == 1) %>%
-  filter(analysis_outcome_washout == NULL) %>% 
+  filter(analysis_outcome_washout == 0) %>% 
   filter(analysis_interval == "years") %>%
   mutate(outcome = case_when(outcome_cohort_name == "First_generation_antiandrogens" ~ "First Generation Antiandrogens",
                              outcome_cohort_name == "GNRH_Agonists_with1stGenADT" ~ "GnRH Agonists with First Generation Antiandrogens",
                              outcome_cohort_name == "GNRH_Agonists" ~ "GnRH Agonists",
                              outcome_cohort_name == "GNRH_LHRH_antagonists" ~ "GnRH Antagonists",
                              outcome_cohort_name == "Second_generation_antiandrogens" ~ "Second Generation Antiandrogens")) %>% 
-  as.data.frame()
+
+  
+   as.data.frame()
+
+inc_yrs_plot[!is.na(inc_yrs_plot$outcome), ]
+
 
 inc_yrs_plot <- 
   ggplot(inc_yrs_plot, aes(x = incidence_start_date, y=incidence_100000_pys,
@@ -292,7 +305,8 @@ inc_yrs_plot <-
                            ymax = incidence_100000_pys_95CI_upper, color=outcome, group=outcome)) +
   geom_point() + geom_line() +
   geom_errorbar(width=0) +
-  scale_y_continuous(limits = c(0, 150)) +
+  #scale_y_continuous(limits = c(0, 150)) +
+  scale_x_date(date_labels="%Y",date_breaks  ="1 year") +
   ggtitle("Incidence Rates of Endocrine Treatments in Years in Prostate Cancer Patients Before and After COVID-19 Lockdown") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
@@ -300,9 +314,11 @@ inc_yrs_plot <-
 
 inc_yrs_plot
 
+analysis.name <- "endocrine_inProstatePop"
+plotname <- paste0(analysis.name, db.name, "_inc_yrs")
 
 # Save the plot as jpg
-ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(EndoTxProstateCancer_inc_yrs_plot, ".jpg")), inc_yrs_plot, dpi=600, scale = 1, width = 12, height = 9)
+ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(plotname, ".jpg")), inc_yrs_plot, dpi=600, scale = 1, width = 12, height = 9)
 
 
 
@@ -311,7 +327,7 @@ ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(EndoTxProstateCan
 
 inc_months_plot <- IncTxProstate %>%  
   filter(denominator_cohort_id == 1) %>%
-  filter(analysis_outcome_washout == NULL) %>% 
+  filter(analysis_outcome_washout == 0) %>% 
   filter(analysis_interval == "months") %>%
   mutate(outcome = case_when(outcome_cohort_name == "First_generation_antiandrogens" ~ "First Generation Antiandrogens",
                              outcome_cohort_name == "GNRH_Agonists_with1stGenADT" ~ "GnRH Agonists with First Generation Antiandrogens",
@@ -320,13 +336,17 @@ inc_months_plot <- IncTxProstate %>%
                              outcome_cohort_name == "Second_generation_antiandrogens" ~ "Second Generation Antiandrogens")) %>% 
   as.data.frame()
 
+inc_months_plot[!is.na(inc_months_plot$outcome), ]
+
+
 inc_months_plot <- 
   ggplot(inc_months_plot, aes(x = incidence_start_date, y=incidence_100000_pys,
                            ymin = incidence_100000_pys_95CI_lower,
                            ymax = incidence_100000_pys_95CI_upper, color=outcome, group=outcome)) +
   geom_point() + geom_line() +
   geom_errorbar(width=0) +
-  scale_y_continuous(limits = c(0, 150)) +
+  #scale_y_continuous(limits = c(0, 150)) +
+  scale_x_date(date_labels="%b %Y",date_breaks  ="6 months") +
   ggtitle("Incidence Rates of Endocrine Treatments in Months in Prostate Cancer Patients Before and After COVID-19 Lockdown") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
@@ -334,9 +354,10 @@ inc_months_plot <-
 
 inc_months_plot
 
+plotname <- paste0(analysis.name, db.name, "_inc_months")
 
 # Save the plot as jpg
-ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(EndoTxProstateCancer_inc_months_plot, ".jpg")), inc_months_plot, dpi=600, scale = 1, width = 12, height = 9)
+ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(plotname, ".jpg")), inc_yrs_plot, dpi=600, scale = 1, width = 12, height = 9)
 
 
 
@@ -344,7 +365,7 @@ ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(EndoTxProstateCan
 
 inc_qrs_plot <- IncTxProstate %>%  
   filter(denominator_cohort_id == 1) %>%
-  filter(analysis_outcome_washout == NULL) %>% 
+  filter(analysis_outcome_washout == 0) %>% 
   filter(analysis_interval == "quarters") %>%
   mutate(outcome = case_when(outcome_cohort_name == "First_generation_antiandrogens" ~ "First Generation Antiandrogens",
                              outcome_cohort_name == "GNRH_Agonists_with1stGenADT" ~ "GnRH Agonists with First Generation Antiandrogens",
@@ -353,23 +374,28 @@ inc_qrs_plot <- IncTxProstate %>%
                              outcome_cohort_name == "Second_generation_antiandrogens" ~ "Second Generation Antiandrogens")) %>% 
   as.data.frame()
 
+inc_qrs_plot[!is.na(inc_qrs_plot$outcome), ]
+
+
 inc_qrs_plot <- 
   ggplot(inc_qrs_plot, aes(x = incidence_start_date, y=incidence_100000_pys,
                            ymin = incidence_100000_pys_95CI_lower,
                            ymax = incidence_100000_pys_95CI_upper, color=outcome, group=outcome)) +
   geom_point() + geom_line() +
   geom_errorbar(width=0) +
-  scale_y_continuous(limits = c(0, 150)) +
-  ggtitle("Incidence Rates of Endocrine Treatments in Quarters in Prostate Cancer Patients Before and After COVID-19 Lockdown") +
+  #scale_y_continuous(limits = c(0, 150)) +
+  scale_x_date(date_labels="%b %Y",date_breaks  ="3 months") +
+    ggtitle("Incidence Rates of Endocrine Treatments in Quarters in Prostate Cancer Patients Before and After COVID-19 Lockdown") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red")
 
 inc_qrs_plot
 
+plotname <- paste0(analysis.name, db.name, "_inc_qrs")
 
 # Save the plot as jpg
-ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(EndoTxProstateCancer_inc_qrs_plot, ".jpg")), inc_qrs_plot, dpi=600, scale = 1, width = 12, height = 9)
+ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(plotname, ".jpg")), inc_yrs_plot, dpi=600, scale = 1, width = 12, height = 9)
 
 
 print(paste0("- Analysis of all Endocrine Treatments in prostate cancer patients done"))

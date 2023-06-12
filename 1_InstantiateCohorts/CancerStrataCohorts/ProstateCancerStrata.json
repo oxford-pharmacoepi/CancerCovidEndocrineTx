@@ -195,12 +195,7 @@
     "CriteriaList": [
       {
         "ConditionOccurrence": {
-          "CodesetId": 0,
-          "OccurrenceStartDate": {
-            "Value": "2016-01-01",
-            "Op": "gte"
-          },
-          "First": true
+          "CodesetId": 0
         }
       }
     ],
@@ -219,12 +214,6 @@
     "Type": "All"
   },
   "InclusionRules": [],
-  "EndStrategy": {
-    "DateOffset": {
-      "DateField": "StartDate",
-      "Offset": 365
-    }
-  },
   "CensoringCriteria": [],
   "CollapseSettings": {
     "CollapseType": "ERA",

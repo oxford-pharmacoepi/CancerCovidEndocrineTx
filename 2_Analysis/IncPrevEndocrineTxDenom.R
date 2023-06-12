@@ -125,6 +125,7 @@ inc_yrs_plot <-
   geom_point() + geom_line() +
   geom_errorbar(width=0) +
   scale_y_continuous(limits = c(0, 150)) +
+  scale_x_date(date_labels="%Y",date_breaks  ="1 year") +
   ggtitle("Incidence Rates of Endocrine Treatments for Breast or Prostate Cancer in Years in the General Population Before and After COVID-19 Lockdown") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
@@ -132,9 +133,11 @@ inc_yrs_plot <-
 
 inc_yrs_plot
 
+analysis.name <- "endocrine"
+plotname <- paste0(analysis.name, db.name, "_inc_yrs")
 
 # Save the plot as jpg
-ggsave(here("Results", db.name , "1_EndocrineTxDenom", paste0(EndocrineTxDenom_inc_yrs_plot, ".jpg")), inc_yrs_plot, dpi=600, scale = 1, width = 12, height = 9)
+ggsave(here("Results", db.name , "1_EndocrineTxDenom", paste0(plotname, ".jpg")), inc_yrs_plot, dpi=600, scale = 1, width = 12, height = 9)
 
 
 
@@ -162,6 +165,7 @@ inc_months_plot <-
   geom_point() + geom_line() +
   geom_errorbar(width=0) +
   scale_y_continuous(limits = c(0, 150)) +
+  scale_x_date(date_labels="%b %Y",date_breaks  ="6 months") +
   ggtitle("Incidence Rates of Endocrine Treatments for Breast or Prostate Cancer in Months in the General Population Before and After COVID-19 Lockdown") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
@@ -169,10 +173,10 @@ inc_months_plot <-
 
 inc_months_plot
 
-
+plotname <- paste0(analysis.name, db.name, "_inc_months")
 
 # Save the plot as jpg
-ggsave(here("Results", db.name , "1_EndocrineTxDenom", paste0(EndocrineTxDenom_inc_months_plot, ".jpg")), inc_months_plot, dpi=600, scale = 1, width = 12, height = 9)
+ggsave(here("Results", db.name , "1_EndocrineTxDenom", paste0(plotname, ".jpg")), inc_months_plot, dpi=600, scale = 1, width = 12, height = 9)
 
 
 
@@ -200,6 +204,7 @@ inc_qrs_plot <-
   geom_point() + geom_line() +
   geom_errorbar(width=0) +
   scale_y_continuous(limits = c(0, 150)) +
+  scale_x_date(date_labels="%b %Y",date_breaks  ="3 months") +
   ggtitle("Incidence Rates of Endocrine Treatments for Breast or Prostate Cancer in Quarters in the General Population Before and After COVID-19 Lockdown") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
@@ -207,9 +212,11 @@ inc_qrs_plot <-
 
 inc_qrs_plot
 
+plotname <- paste0(analysis.name, db.name, "_inc_qrs")
+
 
 # Save the plot as jpg
-ggsave(here("Results", db.name , "1_EndocrineTxDenom", paste0(EndocrineTxDenom_inc_qrs_plot, ".jpg")), inc_qrs_plot, dpi=600, scale = 1, width = 12, height = 9)
+ggsave(here("Results", db.name , "1_EndocrineTxDenom", paste0(plotname, ".jpg")), inc_qrs_plot, dpi=600, scale = 1, width = 12, height = 9)
 
 
 print(paste0("- Analysis of all Endocrine Treatments in general population done"))
