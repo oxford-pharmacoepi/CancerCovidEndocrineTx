@@ -21,7 +21,7 @@ cdm <- generateDenominatorCohortSet(
   cohortDateRange = as.Date(c("2017-01-01","2022-07-01")),
   ageGroup = list(c(0,150), c(0,19), c(20,39), c(40,59), c(60,79), c(80,150)),
   sex = c("Both", "Male", "Female"),
-  daysPriorHistory = 365,
+  daysPriorHistory = 0,
   temporary = TRUE
 )
 
@@ -129,7 +129,8 @@ inc_yrs_plot <-
   ggtitle("Incidence Rates of Endocrine Treatments for Breast or Prostate Cancer in Years in the General Population Before and After COVID-19 Lockdown") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-  geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red")
+  geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
+  theme(plot.title = element_text(size = 12))
 
 inc_yrs_plot
 
@@ -169,7 +170,8 @@ inc_months_plot <-
   ggtitle("Incidence Rates of Endocrine Treatments for Breast or Prostate Cancer in Months in the General Population Before and After COVID-19 Lockdown") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-  geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red")
+  geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
+  theme(plot.title = element_text(size = 12))
 
 inc_months_plot
 
@@ -208,7 +210,8 @@ inc_qrs_plot <-
   ggtitle("Incidence Rates of Endocrine Treatments for Breast or Prostate Cancer in Quarters in the General Population Before and After COVID-19 Lockdown") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-  geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red")
+  geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
+  theme(plot.title = element_text(size = 12))
 
 inc_qrs_plot
 

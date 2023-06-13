@@ -1512,8 +1512,7 @@
     "CriteriaList": [
       {
         "DrugExposure": {
-          "CodesetId": 1,
-          "First": true
+          "CodesetId": 1
         }
       }
     ],
@@ -1522,7 +1521,7 @@
       "PostDays": 0
     },
     "PrimaryCriteriaLimit": {
-      "Type": "First"
+      "Type": "All"
     }
   },
   "QualifiedLimit": {

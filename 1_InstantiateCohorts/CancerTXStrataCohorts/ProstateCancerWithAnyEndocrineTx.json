@@ -2052,7 +2052,7 @@
       "PostDays": 0
     },
     "PrimaryCriteriaLimit": {
-      "Type": "First"
+      "Type": "All"
     }
   },
   "QualifiedLimit": {
@@ -2097,14 +2097,14 @@
   ],
   "EndStrategy": {
     "DateOffset": {
-      "DateField": "StartDate",
+      "DateField": "EndDate",
       "Offset": 90
     }
   },
   "CensoringCriteria": [],
   "CollapseSettings": {
     "CollapseType": "ERA",
-    "EraPad": 90
+    "EraPad": 0
   },
   "CensorWindow": {},
   "cdmVersionRange": ">=5.0.0"

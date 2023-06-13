@@ -22,13 +22,17 @@ cdm <- generateDenominatorCohortSet(
   strataCohortId = 1,
   ageGroup = list(c(0,150), c(20,39), c(40,59), c(60,79), c(80,150)),
   sex = c("Both","Female","Male"),
-  daysPriorHistory = 365,
+  daysPriorHistory = 0,
   temporary = TRUE
 )
 
-cohortCount(cdm$denominator)
+count <-cohortCount(cdm$denominator)  
 
-cohortSet(cdm$denominator) 
+count2 <- cohortSet(cdm$denominator) 
+
+Breast_strata_counts <- count %>% left_join(count2)
+
+write.csv(Breast_strata_counts, file=here::here("Results", db.name, "3_OsteoDx", "Breast_strata_counts.csv"))
 
 print(paste0("- Got denominator_breast"))
 info(logger, "- Got denominator_breast")
@@ -110,7 +114,8 @@ inc_yrs_plot <-
     ggtitle("Incidence Rates of Endocrine Treatments in Years in Breast Cancer Patients Before and After COVID-19 Lockdown") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-  geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red")
+  geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
+  theme(plot.title = element_text(size = 12))
 
 inc_yrs_plot
 
@@ -146,7 +151,8 @@ inc_months_plot <-
   ggtitle("Incidence Rates of Endocrine Treatments in Months in Breast Cancer Patients Before and After COVID-19 Lockdown") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-  geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red")
+  geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
+  theme(plot.title = element_text(size = 12))
 
 inc_months_plot
 
@@ -184,7 +190,8 @@ inc_qrs_plot <-
   ggtitle("Incidence Rates of Endocrine Treatments in Quarters in Breast Cancer Patients Before and After COVID-19 Lockdown") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-  geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red")
+  geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
+  theme(plot.title = element_text(size = 12))
 
 inc_qrs_plot
 
@@ -220,10 +227,13 @@ cdm <- generateDenominatorCohortSet(
   temporary = TRUE
 )
 
-cohortCount(cdm$denominator)
+count <-cohortCount(cdm$denominator)  
 
-cohortSet(cdm$denominator) 
+count2 <- cohortSet(cdm$denominator) 
 
+Prostate_strata_counts <- count %>% left_join(count2)
+
+write.csv(Prostate_strata_counts, file=here::here("Results", db.name, "3_OsteoDx", "Prostate_strata_counts.csv"))
 print(paste0("- Got denominator_Prostate"))
 info(logger, "- Got denominator_Prostate")
 
@@ -310,7 +320,8 @@ inc_yrs_plot <-
   ggtitle("Incidence Rates of Endocrine Treatments in Years in Prostate Cancer Patients Before and After COVID-19 Lockdown") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-  geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red")
+  geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
+  theme(plot.title = element_text(size = 12))
 
 inc_yrs_plot
 
@@ -350,7 +361,8 @@ inc_months_plot <-
   ggtitle("Incidence Rates of Endocrine Treatments in Months in Prostate Cancer Patients Before and After COVID-19 Lockdown") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-  geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red")
+  geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
+  theme(plot.title = element_text(size = 12))
 
 inc_months_plot
 
@@ -388,7 +400,8 @@ inc_qrs_plot <-
     ggtitle("Incidence Rates of Endocrine Treatments in Quarters in Prostate Cancer Patients Before and After COVID-19 Lockdown") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-  geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red")
+  geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
+  theme(plot.title = element_text(size = 12))
 
 inc_qrs_plot
 
