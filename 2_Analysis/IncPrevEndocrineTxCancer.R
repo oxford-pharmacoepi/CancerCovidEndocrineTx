@@ -32,7 +32,7 @@ count2 <- cohortSet(cdm$denominator)
 
 Breast_strata_counts <- count %>% left_join(count2)
 
-write.csv(Breast_strata_counts, file=here::here("Results", db.name, "3_OsteoDx", "Breast_strata_counts.csv"))
+write.csv(Breast_strata_counts, file=here::here("Results", db.name, "2_EndocrineTxCancer", "Breast_strata_counts.csv"))
 
 print(paste0("- Got denominator_breast"))
 info(logger, "- Got denominator_breast")
@@ -204,7 +204,6 @@ ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(plotname, ".jpg")
 print(paste0("- Analysis of all Endocrine Treatments in breast cancer patients done"))
 info(logger, "- Analysis of all Endocrine Treatments in breast cancer patients done")
 
-rm(c(inc_yrs_plot, inc_months_plot, inc_qrs_plot))
 
 ## =========================== PROSTATE CANCER ================================ ##
 
@@ -223,7 +222,7 @@ cdm <- generateDenominatorCohortSet(
   strataCohortId = 2,
   ageGroup = list(c(0,150), c(20,39), c(40,59), c(60,79), c(80,150)),
   sex = "Male",
-  daysPriorHistory = 365,
+  daysPriorHistory = 0,
   temporary = TRUE
 )
 
@@ -306,7 +305,6 @@ inc_yrs_plot <- IncTxProstate %>%
   
    as.data.frame()
 
-inc_yrs_plot[!is.na(inc_yrs_plot$outcome), ]
 
 
 inc_yrs_plot <- 
@@ -347,7 +345,6 @@ inc_months_plot <- IncTxProstate %>%
                              outcome_cohort_name == "Second_generation_antiandrogens" ~ "Second Generation Antiandrogens")) %>% 
   as.data.frame()
 
-inc_months_plot[!is.na(inc_months_plot$outcome), ]
 
 
 inc_months_plot <- 
@@ -369,7 +366,7 @@ inc_months_plot
 plotname <- paste0(analysis.name, db.name, "_inc_months")
 
 # Save the plot as jpg
-ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(plotname, ".jpg")), inc_yrs_plot, dpi=600, scale = 1, width = 12, height = 9)
+ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(plotname, ".jpg")), inc_months_plot, dpi=600, scale = 1, width = 12, height = 9)
 
 
 
@@ -386,7 +383,6 @@ inc_qrs_plot <- IncTxProstate %>%
                              outcome_cohort_name == "Second_generation_antiandrogens" ~ "Second Generation Antiandrogens")) %>% 
   as.data.frame()
 
-inc_qrs_plot[!is.na(inc_qrs_plot$outcome), ]
 
 
 inc_qrs_plot <- 
@@ -408,7 +404,7 @@ inc_qrs_plot
 plotname <- paste0(analysis.name, db.name, "_inc_qrs")
 
 # Save the plot as jpg
-ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(plotname, ".jpg")), inc_yrs_plot, dpi=600, scale = 1, width = 12, height = 9)
+ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(plotname, ".jpg")), inc_qrs_plot, dpi=600, scale = 1, width = 12, height = 9)
 
 
 print(paste0("- Analysis of all Endocrine Treatments in prostate cancer patients done"))

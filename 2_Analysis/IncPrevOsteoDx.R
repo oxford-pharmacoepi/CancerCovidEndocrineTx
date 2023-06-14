@@ -126,7 +126,7 @@ analysis.name <- "txOutcomes_inBreastAIPop"
 plotname <- paste0(analysis.name, db.name, "_inc_yrs")
 
 # Save the plot as jpg
-ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_yrs_plot, dpi=600, scale = 1, width = 12, height = 9)
+ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_yrs_plot, dpi=600, scale = 1, width = 15, height = 10)
 
 
 
@@ -164,7 +164,7 @@ analysis.name <- "txOutcomes_inBreastAIPop"
 plotname <- paste0(analysis.name, db.name, "_inc_months")
 
 # Save the plot as jpg
-ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_months_plot, dpi=600, scale = 1, width = 12, height = 9)
+ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_months_plot, dpi=600, scale = 1, width = 15, height = 10)
 
 
 
@@ -203,7 +203,7 @@ analysis.name <- "txOutcomes_inBreastAIPop"
 plotname <- paste0(analysis.name, db.name, "_inc_qrs")
 
 # Save the plot as jpg
-ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_qrs_plot, dpi=600, scale = 1, width = 12, height = 9)
+ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_qrs_plot, dpi=600, scale = 1, width = 15, height = 10)
 
 
 
@@ -331,7 +331,7 @@ analysis.name <- "txOutcomes_inBreastTAMPop"
 plotname <- paste0(analysis.name, db.name, "_inc_yrs")
 
 # Save the plot as jpg
-ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_yrs_plot, dpi=600, scale = 1, width = 12, height = 9)
+ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_yrs_plot, dpi=600, scale = 1, width = 15, height = 10)
 
 
 
@@ -369,7 +369,7 @@ analysis.name <- "txOutcomes_inBreastTAMPop"
 plotname <- paste0(analysis.name, db.name, "_inc_months")
 
 # Save the plot as jpg
-ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_months_plot, dpi=600, scale = 1, width = 12, height = 9)
+ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_months_plot, dpi=600, scale = 1, width = 15, height = 10)
 
 
 
@@ -408,7 +408,7 @@ analysis.name <- "txOutcomes_inBreastTAMPop"
 plotname <- paste0(analysis.name, db.name, "_inc_qrs")
 
 # Save the plot as jpg
-ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_qrs_plot, dpi=600, scale = 1, width = 12, height = 9)
+ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_qrs_plot, dpi=600, scale = 1, width = 15, height = 10)
 
 
 
@@ -534,7 +534,7 @@ analysis.name <- "txOutcomes_inProstatePop"
 plotname <- paste0(analysis.name, db.name, "_inc_yrs")
 
 # Save the plot as jpg
-ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_yrs_plot, dpi=600, scale = 1, width = 12, height = 9)
+ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_yrs_plot, dpi=600, scale = 1, width = 15, height = 10)
 
 
 
@@ -572,7 +572,7 @@ analysis.name <- "txOutcomes_inProstatePop"
 plotname <- paste0(analysis.name, db.name, "_inc_months")
 
 # Save the plot as jpg
-ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_months_plot, dpi=600, scale = 1, width = 12, height = 9)
+ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_months_plot, dpi=600, scale = 1, width = 15, height = 10)
 
 
 
@@ -611,7 +611,7 @@ analysis.name <- "txOutcomes_inProstatePop"
 plotname <- paste0(analysis.name, db.name, "_inc_qrs")
 
 # Save the plot as jpg
-ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_qrs_plot, dpi=600, scale = 1, width = 12, height = 9)
+ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_qrs_plot, dpi=600, scale = 1, width = 15, height = 10)
 
 
 

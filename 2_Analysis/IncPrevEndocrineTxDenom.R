@@ -25,25 +25,14 @@ cdm <- generateDenominatorCohortSet(
   temporary = TRUE
 )
 
-#cdm$denominator %>% tally()
 
-cohortCount(cdm$denominator)
+count <-cohortCount(cdm$denominator)  
 
-cohortSet(cdm$denominator) 
+count2 <- cohortSet(cdm$denominator) 
 
-# #dpop <- cdm$denominator %>%
-#   # collect() %>%
-#   left_join(cohortSet(cdm$denominator))
-# 
-# dpop %>%
-#   glimpse()
-# 
-# dpop %>%
-#   group_by(cohort_definition_id, age_group) %>%
-#   tally()
-# 
-# View attrition table
-# cohortAttrition(cdm$denominator)
+Denominator_counts <- count %>% left_join(count2)
+
+write.csv(Denominator_counts, file=here::here("Results", db.name, "1_EndocrineTxDenom", "Denominator_counts"))
 
 print(paste0("- Got denominator"))
 info(logger, "- Got denominator")
@@ -59,10 +48,10 @@ inc <- estimateIncidence(
   cdm = cdm,
   denominatorTable = "denominator",
   outcomeTable = outcome_table_name_1, 
-  outcomeCohortId = outcome_cohorts_1$cohortId, 
+  outcomeCohortId = NULL, 
   interval = c("months", "quarters", "years"),
   completeDatabaseIntervals = FALSE,
-  outcomeWashout = c(0, NULL, 90), 
+  outcomeWashout = c(0, 90), 
   repeatedEvents = TRUE,
   minCellCount = 5,
   temporary = TRUE,
