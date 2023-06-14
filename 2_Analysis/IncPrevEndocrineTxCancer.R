@@ -97,6 +97,7 @@ inc_yrs_plot <- IncTxBreast %>%
   filter(denominator_cohort_id == 1) %>%
   filter(analysis_outcome_washout == 0) %>% 
   filter(analysis_interval == "years") %>%
+  filter(outcome_cohort_name %in% c("AromataseInhibitors", "AromataseInhibitors_withGnRHAgonistsOrAntagonists","Tamoxifen_withGnRHAgonistsOrAntagonists","Tamoxifen")) %>%
   mutate(outcome = case_when(outcome_cohort_name == "AromataseInhibitors" ~ "Aromatase Inhibitors",
                              outcome_cohort_name == "AromataseInhibitors_withGnRHAgonistsOrAntagonists" ~ "Aromatase Inhibitors with GnRH Agonists Or Antagonists",
                              outcome_cohort_name == "Tamoxifen_withGnRHAgonistsOrAntagonists" ~ "Tamoxifen with GnRH Agonists Or Antagonists",
@@ -134,6 +135,7 @@ inc_months_plot <- IncTxBreast %>%
   filter(denominator_cohort_id == 1) %>%
   filter(analysis_outcome_washout == 0) %>% 
   filter(analysis_interval == "months") %>%
+  filter(outcome_cohort_name %in% c("AromataseInhibitors", "AromataseInhibitors_withGnRHAgonistsOrAntagonists","Tamoxifen_withGnRHAgonistsOrAntagonists","Tamoxifen")) %>%
   mutate(outcome = case_when(outcome_cohort_name == "AromataseInhibitors" ~ "Aromatase Inhibitors",
                              outcome_cohort_name == "AromataseInhibitors_withGnRHAgonistsOrAntagonists" ~ "Aromatase Inhibitors with GnRH Agonists Or Antagonists",
                              outcome_cohort_name == "Tamoxifen_withGnRHAgonistsOrAntagonists" ~ "Tamoxifen with GnRH Agonists Or Antagonists",
@@ -172,6 +174,7 @@ inc_qrs_plot <- IncTxBreast %>%
   filter(denominator_cohort_id == 1) %>%
   filter(analysis_outcome_washout == 0) %>% 
   filter(analysis_interval == "quarters") %>%
+  filter(outcome_cohort_name %in% c("AromataseInhibitors", "AromataseInhibitors_withGnRHAgonistsOrAntagonists","Tamoxifen_withGnRHAgonistsOrAntagonists","Tamoxifen")) %>%
   mutate(outcome = case_when(outcome_cohort_name == "AromataseInhibitors" ~ "Aromatase Inhibitors",
                              outcome_cohort_name == "AromataseInhibitors_withGnRHAgonistsOrAntagonists" ~ "Aromatase Inhibitors with GnRH Agonists Or Antagonists",
                              outcome_cohort_name == "Tamoxifen_withGnRHAgonistsOrAntagonists" ~ "Tamoxifen with GnRH Agonists Or Antagonists",
@@ -296,6 +299,7 @@ inc_yrs_plot <- IncTxProstate %>%
   filter(denominator_cohort_id == 1) %>%
   filter(analysis_outcome_washout == 0) %>% 
   filter(analysis_interval == "years") %>%
+  filter(outcome_cohort_name %in% c("First_generation_antiandrogens", "GNRH_Agonists_with1stGenADT","GNRH_Agonists","GNRH_LHRH_antagonists", "Second_generation_antiandrogens")) %>%
   mutate(outcome = case_when(outcome_cohort_name == "First_generation_antiandrogens" ~ "First Generation Antiandrogens",
                              outcome_cohort_name == "GNRH_Agonists_with1stGenADT" ~ "GnRH Agonists with First Generation Antiandrogens",
                              outcome_cohort_name == "GNRH_Agonists" ~ "GnRH Agonists",
@@ -338,6 +342,7 @@ inc_months_plot <- IncTxProstate %>%
   filter(denominator_cohort_id == 1) %>%
   filter(analysis_outcome_washout == 0) %>% 
   filter(analysis_interval == "months") %>%
+  filter(outcome_cohort_name %in% c("First_generation_antiandrogens", "GNRH_Agonists_with1stGenADT","GNRH_Agonists","GNRH_LHRH_antagonists", "Second_generation_antiandrogens")) %>%
   mutate(outcome = case_when(outcome_cohort_name == "First_generation_antiandrogens" ~ "First Generation Antiandrogens",
                              outcome_cohort_name == "GNRH_Agonists_with1stGenADT" ~ "GnRH Agonists with First Generation Antiandrogens",
                              outcome_cohort_name == "GNRH_Agonists" ~ "GnRH Agonists",
@@ -376,6 +381,7 @@ inc_qrs_plot <- IncTxProstate %>%
   filter(denominator_cohort_id == 1) %>%
   filter(analysis_outcome_washout == 0) %>% 
   filter(analysis_interval == "quarters") %>%
+  filter(outcome_cohort_name %in% c("First_generation_antiandrogens", "GNRH_Agonists_with1stGenADT","GNRH_Agonists","GNRH_LHRH_antagonists", "Second_generation_antiandrogens")) %>%
   mutate(outcome = case_when(outcome_cohort_name == "First_generation_antiandrogens" ~ "First Generation Antiandrogens",
                              outcome_cohort_name == "GNRH_Agonists_with1stGenADT" ~ "GnRH Agonists with First Generation Antiandrogens",
                              outcome_cohort_name == "GNRH_Agonists" ~ "GnRH Agonists",

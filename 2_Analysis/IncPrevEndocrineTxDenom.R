@@ -32,7 +32,7 @@ count2 <- cohortSet(cdm$denominator)
 
 Denominator_counts <- count %>% left_join(count2)
 
-write.csv(Denominator_counts, file=here::here("Results", db.name, "1_EndocrineTxDenom", "Denominator_counts"))
+write.csv(Denominator_counts, file=here::here("Results", db.name, "1_EndocrineTxDenom", "Denominator_counts.csv"))
 
 print(paste0("- Got denominator"))
 info(logger, "- Got denominator")
