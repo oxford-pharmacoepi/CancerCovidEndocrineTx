@@ -8,6 +8,8 @@
 
 library(readr)
 library(dplyr)
+library(lubridate)
+library(here)
 
 
 # Read the csv file of incidence results from the IncPrev package ----
@@ -56,7 +58,7 @@ inc_data <- inc_data %>% mutate(month_year = as.Date(inc_data$incidence_start_da
   mutate(month_year = format(month_year, format = "%m/%Y"))
 
 # make this a date variable
-inc_data <- inc_data %>% mutate(month_year_convert = as.Date(my(inc_data$incidence_start_date)))
+inc_data <- inc_data %>% mutate(month_year_convert = as.Date(my(inc_data$month_year)))
 
 # compute person months
 inc_data <- inc_data %>% mutate(months = inc_data$person_days/30.4375) # this is the average number of days in a month

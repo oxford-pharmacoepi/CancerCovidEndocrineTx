@@ -37,8 +37,8 @@ IR.age$Month1 <- NULL
 IR.overall$covid <- as.factor(IR.overall$covid)
 IR.overall$covid <-relevel(IR.overall$covid, "Pre-COVID")
 
-IR.age$covid <- as.factor(IR.age_sex$covid)
-IR.age$covid <-relevel(IR.age_sex$covid, "Pre-COVID")
+IR.age$covid <- as.factor(IR.age$covid)
+IR.age$covid <-relevel(IR.age$covid, "Pre-COVID")
 
 
 
@@ -56,12 +56,12 @@ ci <- round(epi.conf(ir1, ctype = "inc.rate", method = "exact", N = 100000, desi
 
 ir_ci <- cbind(ir, ci)
 ir_ci <- ir_ci %>% 
-  mutate(ir = paste0(paste(est),"(", paste(lower), " to ", paste(upper), ")"))%>%
-  dplyr::select(covid, outcome, denominator_sex, denominator_age_group, events_t, person_months_at_risk, ir)%>%
+  mutate(ir = paste0(paste(est), " (",paste(lower), " to ", paste(upper), ")"))%>%
+  dplyr::select(covid, outcome,  denominator_age_group, events_t, person_months_at_risk, ir)%>%
   arrange(covid, outcome)
 
 
-write.csv(ir_ci, file=here("3_DataSummary", "Summary of observed data_incidence_rates.csv"))
+write.csv(ir_ci, file=here("3_IRR", "Observed_incidence_rates_Endo_Tx_breast.csv"))
 save(ir_ci, file=here("3_IRR", "Observed_incidence_rates_Endo_Tx_breast.RData"))
 
 rm(ci,sex, ir, ir_ci, ir1, overall)
