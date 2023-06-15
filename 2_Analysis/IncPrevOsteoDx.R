@@ -440,9 +440,13 @@ cdm <- generateDenominatorCohortSet(
   temporary = TRUE
 )
 
-cohortCount(cdm$denominator) # CHECK NAME OF OUTCOME COHORT IN TABLE AS MIGHT NOT LIKE BRACKETS
+count <- cohortCount(cdm$denominator) # CHECK NAME OF OUTCOME COHORT IN TABLE AS MIGHT NOT LIKE BRACKETS
 
-cohortSet(cdm$denominator) 
+count2 <- cohortSet(cdm$denominator) 
+
+Prostate_endocrine_counts <- count %>% left_join(count2)
+
+write.csv(Prostate_endocrine_counts, file=here::here("Results", db.name, "3_OsteoDx", "Prostate_endocrine_counts.csv"))
 
 print(paste0("- Got denominator_prostate"))
 info(logger, "- Got denominator_prostate")
