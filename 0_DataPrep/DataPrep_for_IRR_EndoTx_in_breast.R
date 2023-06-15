@@ -13,7 +13,7 @@ library(dplyr)
 # Read the csv file of incidence results from the IncPrev package ----
 
 
-incidence_estimates_EndoTx_in_breast <- read_csv("2_Analysis/Data/incidence_estimates_EndoTx_in_breast.csv")
+incidence_estimates_EndoTx_in_breast <- read_csv("0_DataPrep/Data/incidence_estimates_EndoTx_in_breast.csv")
 View(incidence_estimates_EndoTx_in_breast)
 
 inc_data <- incidence_estimates_EndoTx_in_breast
@@ -55,6 +55,8 @@ inc_data <- inc_data %>% mutate(month = as.Date(inc_data$incidence_start_date, f
 inc_data <- inc_data %>% mutate(month_year = as.Date(inc_data$incidence_start_date, format="%d/%m/%Y")) %>%
   mutate(month_year = format(month_year, format = "%m/%Y"))
 
+# make this a date variable
+inc_data <- inc_data %>% mutate(month_year_convert = as.Date(my(inc_data$incidence_start_date)))
 
 # compute person months
 inc_data <- inc_data %>% mutate(months = inc_data$person_days/30.4375) # this is the average number of days in a month
@@ -69,28 +71,16 @@ start.date<-as.Date(dmy(paste0("01-01-","2017")))
 start.date.month.year<- format(as.Date(start.date), "%m-%Y")
 
 #end date 
-end.date<-as.Date(dmy(paste0("01-03-","2020")))
+end.date<-as.Date(dmy(paste0("01-07-","2022")))
 end.date.month.year<- format(as.Date(end.date), "%m-%Y")
 
 # number of months in the study
 n.months<-lubridate::interval(ymd(start.date),ymd(end.date)) %/% months(1)
 
 
-
-#  To account for possible seasonality and linear trends, we will fit calendar month as a categorical 
-#  variable and time as a continuous variable. The number of months since the start of the study is considered as 
-#  the unit of measurement for time
-
 # create months since start of the study for each of the estimates to use as a time variable
-# function for getting number of months since start ----------------------
 
-months.since.start.working <- function(d) { lt <- as.POSIXlt(as.Date(d, origin = "1900-01-01"))
-                        lt$year*12 + lt$mon}
-
-months.since.start.function <- function(d1, d2) {months.since.start.working(d2) - months.since.start.working(d1)}
-
-
-inc_data <- inc_data %>% mutate(months.since.start = 1+(months.since.start.function(start.date, inc_data$incidence_start_date)))
+inc_data <- inc_data %>% mutate(months.since.start = 1+(lubridate::interval(start.date, inc_data$month_year_convert) %/% months(1) ) )
 
 # show all date variables to check correct
 inc_data  %>% dplyr::select(incidence_start_date, months.since.start) %>% print(n=40)
@@ -115,37 +105,17 @@ inc_data_final <- inc_data %>% dplyr::select(n_persons, incidence_start_date, pe
                                              month_year, denominator_age_group, denominator_sex, denominator_cohort_id)
 
 
-# rename columns in line with Berta's column names
+# rename columns to use code for IR and IRR
 inc_data_final <- inc_data_final %>% rename("n" = "n_persons", "days" = "person_days", "years" = "person_years", "events" = "n_events")
 
 head(inc_data_final)
 
-
-
-# ADD SES HERE WHEN WE HAVE LINKAGE TO MULITPLE INDEX OF DEPRIVATION DATA
-#
-#
-#
-
+# rename rdata object so can re-use
+inc_data_endo_tx_in_breast <- inc_data_final
 
 
 # save General Pop----
-save(inc_data_final, file = here("2_Analysis", "Data", "GeneralPop2017_20.RData"))
+save(inc_data_endo_tx_in_breast, file = here("0_DataPrep", "Data", "inc_data_endo_tx_in_breast.RData"))
 
-write.csv(exclusion_table, file=here("2_Analysis", "exclusion_table_2017_20.csv"))
+write.csv(inc_data_endo_tx_in_breast, file=here("0_DataPrep", "Data", "inc_data_endo_tx_in_breast.csv"))
 
-
-
-# example plot  
-inc_yrs_plot <- inc_data_final %>%
-  filter(denominator_cohort_id == 1) %>%
-  ggplot(aes(x = incidence_start_date, y=ir_m,
-                            color=outcome, group=outcome)) +
-  geom_point() + geom_line() +
-  scale_y_continuous(limits = c(0, NA)) +
-  ggtitle("Incidence Rates of Cancer in Years Before and After COVID-19 Lockdown") +
-  labs(colour = "Cancer", x="Time" , y="Incidence per 100000 person-months") +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-  geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red")
-
-inc_yrs_plot
