@@ -1,3 +1,13 @@
+# ============================================================================ #
+#     Create tables with incidence incidence rates and incidence rate ratios   #
+#                   compared to the pre-covid reference period                 #
+#                  for endocrine treatments in breast cancer                   #
+#                                                                              #
+#                              Nicola Barclay                                  #
+#                                16-06-2023                                    #
+# ============================================================================ #
+
+
 renv::restore() # this should prompt you to install the various packages required for the study
 
 # packages
@@ -18,95 +28,82 @@ library(epiR)
 library(fmsb)
 library(epitools)
 library(flextable)
+library(data.table)
 
 load(here("0_DataPrep", "Data", "inc_data_endo_tx_in_breast.RData"))
 
 # Periods-----------------
-IR.overall <- inc_data_endo_tx_in_breast %>% mutate(Month1 =paste(1,month, year, sep ="-")) %>% filter(denominator_cohort_id ==1)
-IR.age <- inc_data_endo_tx_in_breast %>% mutate(Month1 =paste(1,month, year, sep ="-")) 
+
+IR.age <- inc_data_endo_tx_in_breast %>% drop_na(outcome)
 
 Sys.setlocale("LC_TIME", "English")
-IR.overall$Date <- NA
-IR.overall$Date <- dmy(IR.overall$Month1)
-IR.overall$Month1 <- NULL
-
-IR.age$Date <- NA
-IR.age$Date <- dmy(IR.age_sex$Month1)
-IR.age$Month1 <- NULL
-
-IR.overall$covid <- as.factor(IR.overall$covid)
-IR.overall$covid <-relevel(IR.overall$covid, "Pre-COVID")
 
 IR.age$covid <- as.factor(IR.age$covid)
 IR.age$covid <-relevel(IR.age$covid, "Pre-COVID")
 
 
 
-#### INCIDENCE RATES TABLES FOR PAPER --------------------------------------- ##
-## IRR by study period stratified by age
 
-overall <-IR.overall%>% group_by(covid, outcome) %>% summarise(events_t = sum(events),person_months_at_risk = sum(months),)
-age <-IR.age %>% group_by(covid, outcome, denominator_age_group) %>% summarise(events_t = sum(events),person_months_at_risk = sum(months),)
+# ================ CALCULATE OBSERVED INCIDENCE RATES FOR EACH ENDOCRINE TREATMENT FOR BREAST CANCER OVER PERIODS ==================== #
+# ======================== AGE STRATIFICATION =========================== #  
 
-ir <- rbind(overall, age)%>% arrange(covid, outcome)%>% relocate(denominator_age_group, .after = outcome)
+age <-IR.age %>% filter(denominator_sex == "Female") %>% group_by(covid, outcome, denominator_age_group) %>% summarise(events_t = sum(events),person_months_at_risk = sum(months),)
+
+
+
+ir_all <- age %>% arrange(covid, outcome)%>% relocate(denominator_age_group, .after = outcome)
   
-ir1 <-as.matrix(ir[,4:5])
-ci <- round(epi.conf(ir1, ctype = "inc.rate", method = "exact", N = 100000, design = 1, 
+ir1_all <-as.matrix(ir_all[,4:5])
+ci_all <- round(epi.conf(ir1_all, ctype = "inc.rate", method = "exact", N = 100000, design = 1, 
                conf.level = 0.95) * 100000,1)
 
-ir_ci <- cbind(ir, ci)
-ir_ci <- ir_ci %>% 
+ir_ci_all <- cbind(ir_all, ci_all)
+ir_ci_all <- ir_ci_all %>% 
   mutate(ir = paste0(paste(est), " (",paste(lower), " to ", paste(upper), ")"))%>%
   dplyr::select(covid, outcome,  denominator_age_group, events_t, person_months_at_risk, ir)%>%
-  arrange(covid, outcome)
+  arrange(covid, outcome, denominator_age_group)
 
 
-write.csv(ir_ci, file=here("3_IRR", "Observed_incidence_rates_Endo_Tx_breast.csv"))
-save(ir_ci, file=here("3_IRR", "Observed_incidence_rates_Endo_Tx_breast.RData"))
-
-rm(ci,sex, ir, ir_ci, ir1, overall)
+write.csv(ir_ci_all, file=here("3_IRR", "Observed_incidence_rates_Endo_Tx_breast.csv"))
+save(ir_ci_all, file=here("3_IRR", "Observed_incidence_rates_Endo_Tx_breast.RData"))
 
 
 # add combined periods post-lockdown
-overall.post <-IR.overall%>% 
-  filter(months.since.start >=31)%>%
-  group_by(outcome) %>% summarise( events_t = sum(events),person_months_at_risk = sum(months),)
 age.post <-IR.age%>% 
   filter(months.since.start >=31)%>%
   group_by(outcome,denominator_age_group) %>% summarise( events_t = sum(events),person_months_at_risk = sum(months),)
 
-ir_post <- bind_rows(overall.post, agepost)%>% arrange(outcome)%>% relocate(denominator_sex, .after = outcome)%>%
-  relocate(denominator_age_group, .after = denominator_sex)
+ir_post <- age.post %>% arrange(outcome)
 
-ir1 <-as.matrix(ir_post[,4:5])
-ci <- round(epi.conf(ir1, ctype = "inc.rate", method = "exact", N = 100000, design = 1, 
+ir1_post <-as.matrix(ir_post[,3:4])
+ci_post <- round(epi.conf(ir1_post, ctype = "inc.rate", method = "exact", N = 100000, design = 1, 
                conf.level = 0.95) * 100000,1)
 
-ir_ci <- cbind(ir_post, ci)
-ir.post_ci <- ir_ci %>% 
+ir_ci_post <- cbind(ir_post, ci_post)
+ir.post_ci <- ir_ci_post %>% 
   mutate(ir = paste0(paste(est)," (", paste(lower), " to ", paste(upper), ")"))%>%
   mutate(covid="Post-lockdown")%>%
-  dplyr::select(covid,outcome, denominator_sex, denominator_age_group, events_t, person_months_at_risk, ir)%>%
+  dplyr::select(covid,outcome, denominator_age_group, events_t, person_months_at_risk, ir)%>%
   arrange(covid, outcome)
 
 
 write.csv(ir.post_ci, file=here("3_IRR", "Observed_incidence_rates_post_lockdown_EndoTx_Breast.csv"))
-save(ir.post_ci, file=here("3_DataSummary", "Summary of observed data_incidence_rates_post_lockdown.RData"))
+save(ir.post_ci, file=here("3_IRR", "Observed_incidence_rates_post_lockdown_EndoTx_Breast.RData"))
 
 
 # JOIN ALL PERIODS WITH POST-COVID
 
-ir_ci_pre_post <- rbind(ir_ci, ir.post_ci)
+ir_ci_pre_post <- rbind(ir_ci_all, ir.post_ci)
 
-write.csv(ir_ci_pre_post, file=here("3_DataSummary", "Summary of observed data_incidence_rates_pre_post_lockdown.csv"))
-save(ir_ci_pre_post, file=here("3_DataSummary", "Summary of observed data_incidence_rates_pre_post_lockdown.RData"))
+write.csv(ir_ci_pre_post, file=here("3_IRR", "Observed_incidence_rates_pre_post_lockdown_EndoTx_Breast.csv"))
+save(ir_ci_pre_post, file=here("3_IRR", "Observed_incidence_rates_pre_post_lockdown_EndoTx_Breast.RData"))
 
 # Change table structure to remove events and person months, and pivot the covid categories
 ir_ci_pre_post_pivot <- ir_ci_pre_post %>% dplyr::select(c(-events_t, -person_months_at_risk)) %>% tidyr::pivot_wider(names_from = covid, values_from = ir) 
 
 
-ir_ci_pre_post_pivot <- ir_ci_pre_post_pivot[, c(1, 2, 3, 8, 6, 11, 7, 9, 10, 4, 5)]
-ir_ci_pre_post_pivot <- ir_ci_pre_post_pivot %>% rename(Sex = denominator_sex, "Age Group" = denominator_age_group,
+ir_ci_pre_post_pivot <- ir_ci_pre_post_pivot[, c(1, 2, 3, 6, 7, 8, 9, 4, 5, 10)]
+ir_ci_pre_post_pivot <- ir_ci_pre_post_pivot %>% rename("Age Group" = denominator_age_group,
                                                         "Pre-COVID (Jan 2017-Feb 2020)" = "Pre-COVID", 
                                                         "Lockdown (March 2020-June 2020)" = "Lockdown",
                                                         "Post-lockdown (July 2020-Dec 2021)" = "Post-lockdown", 
@@ -118,332 +115,139 @@ ir_ci_pre_post_pivot <- ir_ci_pre_post_pivot %>% rename(Sex = denominator_sex, "
 
 
 Pretty_observed_IR_results_table <- flextable(ir_ci_pre_post_pivot) %>% theme_vanilla() %>% 
-  set_caption(caption = "Incidence rates of cancer diagnoses in each of the time periods, stratified by overall, age and sex") %>% 
+  set_caption(caption = "Incidence rates of breast cancer endocrine treatments in each of the time periods, stratified by age") %>% 
   width(width = 1.4) 
 
-save(ir_ci_pre_post_pivot, file=here("3_DataSummary", "Summary of observed data_incidence_rates_ir_ci_pre_post_pivot.RData"))
-write.csv(ir_ci_pre_post_pivot, file=here("3_DataSummary", "Summary of observed data_incidence_rates_ir_ci_pre_post_pivot.csv"))
+save(ir_ci_pre_post_pivot, file=here("3_IRR", "Observed incidence_rates_ir_ci_pre_post_pivot_EndoTx_Breast.RData"))
+write.csv(ir_ci_pre_post_pivot, file=here("3_IRR", "Observed incidence_rates_ir_ci_pre_post_pivot_EndoTx_Breast.csv"))
 
-save_as_docx('Pretty_observed_IR_results_table' = Pretty_observed_IR_results_table, path=here("3_DataSummary", "Summary of observed incidence rates.docx"))
-
-
-
-# Save a version of the observed IR table for each cancer separately
-
-# Breast
-
-Breast_observed_IR_results_table <- ir_ci_pre_post_pivot %>% filter(outcome=="Breast")
-Pretty_breast_observed_IR_results_table <- flextable(Breast_observed_IR_results_table) %>% theme_vanilla() %>% 
-  set_caption(caption = "Incidence rates of breast cancer diagnoses in each of the time periods, stratified by overall, age and sex") %>% 
-  width(width = 1.4) 
-
-save(Breast_observed_IR_results_table, file=here("3_DataSummary", "Summary of observed breast_incidence_rates.RData"))
-write.csv(Breast_observed_IR_results_table, file=here("3_DataSummary", "Summary of observed breast_incidence_rates.csv"))
-
-save_as_docx('Pretty_breast_observed_IR_results_table' = Pretty_breast_observed_IR_results_table, path=here("3_DataSummary", "Summary of observed incidence rates-breast.docx"))
-
-
-# Colorectal
-
-Colorectal_observed_IR_results_table <- ir_ci_pre_post_pivot %>% filter(outcome=="Colorectal")
-Pretty_colorectal_observed_IR_results_table <- flextable(Colorectal_observed_IR_results_table) %>% theme_vanilla() %>% 
-  set_caption(caption = "Incidence rates of colorectal cancer diagnoses in each of the time periods, stratified by overall, age and sex") %>% 
-  width(width = 1.4) 
-
-save(Colorectal_observed_IR_results_table, file=here("3_DataSummary", "Summary of observed colorectal_incidence_rates.RData"))
-write.csv(Colorectal_observed_IR_results_table, file=here("3_DataSummary", "Summary of observed colorectal_incidence_rates.csv"))
-
-save_as_docx('Pretty_colorectal_observed_IR_results_table' = Pretty_colorectal_observed_IR_results_table, path=here("3_DataSummary", "Summary of observed incidence rates-colorectal.docx"))
-
-
-
-# Lung
-
-Lung_observed_IR_results_table <- ir_ci_pre_post_pivot %>% filter(outcome=="Lung")
-Pretty_lung_observed_IR_results_table <- flextable(Lung_observed_IR_results_table) %>% theme_vanilla() %>% 
-  set_caption(caption = "Incidence rates of lung cancer diagnoses in each of the time periods, stratified by overall, age and sex") %>% 
-  width(width = 1.4) 
-
-save(Lung_observed_IR_results_table, file=here("3_DataSummary", "Summary of observed lung_incidence_rates.RData"))
-write.csv(Lung_observed_IR_results_table, file=here("3_DataSummary", "Summary of observed lung_incidence_rates.csv"))
-
-save_as_docx('Pretty_lung_observed_IR_results_table' = Pretty_lung_observed_IR_results_table, path=here("3_DataSummary", "Summary of observed incidence rates-lung.docx"))
+save_as_docx('Pretty_observed_IR_results_table' = Pretty_observed_IR_results_table, path=here("3_IRR", "Observed incidence_rates_EndoTx_Breast.docx"))
 
 
 
 
-# Prostate
 
-Prostate_observed_IR_results_table <- ir_ci_pre_post_pivot %>% filter(outcome=="Prostate")
-Pretty_prostate_observed_IR_results_table <- flextable(Prostate_observed_IR_results_table) %>% theme_vanilla() %>% 
-  set_caption(caption = "Incidence rates of prostate cancer diagnoses in each of the time periods, stratified by overall, age and sex") %>% 
-  width(width = 1.4) 
+# ================ CALCULATE IRR FOR EACH ENDOCRINE TREATMENT FOR BREAST CANCER OVER PERIODS ==================== #
 
-save(Prostate_observed_IR_results_table, file=here("3_DataSummary", "Summary of observed prostate_incidence_rates.RData"))
-write.csv(Prostate_observed_IR_results_table, file=here("3_DataSummary", "Summary of observed prostate_incidence_rates.csv"))
+# ======================== AGE STRATIFICATION =========================== #  
 
-save_as_docx('Pretty_prostate_observed_IR_results_table' = Pretty_prostate_observed_IR_results_table, path=here("3_DataSummary", "Summary of observed incidence rates-prostate.docx"))
+load(here("0_DataPrep", "Data", "inc_data_endo_tx_in_breast.RData"))
+
+# This code calculates the IRR for each of the breast cancer endocrine treatments
+# over a loop for each period of interest
+# and loops over age categories
+
+# first filter out prostate treatments:
+IR.age <- inc_data_endo_tx_in_breast %>% drop_na(outcome)
 
 
-#### INCIDENCE RATE RATIOS: OVERALL----------------- THE IRR CALCULATE THE RELATIVE CHANGE IN THE INCIDENCE COMPARED TO A COMPARATOR GROUP
-# HERE WE COMPARE THE INCIDENCE RATE IN EACH OF THE STUDY PERIODS COMPARED TO THE TIME PERIOD BEFORE LOCKDOWN
+# the reason why there is no data for denominator cohort id 5,6,8 is that the results were obscured for all these categories
+IR.age <- IR.age %>% filter(  denominator_cohort_id == 2 |denominator_cohort_id == 5|denominator_cohort_id == 8|
+                                denominator_cohort_id == 11|denominator_cohort_id == 14)
 
-IR <- IR.overall
+# CREATE A NEW COLUMN OF Age and Sex groups
+IR.age <- IR.age %>% mutate(Age_sex = case_when(grepl("2", denominator_cohort_id) ~ "Female; 0-150",
+                                                grepl("5", denominator_cohort_id) ~ "Female; 20-39",
+                                                grepl("8", denominator_cohort_id) ~ "Female; 40-59",
+                                                grepl("11", denominator_cohort_id) ~ "Female; 60-79",
+                                                grepl("14", denominator_cohort_id) ~ "Female; 80-150"))
 
-# Select periods of interest
-# the IR dataframe already has this information, so I don't need to do this.
-#IR <- IR %>% filter(months.since.start<=43|months.since.start>=48)
-#IR$covid[which((IR$months.since.start >= 27)& (IR$months.since.start <= 30))] <-"Lockdown"
-#IR$covid[which((IR$months.since.start >= 31)& (IR$months.since.start <= 34))] <-"Post-lockdown1"
-#IR$covid[which((IR$months.since.start >=35) & (IR$months.since.start <= 36))] <-"Second lockdown"
-#IR$covid[which((IR$months.since.start >= 37) & (IR$months.since.start <= 38))] <-"Third lockdown"
-#IR$covid[which((IR$months.since.start >= 39) & (IR$months.since.start <= 42))] <-"Easing of restrictions"
-#IR$covid[which((IR$months.since.start >= 43))] <-"Legal restrictions removed"
 
-IRR <- list()
-IRR_Ref <-list()
+
+names_cohort_id = names(table(IR.age$Age_sex))
+number_cohort_id = length(names_cohort_id)
+
+IR <- IR.age
+
 periods<- IR%>% dplyr::select("covid")%>%distinct()%>%pull()
-year <- IR%>% dplyr::select("year")%>% distinct()%>%pull()
 outcome <-IR%>% dplyr::select("outcome")%>% distinct()%>%pull()
-#n <-0 # number of stratifications
+rateratios <- list()
 
-events <- 1
-pt<- 2
-
-test <- c(events, pt)
-
-for (y in 1:length(outcome)){
-  working.outcome <- outcome[y]
-  for(z in 1:length(periods)){ 
-    working.period <- periods[z]
-    working.data <- IR %>% 
-      filter(outcome==working.outcome)%>%
-      filter(covid==working.period) %>%
-      mutate(ref=if_else(months.since.start < 27,0,1))%>% # 26 indicates reference OF PRE-COVID
-      group_by(ref)%>% #no function for final time period
-      summarise( events_t = sum(events),person_months_at_risk = sum(months))%>%
-      mutate(period = paste(working.period))%>%
-      mutate(outcome= paste(working.outcome))
-    
-    events <- c(working.data%>%dplyr::select(events_t)%>%pull())
-    pt <- c(working.data%>%dplyr::select(person_months_at_risk)%>%pull())
-
-    vector <- c(events, pt)
-    
-    rateratios <-rateratio(vector, y=NULL) # this bit throws an error of nrow(x) object x not found which is why i haven't run this
-    }
-  }
-    
-    IRR[[paste0(working.period, working.outcome)]]<- working.data %>%
-      filter(period == working.period)%>%
-     filter(outcome == working.outcome)%>%
-      filter(ref==1)
-      mutate(IR = events_t/person_months_at_risk * 100000) #%>%
-     mutate(IRR=round(rateratios$measure[2],2)) %>%
-      mutate(IRR_low =round(rateratios$measure[2,2],2)) %>%
-      mutate(IRR_upp =round(rateratios$measure[2,3],2))
-    
-
-
-IRR.overall <- bind_rows(IRR)
-IRR.overall <- IRR.overall %>% mutate(IRR = paste0(paste(IRR)," (", paste(IRR_low), " to ", paste(IRR_upp), ")")) %>%
-  dplyr::select(ref:IRR)
-
-#### INCIDENCE RATE RATIOS: AGE & GENDER-----------------
-IR <- IR.age_sex
-#Seleccionem periodes d'interès
-#03-2020 al 03-2021 pandemia
-#03-2018 al 03-2019 referencia
-#per establir relació posem mateixos periodes covid independentment de si son ref o no
-IR <- IR %>% filter(months.since.start<=13|months.since.start>=25)
-IR$covid[which((IR$months.since.start >= 1)& (IR$months.since.start <= 4))] <-"Lockdown"
-IR$covid[which((IR$months.since.start >= 5)& (IR$months.since.start <= 7))] <-"Post-lockdown1"
-IR$covid[which((IR$months.since.start >=8) & (IR$months.since.start <= 10))] <-"Post-lockdown2"
-IR$covid[which((IR$months.since.start >= 11) & (IR$months.since.start <= 13))] <-"Post-lockdown3"
-
-IRR.age_gender <- list()
-periods<- IR%>% dplyr::select("covid")%>% distinct()%>%pull()
-year <- IR%>% dplyr::select("year")%>% distinct()%>%pull()
-outcome <-IR%>% dplyr::select("outcome")%>% distinct()%>%pull()
-strata.age <- as.character(IR%>% dplyr::select("age_gr2") %>% drop_na()%>%distinct()%>%pull() )
-strata.gender <- as.character(IR%>% ungroup()%>%dplyr::select("gender") %>% drop_na()%>%distinct()%>%pull() )
-strata <- c(strata.age,strata.gender)
-comb <- expand.grid(strata.age, strata.gender)
-
-n <-0#numero estratificacions NO CAL EN AQUEST CAS
-
-for (y in 1:length(outcome)){
-  working.outcome <- outcome[y]
-  for(z in 1:length(periods)){ 
-    working.period <- periods[z]
-    for(i in 1:NROW(comb)){
-      
-      working.strata <- paste(comb$Var1, comb$Var2)[i]
-      working.age <- comb$Var1[i]
-      working.gender<- comb$Var2[i]
-      
-      
-      working.data <- IR %>% 
+for (id in names_cohort_id){
+  for (y in 1:length(outcome)){
+    working.outcome <- outcome[y]
+    vector <- NULL # a vector to place the values from the loop
+    for(z in 1:length(periods)){
+      working.period <- periods[z]
+      working.data <- IR %>%
+        filter(Age_sex==id)%>%
         filter(outcome==working.outcome)%>%
-        filter((covid==working.period)) %>%
-        filter((age_gr2==working.age)) %>%
-        filter((gender==working.gender)) %>%
-        mutate(ref=if_else(months.since.start < 25,0,1))%>% #zero indica ref
-        group_by(ref)%>% #no funcionara per ultim trimestre
-        summarise( events_t = sum(events),pmar = sum(months))%>%
-        mutate(period = paste(working.period))%>%
-        mutate(outcome= paste(working.outcome))%>%
-        mutate(strata = paste(working.strata))
+        filter(covid==working.period) %>%
+        mutate(ref=if_else(months.since.start < 39,0,1))%>% # 38 indicates reference OF PRE-COVID
+        group_by(ref)%>% 
+        summarise( events_t = sum(events),person_months_at_risk = sum(months))%>%
+        mutate(periods = paste(working.period))%>%
+        mutate(outcome= paste(working.outcome))
       
       events <- c(working.data%>%dplyr::select(events_t)%>%pull())
-      pt <- c(working.data%>%dplyr::select(pmar)%>%pull())
-      vector <- c(events, pt)
-      rateratios <-rateratio(vector)
+      pt <- c(working.data%>%dplyr::select(person_months_at_risk)%>%pull())
       
+      vector <- vector %>%
+        union_all(
+          tibble(
+            events = events, person_time = pt, period = periods[z]
+          )
+        )
       
-      IRR.age_gender[[paste0(working.period, working.outcome, working.strata)]]<- working.data %>%
-        filter(period == working.period)%>%
-        # filter(outcome == working.outcome)%>%
-        filter(ref==1)%>%
-        mutate(IR = events_t/pmar * 100000) %>%
-        mutate(IRR=round(rateratios$measure[2],2)) %>%
-        mutate(IRR_low =round(rateratios$measure[2,2],2)) %>%
-        mutate(IRR_upp =round(rateratios$measure[2,3],2))
     }
+    count <- paste(outcome[y], id, sep = ";")
+    if (dim(vector)[1] > 1) {
+      rateratios[[count]] <- rateratio(as.matrix(vector[,1:2], y=NULL))$measure %>% bind_cols(vector[,3])
+    }
+    
   }
 }
 
-IRR.age_gender <- bind_rows(IRR.age_gender)
-IRR.age_gender <- IRR.age_gender %>% mutate(IRR = paste0(paste(IRR)," (", paste(IRR_low), " to ", paste(IRR_upp), ")")) %>%
-  dplyr::select(ref:IRR)
+rateratios_table <- bind_rows(rateratios, .id = "age_sex")
 
-#### INCIDENCE RATE RATIOS: GENDER----------------
-IR <- IR.sex
-#Seleccionem periodes d'interès
-#03-2020 al 03-2021 pandemia
-#03-2018 al 03-2019 referencia
-#per establir relació posem mateixos periodes covid independentment de si son ref o no
-IR <- IR %>% filter(months.since.start<=13|months.since.start>=25)
-IR$covid[which((IR$months.since.start >= 1)& (IR$months.since.start <= 4))] <-"Lockdown"
-IR$covid[which((IR$months.since.start >= 5)& (IR$months.since.start <= 7))] <-"Post-lockdown1"
-IR$covid[which((IR$months.since.start >=8) & (IR$months.since.start <= 10))] <-"Post-lockdown2"
-IR$covid[which((IR$months.since.start >= 11) & (IR$months.since.start <= 13))] <-"Post-lockdown3"
 
-IRR.gender <- list()
-IRR_Ref <-list()
-periods<- IR%>% dplyr::select("covid")%>% distinct()%>%pull()
-year <- IR%>% dplyr::select("year")%>% distinct()%>%pull()
-outcome <-IR%>% dplyr::select("outcome")%>% distinct()%>%pull()
-strata <- as.character(IR%>% dplyr::select("gender") %>% drop_na()%>%distinct()%>%pull() )
+# LAYOUT THE TABLE HOW YOU WANT IT
 
-n <-0 #numero estratificacions
+rate_ratios_table_formatted <- rateratios_table %>%  mutate_if(is.numeric, round, digits=2)
 
-for (y in 1:length(outcome)){
-  working.outcome <- outcome[y]
-  for(z in 1:length(periods)){ 
-    working.period <- periods[z]
-    for(i in 1:length(strata)){
-      working.strata <- strata[i] 
-      
-      working.data <- IR %>% 
-        filter(outcome==working.outcome)%>%
-        filter((covid==working.period)) %>%
-        filter((gender==working.strata)) %>%
-        mutate(ref=if_else(months.since.start < 25,0,1))%>% #zero indica ref
-        group_by(ref)%>% #no funcionara per ultim trimestre
-        summarise( events_t = sum(events),pmar = sum(months))%>%
-        mutate(period = paste(working.period))%>%
-        mutate(outcome= paste(working.outcome))%>%
-        mutate(gender = paste(working.strata))
-      
-      events <- c(working.data%>%dplyr::select(events_t)%>%pull())
-      pt <- c(working.data%>%dplyr::select(pmar)%>%pull())
-      vector <- c(events, pt)
-      rateratios <-rateratio(vector)
-      
-      IRR.gender[[paste0(working.period, working.outcome, working.strata)]]<- working.data %>%
-        filter(period == working.period)%>%
-        # filter(outcome == working.outcome)%>%
-        filter(ref==1)%>%
-        mutate(IR = events_t/pmar * 100000) %>%
-        mutate(IRR=round(rateratios$measure[2],2)) %>%
-        mutate(IRR_low =round(rateratios$measure[2,2],2)) %>%
-        mutate(IRR_upp =round(rateratios$measure[2,3],2))
-    }
-  }
-}
+# combine cis with the estimate
+rate_ratios_table_formatted <- rate_ratios_table_formatted %>% mutate(estimate = paste0(paste(estimate)," (", paste(lower), " to ", paste(upper), ")")) 
 
-IRR.gender <- bind_rows(IRR.gender)
-IRR.gender <- IRR.gender %>% mutate(IRR = paste0(paste(IRR)," (", paste(IRR_low), " to ", paste(IRR_upp), ")")) %>%
-  dplyr::select(ref:IRR)
+
+# CREATE A NEW COLUMN OF CANCER TYPES
+rate_ratios_table_formatted <- rate_ratios_table_formatted %>% mutate("Endocrine Treatment" = case_when(grepl("Aromatase Inhibitors with GnRH Agonists Or Antagonists", age_sex) ~ "Aromatase Inhibitors with GnRH Agonists Or Antagonists",
+                                                                                                        grepl("Aromatase Inhibitors;Female", age_sex) ~ "Aromatase Inhibitors",
+                                                                                                        grepl("Tamoxifen with GnRH Agonists Or Antagonists", age_sex) ~ "Tamoxifen with GnRH Agonists Or Antagonists",
+                                                                                                        grepl("Tamoxifen;Female", age_sex) ~ "Tamoxifen"))
 
 
 
-#### INCIDENCE RATE RATIOS: SES-----------------
-IR.ses<- IR.ses[which(IR.ses$medea!="Missing"),]
-IR <- IR.ses
-#Seleccionem periodes d'interès
-#03-2020 al 03-2021 pandemia
-#03-2018 al 03-2019 referencia
-#per establir relació posem mateixos periodes covid independentment de si son ref o no
-IR <- IR %>% filter(months.since.start<=13|months.since.start>=25)
-IR$covid[which((IR$months.since.start >= 1)& (IR$months.since.start <= 4))] <-"Lockdown"
-IR$covid[which((IR$months.since.start >= 5)& (IR$months.since.start <= 7))] <-"Post-lockdown1"
-IR$covid[which((IR$months.since.start >=8) & (IR$months.since.start <= 10))] <-"Post-lockdown2"
-IR$covid[which((IR$months.since.start >= 11) & (IR$months.since.start <= 13))] <-"Post-lockdown3"
+# CREATE A NEW COLUMN OF Age groups - THIS BIT OF CODE MERGES 80-150 AND 0-150 BECAUSE IT READS 80-150 WHEN IT READS 0-150
+rate_ratios_table_formatted <- rate_ratios_table_formatted %>% mutate("Age Group" = case_when(grepl(" 0-150", age_sex) ~ "0-150",
+                                                                                              grepl("20-39", age_sex) ~ "20-39",
+                                                                                              grepl("40-59", age_sex) ~ "40-59",
+                                                                                              grepl("60-79", age_sex) ~ "60-79",
+                                                                                              grepl("80-150", age_sex) ~ "80-150"))
 
-IRR.ses <- list()
-IRR_Ref <-list()
-periods<- IR%>% dplyr::select("covid")%>% distinct()%>%pull()
-year <- IR%>% dplyr::select("year")%>% distinct()%>%pull()
-outcome <-IR%>% dplyr::select("outcome")%>% distinct()%>%pull()
-strata <- as.character(IR%>% dplyr::select("medea") %>% drop_na()%>%distinct()%>%pull() )
 
-n <-0 #numero estratificacions
 
-for (y in 1:length(outcome)){
-  working.outcome <- outcome[y]
-  for(z in 1:length(periods)){ 
-    working.period <- periods[z]
-    for(i in 1:length(strata)){
-      working.strata <- strata[i] 
-      
-      working.data <- IR %>% 
-        filter(outcome==working.outcome)%>%
-        filter((covid==working.period)) %>%
-        filter((medea==working.strata)) %>%
-        mutate(ref=if_else(months.since.start < 25,0,1))%>% #zero indica ref
-        group_by(ref)%>% #no funcionara per ultim trimestre
-        summarise( events_t = sum(events),pmar = sum(months))%>%
-        mutate(period = paste(working.period))%>%
-        mutate(outcome= paste(working.outcome))%>%
-        mutate(medea = paste(working.strata))
-      
-        events <- c(working.data%>%dplyr::select(events_t)%>%pull())
-        vector <- c(events, pt)
-        rateratios <-rateratio(vector)
-        
-     
-      IRR.ses[[paste0(working.period, working.outcome, working.strata)]]<- working.data %>%
-        filter(period == working.period)%>%
-        # filter(outcome == working.outcome)%>%
-        filter(ref==1)%>%
-        mutate(IR = events_t/pmar * 100000) %>%
-        mutate(IRR=round(rateratios$measure[2],2)) %>%
-        mutate(IRR_low =round(rateratios$measure[2,2],2)) %>%
-        mutate(IRR_upp =round(rateratios$measure[2,3],2))
-    }
-  }
-}
+# remove superfluous columns of cis
+rate_ratios_table_formatted <- rate_ratios_table_formatted[-c(3,4)]
 
-IRR.ses <- bind_rows(IRR.ses)
-IRR.ses <- IRR.ses %>% mutate(IRR = paste0(paste(IRR)," (", paste(IRR_low), " to ", paste(IRR_upp), ")")) %>%
-  dplyr::select(ref:IRR)
+# Re-order columns 
+rate_ratios_table_formatted <- rate_ratios_table_formatted[c(4,5,3,2)]
 
+
+
+# pivot - 
+rate_ratios_table_formatted <- rate_ratios_table_formatted %>% pivot_wider(names_from = period, values_from = estimate) %>% arrange(`Endocrine Treatment`, `Age Group`)
+#drop pre-lockdown reference column and re-order periods
+rate_ratios_table_formatted <- rate_ratios_table_formatted[c(1,2,5,4,6,7,8,9)]
 
 
 #### Save IRR
-write.csv(IRR.overall, "Summary of observed data/irr_overall_rev.csv")
-write.csv(IRR.gender, "Summary of observed data/irr_gender_rev.csv")
-write.csv(IRR.age_gender, "Summary of observed data/irr_age.gender_rev.csv")
-write.csv(IRR.ses, "Summary of observed data/irr_ses_rev.csv")
+write.csv(rate_ratios_table_formatted, file=here::here("3_IRR", "Observed IRR_EndoTx_Breast.csv"))
+save(rate_ratios_table_formatted, file=here::here("3_IRR", "Observed IRR_EndoTx_Breast.RData"))
+
+#### Make pretty table for breast cancer
+
+Pretty_IRR_table_EndoTxBreast<- flextable(rate_ratios_table_formatted) %>% theme_vanilla() %>% 
+  set_caption(caption = "Incidence rate ratios of endocrine treatments in breast cancer patients over the lockdown periods compared to pre-COVID period, stratified by sex") %>% 
+  width(width = 1.4) 
+
+save_as_docx('Pretty_IRR_table_EndoTxBreast' = Pretty_IRR_table_EndoTxBreast, path=here("3_IRR", "Pretty_IRR_table_EndoTxBreast.docx"))
