@@ -1,6 +1,6 @@
 # ============================================================================ #
 #                Data preparation for incidence rate ratio                     #
-#       calculation for endocrine treatments in breast cancer patients         #
+#    calculation for endocrine treatments in prostate cancer patients          #
 #                              Nicola Barclay                                  #
 #                               15-06-2023                                     #
 # THIS IMPORTS CSV FILE FROM INCPREV PACKAGE AND PREPARES IT FOR ANALYSIS      #
@@ -15,10 +15,10 @@ library(here)
 # Read the csv file of incidence results from the IncPrev package ----
 
 
-incidence_estimates_EndoTx_in_breast <- read_csv("0_DataPrep/Data/incidence_estimates_EndoTx_in_breast.csv")
-View(incidence_estimates_EndoTx_in_breast)
+incidence_estimates_EndoTx_in_prostate <- read_csv("0_DataPrep/Data/incidence_estimates_EndoTx_in_prostate.csv")
+View(incidence_estimates_EndoTx_in_prostate)
 
-inc_data <- incidence_estimates_EndoTx_in_breast
+inc_data <- incidence_estimates_EndoTx_in_prostate
 
 
 # columns to remove from inc_data - remove all those that do not vary
@@ -26,10 +26,14 @@ inc_data <- inc_data %>% dplyr::select(c(-analysis_id, -cohort_obscured, -analys
                                          -analysis_complete_database_intervals,-analysis_min_cell_count, -denominator_strata_cohort_definition_id,
                                        -denominator_strata_cohort_name, -cdm_name)) %>%
                                        # name outcomes
-                                        mutate(outcome = case_when(outcome_cohort_name == "AromataseInhibitors" ~ "Aromatase Inhibitors",
-                                                                   outcome_cohort_name == "AromataseInhibitors_withGnRHAgonistsOrAntagonists" ~ "Aromatase Inhibitors with GnRH Agonists Or Antagonists",
-                                                                   outcome_cohort_name == "Tamoxifen_withGnRHAgonistsOrAntagonists" ~ "Tamoxifen with GnRH Agonists Or Antagonists",
-                                                                   outcome_cohort_name == "Tamoxifen" ~ "Tamoxifen")) %>% 
+                                        mutate(outcome = case_when(outcome_cohort_name == "First_generation_antiandrogens" ~ "First Generation Antiandrogens",
+                                                                   outcome_cohort_name == "GNRH_Agonists_with1stGenADT" ~ "GnRH Agonists with 1st Generation ADT",
+                                                                   outcome_cohort_name == "GNRH_Agonists" ~ "GNRH_Agonists",
+                                                                   outcome_cohort_name == "GNRH_LHRH_antagonists" ~ "GnRH Antagonists",
+                                                                   outcome_cohort_name == "Second_generation_antiandrogens" ~ "Second Generation Antiandrogens")) %>%
+                                        
+                                        # drop endocrine treatments not related to prostate      
+                                          drop_na(outcome) %>%
 
                                        # save only data for months not years
                                          filter(analysis_interval == "months") %>%
@@ -113,11 +117,11 @@ inc_data_final <- inc_data_final %>% rename("n" = "n_persons", "days" = "person_
 head(inc_data_final)
 
 # rename rdata object so can re-use
-inc_data_endo_tx_in_breast <- inc_data_final
+inc_data_endo_tx_in_prostate <- inc_data_final
 
 
 # save General Pop----
-save(inc_data_endo_tx_in_breast, file = here("0_DataPrep", "Data", "inc_data_endo_tx_in_breast.RData"))
+save(inc_data_endo_tx_in_prostate, file = here("0_DataPrep", "Data", "inc_data_endo_tx_in_prostate.RData"))
 
-write.csv(inc_data_endo_tx_in_breast, file=here("0_DataPrep", "Data", "inc_data_endo_tx_in_breast.csv"))
+write.csv(inc_data_endo_tx_in_prostate, file=here("0_DataPrep", "Data", "inc_data_endo_tx_in_prostate.csv"))
 
