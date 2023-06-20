@@ -1,7 +1,7 @@
 # ============================================================================ #
 #     Create tables with incidence incidence rates and incidence rate ratios   #
 #                   compared to the pre-covid reference period                 #
-#                  for endocrine treatments in prostate cancer                   #
+#                  for endocrine treatments in breast cancer                   #
 #                                                                              #
 #                              Nicola Barclay                                  #
 #                                16-06-2023                                    #
@@ -30,11 +30,11 @@ library(epitools)
 library(flextable)
 library(data.table)
 
-load(here("0_DataPrep", "Data", "inc_data_endo_tx_in_prostate.RData"))
+load(here("0_DataPrep", "Data", "inc_data_endo_tx_in_breast.RData"))
 
 # Periods-----------------
 
-IR.age <- inc_data_endo_tx_in_prostate %>% drop_na(outcome)
+IR.age <- inc_data_endo_tx_in_breast %>% drop_na(outcome)
 
 Sys.setlocale("LC_TIME", "English")
 
@@ -44,10 +44,10 @@ IR.age$covid <-relevel(IR.age$covid, "Pre-COVID")
 
 
 
-# ================ CALCULATE OBSERVED INCIDENCE RATES FOR EACH ENDOCRINE TREATMENT FOR prostate CANCER OVER PERIODS ==================== #
+# ================ CALCULATE OBSERVED INCIDENCE RATES FOR EACH ENDOCRINE TREATMENT FOR BREAST CANCER OVER PERIODS ==================== #
 # ======================== AGE STRATIFICATION =========================== #  
 
-age <-IR.age %>% filter(denominator_sex == "Male") %>% group_by(covid, outcome, denominator_age_group) %>% summarise(events_t = sum(events),person_months_at_risk = sum(months),)
+age <-IR.age %>% filter(denominator_sex == "Female") %>% group_by(covid, outcome, denominator_age_group) %>% summarise(events_t = sum(events),person_months_at_risk = sum(months),)
 
 
 
@@ -64,8 +64,8 @@ ir_ci_all <- ir_ci_all %>%
   arrange(covid, outcome, denominator_age_group)
 
 
-write.csv(ir_ci_all, file=here("3_IRR", "Observed_incidence_rates_Endo_Tx_prostate.csv"))
-save(ir_ci_all, file=here("3_IRR", "Observed_incidence_rates_Endo_Tx_prostate.RData"))
+write.csv(ir_ci_all, file=here("3_IRR", db.name, "EndoTxBreast",  "Observed_incidence_rates_Endo_Tx_breast.csv"))
+save(ir_ci_all, file=here("3_IRR", db.name, "EndoTxBreast",  "Observed_incidence_rates_Endo_Tx_breast.RData"))
 
 
 # add combined periods post-lockdown
@@ -87,16 +87,16 @@ ir.post_ci <- ir_ci_post %>%
   arrange(covid, outcome)
 
 
-write.csv(ir.post_ci, file=here("3_IRR", "Observed_incidence_rates_post_lockdown_EndoTx_prostate.csv"))
-save(ir.post_ci, file=here("3_IRR", "Observed_incidence_rates_post_lockdown_EndoTx_prostate.RData"))
+write.csv(ir.post_ci, file=here("3_IRR", db.name, "EndoTxBreast",  "Observed_incidence_rates_post_lockdown_EndoTx_Breast.csv"))
+save(ir.post_ci, file=here("3_IRR", db.name, "EndoTxBreast",  "Observed_incidence_rates_post_lockdown_EndoTx_Breast.RData"))
 
 
 # JOIN ALL PERIODS WITH POST-COVID
 
 ir_ci_pre_post <- rbind(ir_ci_all, ir.post_ci)
 
-write.csv(ir_ci_pre_post, file=here("3_IRR", "Observed_incidence_rates_pre_post_lockdown_EndoTx_prostate.csv"))
-save(ir_ci_pre_post, file=here("3_IRR", "Observed_incidence_rates_pre_post_lockdown_EndoTx_prostate.RData"))
+write.csv(ir_ci_pre_post, file=here("3_IRR", db.name, "EndoTxBreast",  "Observed_incidence_rates_pre_post_lockdown_EndoTx_Breast.csv"))
+save(ir_ci_pre_post, file=here("3_IRR", db.name, "EndoTxBreast",  "Observed_incidence_rates_pre_post_lockdown_EndoTx_Breast.RData"))
 
 # Change table structure to remove events and person months, and pivot the covid categories
 ir_ci_pre_post_pivot <- ir_ci_pre_post %>% dplyr::select(c(-events_t, -person_months_at_risk)) %>% tidyr::pivot_wider(names_from = covid, values_from = ir) 
@@ -115,40 +115,38 @@ ir_ci_pre_post_pivot <- ir_ci_pre_post_pivot %>% rename("Age Group" = denominato
 
 
 Pretty_observed_IR_results_table <- flextable(ir_ci_pre_post_pivot) %>% theme_vanilla() %>% 
-  set_caption(caption = "Incidence rates of prostate cancer endocrine treatments in each of the time periods, stratified by age") %>% 
+  set_caption(caption = "Incidence rates of breast cancer endocrine treatments in each of the time periods, stratified by age") %>% 
   width(width = 1.4) 
 
-save(ir_ci_pre_post_pivot, file=here("3_IRR", "Observed incidence_rates_ir_ci_pre_post_pivot_EndoTx_prostate.RData"))
-write.csv(ir_ci_pre_post_pivot, file=here("3_IRR", "Observed incidence_rates_ir_ci_pre_post_pivot_EndoTx_prostate.csv"))
+save(ir_ci_pre_post_pivot, file=here("3_IRR", db.name, "EndoTxBreast",  "Observed incidence_rates_ir_ci_pre_post_pivot_EndoTx_Breast.RData"))
+write.csv(ir_ci_pre_post_pivot, file=here("3_IRR", db.name, "EndoTxBreast",  "Observed incidence_rates_ir_ci_pre_post_pivot_EndoTx_Breast.csv"))
 
-save_as_docx('Pretty_observed_IR_results_table' = Pretty_observed_IR_results_table, path=here("3_IRR", "Observed incidence_rates_EndoTx_prostate.docx"))
-
-
+save_as_docx('Pretty_observed_IR_results_table' = Pretty_observed_IR_results_table, path=here("3_IRR", db.name, "EndoTxBreast",  "Observed incidence_rates_EndoTx_Breast.docx"))
 
 
 
-# ================ CALCULATE IRR FOR EACH ENDOCRINE TREATMENT FOR prostate CANCER OVER PERIODS ==================== #
+
+
+# ================ CALCULATE IRR FOR EACH ENDOCRINE TREATMENT FOR BREAST CANCER OVER PERIODS ==================== #
 
 # ======================== AGE STRATIFICATION =========================== #  
 
-load(here("0_DataPrep", "Data", "inc_data_endo_tx_in_prostate.RData"))
+load(here("0_DataPrep", "Data", "inc_data_endo_tx_in_breast.RData"))
 
-# This code calculates the IRR for each of the prostate cancer endocrine treatments
+# This code calculates the IRR for each of the breast cancer endocrine treatments
 # over a loop for each period of interest
 # and loops over age categories
 
 # first filter out prostate treatments:
-IR.age <- inc_data_endo_tx_in_prostate %>% drop_na(outcome)
-
-############ UPTO HERE############
+IR.age <- inc_data_endo_tx_in_breast %>% drop_na(outcome)
 
 
-# the reason why there is no data for denominator cohort id for any other id is that the results were obscured for all these categories
-# need to check this in the original file and the data prep file
-IR.age <- IR.age %>% filter(  denominator_cohort_id == 5)
+# the reason why there is no data for denominator cohort id 5,6,8 is that the results were obscured for all these categories
+IR.age <- IR.age %>% filter(  denominator_cohort_id == 2 |denominator_cohort_id == 5|denominator_cohort_id == 8|
+                                denominator_cohort_id == 11|denominator_cohort_id == 14)
 
 # CREATE A NEW COLUMN OF Age and Sex groups
-IR.age <- IR.age %>% mutate(Age_sex = case_when(grepl("5", denominator_cohort_id) ~ "Male; 80-150",
+IR.age <- IR.age %>% mutate(Age_sex = case_when(grepl("2", denominator_cohort_id) ~ "Female; 0-150",
                                                 grepl("5", denominator_cohort_id) ~ "Female; 20-39",
                                                 grepl("8", denominator_cohort_id) ~ "Female; 40-59",
                                                 grepl("11", denominator_cohort_id) ~ "Female; 60-79",
@@ -243,13 +241,13 @@ rate_ratios_table_formatted <- rate_ratios_table_formatted[c(1,2,5,4,6,7,8,9)]
 
 
 #### Save IRR
-write.csv(rate_ratios_table_formatted, file=here::here("3_IRR", "Observed IRR_EndoTx_prostate.csv"))
-save(rate_ratios_table_formatted, file=here::here("3_IRR", "Observed IRR_EndoTx_prostate.RData"))
+write.csv(rate_ratios_table_formatted, file=here::here("3_IRR", db.name, "EndoTxBreast",  "Observed IRR_EndoTx_Breast.csv"))
+save(rate_ratios_table_formatted, file=here::here("3_IRR", db.name, "EndoTxBreast",  "Observed IRR_EndoTx_Breast.RData"))
 
-#### Make pretty table for prostate cancer
+#### Make pretty table for breast cancer
 
-Pretty_IRR_table_EndoTxprostate<- flextable(rate_ratios_table_formatted) %>% theme_vanilla() %>% 
-  set_caption(caption = "Incidence rate ratios of endocrine treatments in prostate cancer patients over the lockdown periods compared to pre-COVID period, stratified by sex") %>% 
+Pretty_IRR_table_EndoTxBreast<- flextable(rate_ratios_table_formatted) %>% theme_vanilla() %>% 
+  set_caption(caption = "Incidence rate ratios of endocrine treatments in breast cancer patients over the lockdown periods compared to pre-COVID period, stratified by sex") %>% 
   width(width = 1.4) 
 
-save_as_docx('Pretty_IRR_table_EndoTxprostate' = Pretty_IRR_table_EndoTxprostate, path=here("3_IRR", "Pretty_IRR_table_EndoTxprostate.docx"))
+save_as_docx('Pretty_IRR_table_EndoTxBreast' = Pretty_IRR_table_EndoTxBreast, path=here("3_IRR", db.name, "EndoTxBreast",  "Pretty_IRR_table_EndoTxBreast.docx"))

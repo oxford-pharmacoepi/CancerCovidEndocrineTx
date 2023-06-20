@@ -1,8 +1,9 @@
 # ============================================================================ #
 #                Data preparation for incidence rate ratio                     #
-#    calculation for endocrine treatments in prostate cancer patients          #
+#       calculation for endocrine treatments in breast cancer patients         #
+#                               on tamoxifen                                   #
 #                              Nicola Barclay                                  #
-#                               15-06-2023                                     #
+#                               20-06-2023                                     #
 # THIS IMPORTS CSV FILE FROM INCPREV PACKAGE AND PREPARES IT FOR ANALYSIS      #
 # ============================================================================ #
 
@@ -15,26 +16,23 @@ library(here)
 # Read the csv file of incidence results from the IncPrev package ----
 
 
-incidence_estimates_EndoTx_in_prostate <- read_csv("0_DataPrep/Data/incidence_estimates_EndoTx_in_prostate.csv")
-View(incidence_estimates_EndoTx_in_prostate)
+incidence_estimates_OsteoDx_in_breastTAM <- read_csv("0_DataPrep/Data/incidence_estimates_OsteoDx_in_BreastTAM.csv")
+View(incidence_estimates_OsteoDx_in_breastTAM)
 
-inc_data <- incidence_estimates_EndoTx_in_prostate
+inc_data <- incidence_estimates_OsteoDx_in_breastTAM
 
 
 # columns to remove from inc_data - remove all those that do not vary
 inc_data <- inc_data %>% dplyr::select(c(-analysis_id, -cohort_obscured, -analysis_repeated_events, - denominator_days_prior_history,
                                          -analysis_complete_database_intervals,-analysis_min_cell_count, -denominator_strata_cohort_definition_id,
                                        -denominator_strata_cohort_name, -cdm_name)) %>%
-                                        # filter out the outcomes related to breast cancer
-                                        filter(outcome_cohort_name == c("First_generation_antiandrogens","GNRH_Agonists_with1stGenADT","GNRH_Agonists","GNRH_LHRH_antagonists",
-                                                                        "Second_generation_antiandrogens")) %>%
                                        # name outcomes
-                                        mutate(outcome = case_when(outcome_cohort_name == "First_generation_antiandrogens" ~ "First Generation Antiandrogens",
-                                                                   outcome_cohort_name == "GNRH_Agonists_with1stGenADT" ~ "GnRH Agonists with 1st Generation ADT",
-                                                                   outcome_cohort_name == "GNRH_Agonists" ~ "GNRH_Agonists",
-                                                                   outcome_cohort_name == "GNRH_LHRH_antagonists" ~ "GnRH Antagonists",
-                                                                   outcome_cohort_name == "Second_generation_antiandrogens" ~ "Second Generation Antiandrogens")) %>%
-                                      
+                                        mutate(outcome = case_when(outcome_cohort_name == "Bisphosphonates" ~ "Bisphosphonates",
+                                                                   outcome_cohort_name == "Bone Fracture" ~ "Bone Fracture",
+                                                                   outcome_cohort_name == "Denosumab" ~ "Denosumab",
+                                                                   outcome_cohort_name == "Osteopenia" ~ "Osteopenia",
+                                                                   outcome_cohort_name == "Osteoporosis" ~ "Osteoporosis")) %>% 
+
                                        # save only data for months not years
                                          filter(analysis_interval == "months") %>%
 
@@ -117,11 +115,11 @@ inc_data_final <- inc_data_final %>% rename("n" = "n_persons", "days" = "person_
 head(inc_data_final)
 
 # rename rdata object so can re-use
-inc_data_endo_tx_in_prostate <- inc_data_final
+inc_data_OsteoDx_in_breastTAM <- inc_data_final
 
 
 # save General Pop----
-save(inc_data_endo_tx_in_prostate, file = here("0_DataPrep", "Data", "inc_data_endo_tx_in_prostate.RData"))
+save(inc_data_OsteoDx_in_breastTAM, file = here("0_DataPrep", "Data", "inc_data_OsteoDx_in_breastTAM.RData"))
 
-write.csv(inc_data_endo_tx_in_prostate, file=here("0_DataPrep", "Data", "inc_data_endo_tx_in_prostate.csv"))
+write.csv(inc_data_OsteoDx_in_breastTAM, file=here("0_DataPrep", "Data", "inc_data_OsteoDx_in_breastTAM.csv"))
 

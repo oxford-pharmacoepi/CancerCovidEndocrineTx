@@ -41,4 +41,7 @@ vignettes/*.pdf
 CodeToRun*
 Results/
 Data/
-
+*.csv
+*.RData
+*.docx
+*.jpg

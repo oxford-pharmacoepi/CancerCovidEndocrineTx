@@ -13,10 +13,17 @@ db_name <- "...."
 
 # Set output folder location -----
 # the path to a folder where the results from this analysis will be saved
-output_folder <- here(paste0("Results_", db_name))
-if (!dir.exists(output_folder)) {
-  dir.create(output_folder)
-}
+output.folder <-here("Results")
+output.folder1 <-here("Results", db.name)
+
+
+# Set output folder locations -----
+# the paths to the folders where the results from this analysis will be saved
+output.folder2<-here("3_IRR", db.name)
+output.folder3<-here("3_IRR", db.name, "EndoTxBreast")
+output.folder4<-here("3_IRR", db.name, "EndoTxProstate")
+output.folder5<-here("3_IRR", db.name, "OsteoDxBreast")
+output.folder6<-here("3_IRR", db.name, "OsteoDxProstate")
 
 # Database connection details -----
 # In this study we also use the DBI package to connect to the database

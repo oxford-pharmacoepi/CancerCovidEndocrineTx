@@ -11,6 +11,16 @@ if (!file.exists(output.folder2)){
 if (!file.exists(output.folder3)){
   dir.create(output.folder3, recursive = TRUE)}
 
+if (!file.exists(output.folder4)){
+  dir.create(output.folder4, recursive = TRUE)}
+
+if (!file.exists(output.folder5)){
+  dir.create(output.folder5, recursive = TRUE)}
+
+if (!file.exists(output.folder6)){
+  dir.create(output.folder6, recursive = TRUE)}
+
+
 # table names----
 
 strata_table_name_1 <- paste0(outcome_table_stem,"_breast_prostate_strata") # this is the breast and prostate cohorts to be used as denominator strata
