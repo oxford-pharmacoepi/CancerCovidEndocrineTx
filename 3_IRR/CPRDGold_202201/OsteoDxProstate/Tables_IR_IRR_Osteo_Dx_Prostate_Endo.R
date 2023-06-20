@@ -142,16 +142,9 @@ load(here("0_DataPrep", "Data", "inc_data_OsteoDx_in_prostate.RData"))
 # first filter out prostate treatments:
 IR.age <- inc_data_OsteoDx_in_prostate
 
-# filter out the both and female denominators
-IR.age <- IR.age %>% filter(  denominator_cohort_id == 2 |denominator_cohort_id == 5|denominator_cohort_id == 8|
-                                denominator_cohort_id == 11|denominator_cohort_id == 14)
 
 # CREATE A NEW COLUMN OF Age and Sex groups
-IR.age <- IR.age %>% mutate(Age_sex = case_when(grepl("2", denominator_cohort_id) ~ "Female; 0-150",
-                                                grepl("5", denominator_cohort_id) ~ "Female; 20-39",
-                                                grepl("8", denominator_cohort_id) ~ "Female; 40-59",
-                                                grepl("11", denominator_cohort_id) ~ "Female; 60-79",
-                                                grepl("14", denominator_cohort_id) ~ "Female; 80-150"))
+IR.age <- IR.age %>% mutate(Age_sex = case_when(grepl("1", denominator_cohort_id) ~ "Male; 0-150"))
 
 
 
@@ -220,11 +213,7 @@ rate_ratios_table_formatted <- rate_ratios_table_formatted %>% mutate("Treatment
 
 
 # CREATE A NEW COLUMN OF Age groups - THIS BIT OF CODE MERGES 80-150 AND 0-150 BECAUSE IT READS 80-150 WHEN IT READS 0-150
-rate_ratios_table_formatted <- rate_ratios_table_formatted %>% mutate("Age Group" = case_when(grepl(" 0-150", age_sex) ~ "0-150",
-                                                                                              grepl("20-39", age_sex) ~ "20-39",
-                                                                                              grepl("40-59", age_sex) ~ "40-59",
-                                                                                              grepl("60-79", age_sex) ~ "60-79",
-                                                                                              grepl("80-150", age_sex) ~ "80-150"))
+rate_ratios_table_formatted <- rate_ratios_table_formatted %>% mutate("Age Group" = case_when(grepl(" 0-150", age_sex) ~ "0-150"))
 
 
 
@@ -239,7 +228,7 @@ rate_ratios_table_formatted <- rate_ratios_table_formatted[c(4,5,3,2)]
 # pivot - 
 rate_ratios_table_formatted <- rate_ratios_table_formatted %>% pivot_wider(names_from = period, values_from = estimate) %>% arrange(`Treatment-Related Outcome`, `Age Group`)
 #drop pre-lockdown reference column and re-order periods
-#rate_ratios_table_formatted <- rate_ratios_table_formatted[c(1,2,5,6,7,8,4,9)]
+rate_ratios_table_formatted <- rate_ratios_table_formatted[c(1,2,5,6,7,8,4,9)]
 
 
 #### Save IRR
@@ -249,7 +238,7 @@ save(rate_ratios_table_formatted, file=here::here("3_IRR", db.name, "OsteoDxPros
 #### Make pretty table for breast cancer
 
 Pretty_IRR_table_OsteoDXprostateEndo<- flextable(rate_ratios_table_formatted) %>% theme_vanilla() %>% 
-  set_caption(caption = "Incidence rate ratios of treatment-related outcomes in breast cancer patients on tamoxifen over the lockdown periods compared to pre-COVID period, stratified by sex") %>% 
+  set_caption(caption = "Incidence rate ratios of treatment-related outcomes in prostate cancer patients on endocrine treatments over the lockdown periods compared to pre-COVID period, stratified by sex") %>% 
   width(width = 1.4) 
 
 save_as_docx('Pretty_IRR_table_OsteoDXprostateEndo' = Pretty_IRR_table_OsteoDXprostateEndo, path=here("3_IRR", db.name, "OsteoDxProstate",  "Pretty_IRR_table_OsteoDXprostateEndo.docx"))
@@ -278,11 +267,7 @@ IRR_FOREST  <- IRR_FOREST  %>% mutate("Treatment-Related Outcome" = case_when(gr
 
 
 # CREATE A NEW COLUMN OF Age groups - THIS BIT OF CODE MERGES 80-150 AND 0-150 BECAUSE IT READS 80-150 WHEN IT READS 0-150
-IRR_FOREST  <- IRR_FOREST  %>% mutate("Age Group" = case_when(grepl(" 0-150", age_sex) ~ "0-150",
-                                                                                              grepl("20-39", age_sex) ~ "20-39",
-                                                                                              grepl("40-59", age_sex) ~ "40-59",
-                                                                                              grepl("60-79", age_sex) ~ "60-79",
-                                                                                              grepl("80-150", age_sex) ~ "80-150"))
+IRR_FOREST  <- IRR_FOREST  %>% mutate("Age Group" = case_when(grepl(" 0-150", age_sex) ~ "0-150"))
 
 IRR_FOREST  <- IRR_FOREST  %>% mutate(period = recode(period, "Post-lockdown1" = "Post-first lockdown 1"))
 
@@ -304,7 +289,7 @@ IRR_FOREST <- IRR_FOREST  %>%
 # The palette with grey:
 #cbPalette <- c("#CC79A7", "#D55E00", "#0072B2", "#F0E442", "#009E73", "#56B4E9", "#E69F00", "#999999")
 
-IRR_forest_osteoDx_Breast_TAM =
+IRR_forest_osteoDx_Prostate_Endo =
   ggplot(data=IRR_FOREST, aes(x = `Lockdown Periods`,y = estimate, ymin = lower, ymax = upper ))+
   geom_pointrange(aes(col=`Lockdown Periods`, shape=`Lockdown Periods`))+
   geom_hline(aes(fill=`Lockdown Periods`),yintercept =1, linetype=2)+
@@ -330,10 +315,10 @@ IRR_forest_osteoDx_Breast_TAM =
   theme(plot.title = element_text(size = 11))
 
   
-IRR_forest_osteoDx_Breast_TAM
+IRR_forest_osteoDx_Prostate_Endo
 
 # Save
 
-ggsave(here("3_IRR", db.name, "OsteoDxProstate",  "IRR_OsteoDX_prostateEndo_forest.jpg"), IRR_forest_osteoDx_Breast_TAM, dpi=600, scale = 1,  width = 12, height = 10)
+ggsave(here("3_IRR", db.name, "OsteoDxProstate",  "IRR_OsteoDX_prostateEndo_forest.jpg"), IRR_forest_osteoDx_Prostate_Endo, dpi=600, scale = 1,  width = 12, height = 10)
 
 
