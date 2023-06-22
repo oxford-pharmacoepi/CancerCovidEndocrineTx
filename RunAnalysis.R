@@ -37,7 +37,7 @@ outcome_table_name_1 <- paste0(outcome_table_stem,"_endocrine_tx_table") # this 
 strata_table_name_2 <- paste0(outcome_table_stem,"_cancer_endocrine_strata") # this is the table for the breast/prostate cancer diagnosis cohorts who are on endocrine treatments to be used as denominator strata
 outcome_table_name_2 <- paste0(outcome_table_stem,"_osteo_dx_table") # this is the table for the endocrine-treatment related outcomes of osteoporosis, osteopenia, bon fracture, bisphosphonates and denosumab
 denominator_table_name_1 <- paste0(outcome_table_stem,"_denominator_3_time_periods") # this is the table for the denominator before, during and after lockdown
-outcome_table_name_3 <- paste0(outcome_table_stem,"_breast_prostate_3_time_periods") # this is the table for breast and prostate cancer before, during and after lockdown
+outcome_table_name_3 <- paste0(outcome_table_stem,"_breastprostate3times") # this is the table for breast and prostate cancer before, during and after lockdown
 
 
 

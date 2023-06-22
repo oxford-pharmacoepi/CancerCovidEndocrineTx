@@ -116,9 +116,13 @@ cdm <- generateCohortSet(cdm = cdm,
                          name = denominator_table_name_1,
                          overwrite = TRUE) 
 
-cdm[[denominator_table_name_1]] %>% group_by(cohort_definition_id) %>% arrange(cohort_definition_id) %>% tally() %>% collect() 
+cohortCount(cdm[[denominator_table_name_1]]) %>%  glimpse()
 
-cdm$nb_cancercovid_endotx_denominator_3_time_periods
+cohortAttrition(cdm[[denominator_table_name_1]]) %>%  glimpse()
+
+cohortSet(cdm[[denominator_table_name_1]]) %>%  glimpse()
+
+
 
 info(logger, "- got denominator populations before, during and after lockdown")
 
@@ -130,6 +134,7 @@ info(logger, "- got denominator populations before, during and after lockdown")
 info(logger, "- getting breast and prostate populations before, during and after lockdown")
 
 outcome_cohorts_3 <- readCohortSet(here("1_InstantiateCohorts", "BreastProstate3TimePeriods"))
+
 
 cdm <- generateCohortSet(cdm = cdm, 
                          cohortSet = outcome_cohorts_3,
