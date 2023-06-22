@@ -48,7 +48,7 @@ cohortCount(cdm[[outcome_table_name_1]]) %>%  glimpse()
 
 cohortAttrition(cdm[[outcome_table_name_1]]) %>%  glimpse()
 
-cohortSet(cdm[[outcome_table_name_1]]) %>%  glimpse()
+a <- cohortSet(cdm[[outcome_table_name_1]]) %>%  glimpse()
 
 info(logger, "- got endocrine outcomes")
 
@@ -101,3 +101,47 @@ cohortSet(cdm[[outcome_table_name_2]]) %>%  glimpse()
 
 info(logger, "- got endocrine treatment related outcomes")
 
+
+
+
+# ============================================================================ #
+#           5.  DENOMINATOR BEFORE, DURING AND AFTER LOCKDOWN                  #
+# ============================================================================ #
+info(logger, "- getting denominator populations before, during and after lockdown")
+
+denominator_cohorts_1 <- readCohortSet(here("1_InstantiateCohorts", "Denominator"))
+
+cdm <- generateCohortSet(cdm = cdm, 
+                         cohortSet = denominator_cohorts_1,
+                         name = denominator_table_name_1,
+                         overwrite = TRUE) 
+
+cdm[[denominator_table_name_1]] %>% group_by(cohort_definition_id) %>% arrange(cohort_definition_id) %>% tally() %>% collect() 
+
+cdm$nb_cancercovid_endotx_denominator_3_time_periods
+
+info(logger, "- got denominator populations before, during and after lockdown")
+
+
+
+# ============================================================================ #
+#      6.  BREAST AND PROSTATE CANCER BEFORE, DURING AND AFTER LOCKDOWN        #
+# ============================================================================ #
+info(logger, "- getting breast and prostate populations before, during and after lockdown")
+
+outcome_cohorts_3 <- readCohortSet(here("1_InstantiateCohorts", "BreastProstate3TimePeriods"))
+
+cdm <- generateCohortSet(cdm = cdm, 
+                         cohortSet = outcome_cohorts_3,
+                         name = outcome_table_name_3,
+                         overwrite = TRUE) 
+
+#cdm[[outcome_table_name_3]] %>% group_by(cohort_definition_id) %>% tally() %>% collect() 
+
+cohortCount(cdm[[outcome_table_name_3]]) %>%  glimpse()
+
+cohortAttrition(cdm[[outcome_table_name_3]]) %>%  glimpse()
+
+cohortSet(cdm[[outcome_table_name_3]]) %>%  glimpse()
+
+info(logger, "- got breast and prostate populations before, during and after lockdown")
