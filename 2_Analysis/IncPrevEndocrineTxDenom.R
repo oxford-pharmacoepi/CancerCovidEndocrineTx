@@ -21,7 +21,7 @@ cdm <- generateDenominatorCohortSet(
   cohortDateRange = as.Date(c("2017-01-01","2022-07-01")),
   ageGroup = list(c(0,150), c(0,19), c(20,39), c(40,59), c(60,79), c(80,150)),
   sex = c("Both", "Male", "Female"),
-  daysPriorHistory = 0,
+  daysPriorHistory = 365,
   temporary = TRUE
 )
 
@@ -115,7 +115,7 @@ inc_yrs_plot <-
   geom_errorbar(width=0) +
   scale_y_continuous(limits = c(0, 150)) +
   scale_x_date(date_labels="%Y",date_breaks  ="1 year") +
-  ggtitle("Incidence Rates of Endocrine Treatments for Breast or Prostate Cancer in Years in the General Population Before and After COVID-19 Lockdown") +
+  ggtitle("Incidence Rates of Endocrine Treatments for Breast or Prostate Cancer in Years in the General Population Before and After COVID-19 Lockdown (365 days prior history)") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
@@ -156,7 +156,7 @@ inc_months_plot <-
   geom_errorbar(width=0) +
   scale_y_continuous(limits = c(0, 150)) +
   scale_x_date(date_labels="%b %Y",date_breaks  ="6 months") +
-  ggtitle("Incidence Rates of Endocrine Treatments for Breast or Prostate Cancer in Months in the General Population Before and After COVID-19 Lockdown") +
+  ggtitle("Incidence Rates of Endocrine Treatments for Breast or Prostate Cancer in Months in the General Population Before and After COVID-19 Lockdown (365 days prior history)") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
@@ -196,7 +196,7 @@ inc_qrs_plot <-
   geom_errorbar(width=0) +
   scale_y_continuous(limits = c(0, 150)) +
   scale_x_date(date_labels="%b %Y",date_breaks  ="3 months") +
-  ggtitle("Incidence Rates of Endocrine Treatments for Breast or Prostate Cancer in Quarters in the General Population Before and After COVID-19 Lockdown") +
+  ggtitle("Incidence Rates of Endocrine Treatments for Breast or Prostate Cancer in Quarters in the General Population Before and After COVID-19 Lockdown (365 days prior history)") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
