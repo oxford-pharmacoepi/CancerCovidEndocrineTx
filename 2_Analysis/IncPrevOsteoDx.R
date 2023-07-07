@@ -34,7 +34,8 @@ count2 <- cohortSet(cdm$denominator)
 Breast_AI_counts <- count %>% left_join(count2)
 
 write.csv(Breast_AI_counts, file=here::here("Results", db.name, "3_OsteoDx", "Breast_AI_counts.csv"))
-
+write.csv(Breast_AI_counts_0, file=here::here("Results", db.name0, "3_OsteoDx", "Breast_AI_counts_0.csv"))
+write.csv(Breast_AI_counts_365, file=here::here("Results", db.name365, "3_OsteoDx", "Breast_AI_counts_365.csv"))
 
 print(paste0("- Got denominator_breast_TX"))
 info(logger, "- Got denominator_breast_TX")
@@ -66,6 +67,8 @@ IncTxOutcomesBreastAI %>%
 
 
 save(IncTxOutcomesBreastAI, file = here("Results", db.name, "3_OsteoDx", "IncTxOutcomesBreastAI.RData"))
+save(IncTxOutcomesBreastAI_0, file = here("Results", db.name0, "3_OsteoDx", "IncTxOutcomesBreastAI_0.RData"))
+save(IncTxOutcomesBreastAI_365, file = here("Results", db.name365, "3_OsteoDx", "IncTxOutcomesBreastAI_365.RData"))
 
 
 print(paste0("- Got incidence: treatment related outcomes in breast cancer populations on AIs"))
@@ -278,7 +281,8 @@ count2 <- cohortSet(cdm$denominator)
 Breast_tamoxifen_counts <- count %>% left_join(count2)
 
 write.csv(Breast_tamoxifen_counts, file=here::here("Results", db.name, "3_OsteoDx", "Breast_tamoxifen_counts.csv"))
-
+write.csv(Breast_tamoxifen_counts_0, file=here::here("Results", db.name0, "3_OsteoDx", "Breast_tamoxifen_counts_0.csv"))
+write.csv(Breast_tamoxifen_counts_365, file=here::here("Results", db.name365, "3_OsteoDx", "Breast_tamoxifen_counts_365.csv"))
 
 print(paste0("- Got denominator_breast_TX"))
 info(logger, "- Got denominator_breast_TX")
@@ -310,6 +314,8 @@ IncTxOutcomesBreastTAM %>%
 
 
 save(IncTxOutcomesBreastTAM, file = here("Results", db.name, "3_OsteoDx", "IncTxOutcomesBreastTAM.RData"))
+save(IncTxOutcomesBreastTAM_0, file = here("Results", db.name0, "3_OsteoDx", "IncTxOutcomesBreastTAM_0.RData"))
+save(IncTxOutcomesBreastTAM_365, file = here("Results", db.name365, "3_OsteoDx", "IncTxOutcomesBreastTAM_365.RData"))
 
 
 print(paste0("- Got incidence: treatment related outcomes in breast cancer populations on TAM"))
@@ -526,6 +532,10 @@ count2 <- cohortSet(cdm$denominator)
 Prostate_endocrine_counts <- count %>% left_join(count2)
 
 write.csv(Prostate_endocrine_counts, file=here::here("Results", db.name, "3_OsteoDx", "Prostate_endocrine_counts.csv"))
+write.csv(Prostate_endocrine_counts_0, file=here::here("Results", db.name0, "3_OsteoDx", "Prostate_endocrine_counts_0.csv"))
+write.csv(Prostate_endocrine_counts_365, file=here::here("Results", db.name365, "3_OsteoDx", "Prostate_endocrine_counts_365.csv"))
+
+
 
 print(paste0("- Got denominator_prostate"))
 info(logger, "- Got denominator_prostate")
@@ -557,6 +567,8 @@ IncTxOutcomesProstate %>%
 
 
 save(IncTxOutcomesProstate, file = here("Results", db.name, "3_OsteoDx", "IncTxOutcomesProstate.RData"))
+save(IncTxOutcomesProstate_0, file = here("Results", db.name0, "3_OsteoDx", "IncTxOutcomesProstate_0.RData"))
+save(IncTxOutcomesProstate_365, file = here("Results", db.name365, "3_OsteoDx", "IncTxOutcomesProstate_365.RData"))
 
 
 print(paste0("- Got incidence: treatment related outcomes in Prostate Cancer Cohort on endocrine tx"))

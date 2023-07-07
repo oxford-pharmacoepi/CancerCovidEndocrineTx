@@ -21,7 +21,7 @@ cdm <- generateDenominatorCohortSet(
   cohortDateRange = as.Date(c("2017-01-01","2022-07-01")),
   ageGroup = list(c(0,150), c(0,19), c(20,39), c(40,59), c(60,79), c(80,150)),
   sex = c("Both", "Male", "Female"),
-  daysPriorHistory = 365,
+  daysPriorHistory = 0,
   temporary = TRUE
 )
 
@@ -33,6 +33,8 @@ count2 <- cohortSet(cdm$denominator)
 Denominator_counts <- count %>% left_join(count2)
 
 write.csv(Denominator_counts, file=here::here("Results", db.name, "1_EndocrineTxDenom", "Denominator_counts.csv"))
+write.csv(Denominator_counts_0, file=here::here("Results", db.name0, "1_EndocrineTxDenom", "Denominator_counts_0.csv"))
+write.csv(Denominator_counts_365, file=here::here("Results", db.name365, "1_EndocrineTxDenom", "Denominator_counts_365.csv"))
 
 print(paste0("- Got denominator"))
 info(logger, "- Got denominator")
@@ -115,7 +117,8 @@ inc_yrs_plot <-
   geom_errorbar(width=0) +
   scale_y_continuous(limits = c(0, 150)) +
   scale_x_date(date_labels="%Y",date_breaks  ="1 year") +
-  ggtitle("Incidence Rates of Endocrine Treatments for Breast or Prostate Cancer in Years in the General Population Before and After COVID-19 Lockdown (365 days prior history)") +
+  ggtitle("Incidence Rates of Endocrine Treatments for Breast or Prostate Cancer in Years 
+          in the General Population Before and After COVID-19 Lockdown (365 days prior history)") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
