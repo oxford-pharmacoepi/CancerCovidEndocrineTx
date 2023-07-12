@@ -33,8 +33,10 @@ count2 <- cohortSet(cdm$denominator)
 Denominator_counts <- count %>% left_join(count2)
 
 write.csv(Denominator_counts, file=here::here("Results", db.name, "1_EndocrineTxDenom", "Denominator_counts.csv"))
-write.csv(Denominator_counts_0, file=here::here("Results", db.name0, "1_EndocrineTxDenom", "Denominator_counts_0.csv"))
-write.csv(Denominator_counts_365, file=here::here("Results", db.name365, "1_EndocrineTxDenom", "Denominator_counts_365.csv"))
+save(Denominator_counts_0, file = here("Results", db.name0, "1_EndocrineTxDenom", "Denominator_counts_0.RData"))
+save(Denominator_counts_365, file = here("Results", db.name365, "1_EndocrineTxDenom", "Denominator_counts_365.RData"))
+
+
 
 print(paste0("- Got denominator"))
 info(logger, "- Got denominator")
@@ -65,7 +67,8 @@ inc %>%
 
 
 save(inc, file = here("Results", db.name, "1_EndocrineTxDenom", "IncTxDenom.RData"))
-
+save(inc_0, file = here("Results", db.name0, "1_EndocrineTxDenom", "IncTxDenom0.RData"))
+save(inc_365, file = here("Results", db.name365, "1_EndocrineTxDenom", "IncTxDenom365.RData"))
 
 print(paste0("- Got incidence: endocrine tx in general population"))
 info(logger, "- Got incidence: endocrine tx in general population")

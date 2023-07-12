@@ -6,30 +6,42 @@ output: html_document
 ---
 
 ```{r setup, echo=FALSE}
-#knitr::opts_chunk$set(echo = TRUE)
+#knitr::opts_chunk$set(echo = FALSE)
 ```
 
 ### Cancer/ Covid Breast and Prostate Cancer Endocrine Treatment Preliminary Analyses
 
-## 1. Incidence of the use of endocrine treatments for breast and prostate cancer in the general population. 
+#### 1. Incidence of the use of endocrine treatments for breast and prostate cancer in the general population. 
 
 Denominator cohorts specified in the Incidence/Prevalence package with 0 days prior history:
 
 ```{r, echo=FALSE}
+library(here)
+library(dplyr)
+library(readr)
+library(tidyr)
+library(stringr)
+library(ggplot2)
+library(markdown)
+
+load("~/R/CancerCovidEndocrineTx/Markdown/Denominator_counts_0.RData")
 Denominator_counts_0
 ```
 
 Denominator cohorts specified in the Incidence/Prevalence package with 0 days prior history:
 
 ```{r, echo=FALSE}
+load("~/R/CancerCovidEndocrineTx/Markdown/Denominator_counts_365.RData")
 Denominator_counts_365
 ```
 
-# 1a. Incidence Rates of Endocrine Treatments for Breast or Prostate Cancer in Quarters 
-# in the General Population Before and After COVID-19 Lockdown 
-# (0 days prior history, 90 days washout)
+#### 1a. Incidence Rates of Endocrine Treatments for Breast or Prostate Cancer in Quarters 
+#### in the General Population Before and After COVID-19 Lockdown 
+#### (0 days prior history, 90 days washout)
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, out.width="100%"}
+
+load("~/R/CancerCovidEndocrineTx/Results/cdm_gold_202207_0_prior_history/1_EndocrineTxDenom/IncTxDenom0.RData")
 inc_yrs_plot <- inc_0 %>%  
   filter(denominator_cohort_id == 1) %>%
   filter(analysis_outcome_washout == 90) %>% 
@@ -66,11 +78,13 @@ inc_yrs_plot
 ```
 
 
-# 1b. Incidence Rates of Endocrine Treatments for Breast or Prostate Cancer in Quarters 
-# in the General Population Before and After COVID-19 Lockdown 
-# (0 days prior history, 0 days washout)
+#### 1b. Incidence Rates of Endocrine Treatments for Breast or Prostate Cancer in Quarters 
+#### in the General Population Before and After COVID-19 Lockdown 
+#### (0 days prior history, 0 days washout)
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, out.width="100%"}
+
+load("~/R/CancerCovidEndocrineTx/Results/cdm_gold_202207_0_prior_history/1_EndocrineTxDenom/IncTxDenom0.RData")
 inc_yrs_plot <- inc_0 %>%  
   filter(denominator_cohort_id == 1) %>%
   filter(analysis_outcome_washout == 0) %>% 
@@ -108,11 +122,12 @@ inc_yrs_plot
 
 
 
-# 1c. Incidence Rates of Endocrine Treatments for Breast or Prostate Cancer in Quarters 
-# in the General Population Before and After COVID-19 Lockdown 
-# (365 days prior history, 90 days washout)
+#### 1c. Incidence Rates of Endocrine Treatments for Breast or Prostate Cancer in Quarters 
+#### in the General Population Before and After COVID-19 Lockdown 
+#### (365 days prior history, 90 days washout)
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, out.width="100%"}
+load("~/R/CancerCovidEndocrineTx/Results/cdm_gold_202207_365_prior_history/1_EndocrineTxDenom/IncTxDenom365.RData")
 inc_yrs_plot <- inc_365 %>%  
   filter(denominator_cohort_id == 1) %>%
   filter(analysis_outcome_washout == 90) %>% 
@@ -149,11 +164,12 @@ inc_yrs_plot
 ```
 
 
-# 1d. Incidence Rates of Endocrine Treatments for Breast or Prostate Cancer in Quarters 
-# in the General Population Before and After COVID-19 Lockdown 
-# (365 days prior history, 0 days washout)
+#### 1d. Incidence Rates of Endocrine Treatments for Breast or Prostate Cancer in Quarters 
+#### in the General Population Before and After COVID-19 Lockdown 
+#### (365 days prior history, 0 days washout)
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, out.width="100%"}
+load("~/R/CancerCovidEndocrineTx/Results/cdm_gold_202207_365_prior_history/1_EndocrineTxDenom/IncTxDenom365.RData")
 inc_yrs_plot <- inc_365 %>%  
   filter(denominator_cohort_id == 1) %>%
   filter(analysis_outcome_washout == 0) %>% 
@@ -191,24 +207,27 @@ inc_yrs_plot
 
 
 
-## 2. Incidence of the use of endocrine treatments for breast cancer in breast cancer patients
+### 2. Incidence of the use of endocrine treatments for breast cancer in breast cancer patients
 
 Breast cancer strata cohorts specified in the Incidence/Prevalence package with 0 days prior history:
 
 ```{r, echo=FALSE}
+load("~/R/CancerCovidEndocrineTx/Markdown/Breast_strata_counts_0.Rdata")
 Breast_strata_counts_0
 ```
 
 Breast cancer strata cohorts specified in the Incidence/Prevalence package with 365 days prior history:
 ```{r, echo=FALSE}
+load("~/R/CancerCovidEndocrineTx/Markdown/Breast_strata_counts_365.Rdata")
 Breast_strata_counts_365
 ```
 
-# 2a. Incidence Rates of Endocrine Treatments for Breast Cancer in Quarters 
-# in Breast Cancer Patients Before and After COVID-19 Lockdown 
-# (0 days prior history, 90 days washout)
+#### 2a. Incidence Rates of Endocrine Treatments for Breast Cancer in Quarters 
+#### in Breast Cancer Patients Before and After COVID-19 Lockdown 
+#### (0 days prior history, 90 days washout)
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, out.width="100%"}
+load("~/R/CancerCovidEndocrineTx/Markdown/IncTxBreast_0.RData")
 inc_qrs_plot <- IncTxBreast_0 %>%  
   filter(denominator_cohort_id == 1) %>%
   filter(analysis_outcome_washout == 90) %>% 
@@ -242,11 +261,12 @@ inc_qrs_plot
 
 
 
-# 2b. Incidence Rates of Endocrine Treatments for Breast Cancer in Quarters 
-# in Breast Cancer Patients Before and After COVID-19 Lockdown 
-# (0 days prior history, 0 days washout)
+#### 2b. Incidence Rates of Endocrine Treatments for Breast Cancer in Quarters 
+#### in Breast Cancer Patients Before and After COVID-19 Lockdown 
+#### (0 days prior history, 0 days washout)
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, out.width="100%"}
+load("~/R/CancerCovidEndocrineTx/Markdown/IncTxBreast_0.RData")
 inc_qrs_plot <- IncTxBreast_0 %>%  
   filter(denominator_cohort_id == 1) %>%
   filter(analysis_outcome_washout == 0) %>% 
@@ -279,11 +299,12 @@ inc_qrs_plot
 ```
 
 
-# 2c. Incidence Rates of Endocrine Treatments for Breast Cancer in Quarters 
-# in Breast Cancer Patients Before and After COVID-19 Lockdown 
-# (365 days prior history, 90 days washout)
+#### 2c. Incidence Rates of Endocrine Treatments for Breast Cancer in Quarters 
+#### in Breast Cancer Patients Before and After COVID-19 Lockdown 
+#### (365 days prior history, 90 days washout)
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, out.width="100%"}
+load("~/R/CancerCovidEndocrineTx/Markdown/IncTxBreast_365.RData")
 inc_qrs_plot <- IncTxBreast_365 %>%  
   filter(denominator_cohort_id == 1) %>%
   filter(analysis_outcome_washout == 90) %>% 
@@ -317,11 +338,12 @@ inc_qrs_plot
 
 
 
-# 2d. Incidence Rates of Endocrine Treatments for Breast Cancer in Quarters 
-# in Breast Cancer Patients Before and After COVID-19 Lockdown 
-# (365 days prior history, 0 days washout)
+#### 2d. Incidence Rates of Endocrine Treatments for Breast Cancer in Quarters 
+#### in Breast Cancer Patients Before and After COVID-19 Lockdown 
+#### (365 days prior history, 0 days washout)
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, out.width="100%"}
+load("~/R/CancerCovidEndocrineTx/Markdown/IncTxBreast_365.RData")
 inc_qrs_plot <- IncTxBreast_365 %>%  
   filter(denominator_cohort_id == 1) %>%
   filter(analysis_outcome_washout == 0) %>% 
@@ -354,27 +376,29 @@ inc_qrs_plot
 ```
 
 
-## 3. Incidence of the use of endocrine treatments for prostate cancer in prostate cancer patients
+### 3. Incidence of the use of endocrine treatments for prostate cancer in prostate cancer patients
 
 Prostate cancer strata cohorts specified in the Incidence/Prevalence package with 0 days prior history:
 
 ```{r, echo=FALSE}
+ load("~/R/CancerCovidEndocrineTx/Markdown/Prostate_strata_counts_0.RData")
 Prostate_strata_counts_0
 ```
 
 Prostate cancer strata cohorts specified in the Incidence/Prevalence package with 365 days prior history:
 
 ```{r, echo=FALSE}
+ load("~/R/CancerCovidEndocrineTx/Markdown/Prostate_strata_counts_365.RData")
 Prostate_strata_counts_365
 ```
 
 
-# 3a. Incidence Rates of Endocrine Treatments for Prostate Cancer in Quarters 
-# in Prostate Cancer Patients Before and After COVID-19 Lockdown 
-# (0 days prior history, 90 days washout)
+#### 3a. Incidence Rates of Endocrine Treatments for Prostate Cancer in Quarters 
+#### in Prostate Cancer Patients Before and After COVID-19 Lockdown 
+#### (0 days prior history, 90 days washout)
 
-```{r, echo=FALSE}
-
+```{r, echo=FALSE, out.width="100%"}
+load("~/R/CancerCovidEndocrineTx/Markdown/IncTxProstate_0.RData")
 inc_qrs_plot <- IncTxProstate_0 %>%  
   filter(denominator_cohort_id == 1) %>%
   filter(analysis_outcome_washout == 90) %>% 
@@ -409,12 +433,12 @@ inc_qrs_plot
 ```
 
 
-# 3b. Incidence Rates of Endocrine Treatments for Prostate Cancer in Quarters 
-# in Prostate Cancer Patients Before and After COVID-19 Lockdown 
-# (0 days prior history, 0 days washout)
+#### 3b. Incidence Rates of Endocrine Treatments for Prostate Cancer in Quarters 
+#### in Prostate Cancer Patients Before and After COVID-19 Lockdown 
+#### (0 days prior history, 0 days washout)
 
-```{r, echo=FALSE}
-
+```{r, echo=FALSE, out.width="100%"}
+load("~/R/CancerCovidEndocrineTx/Markdown/IncTxProstate_0.RData")
 inc_qrs_plot <- IncTxProstate_0 %>%  
   filter(denominator_cohort_id == 1) %>%
   filter(analysis_outcome_washout == 0) %>% 
@@ -448,12 +472,12 @@ inc_qrs_plot <-
 inc_qrs_plot
 ```
 
-# 3c. Incidence Rates of Endocrine Treatments for Prostate Cancer in Quarters 
-# in Prostate Cancer Patients Before and After COVID-19 Lockdown 
-# (365 days prior history, 90 days washout)
+#### 3c. Incidence Rates of Endocrine Treatments for Prostate Cancer in Quarters 
+#### in Prostate Cancer Patients Before and After COVID-19 Lockdown 
+#### (365 days prior history, 90 days washout)
 
-```{r, echo=FALSE}
-
+```{r, echo=FALSE, out.width="100%"}
+load("~/R/CancerCovidEndocrineTx/Markdown/IncTxProstate_365.RData")
 inc_qrs_plot <- IncTxProstate_365 %>%  
   filter(denominator_cohort_id == 1) %>%
   filter(analysis_outcome_washout == 90) %>% 
@@ -487,12 +511,12 @@ inc_qrs_plot <-
 inc_qrs_plot
 ```
 
-# 3d. Incidence Rates of Endocrine Treatments for Prostate Cancer in Quarters 
-# in Prostate Cancer Patients Before and After COVID-19 Lockdown 
-# (365 days prior history, 0 days washout)
+#### 3d. Incidence Rates of Endocrine Treatments for Prostate Cancer in Quarters 
+#### in Prostate Cancer Patients Before and After COVID-19 Lockdown 
+#### (365 days prior history, 0 days washout)
 
-```{r, echo=FALSE}
-
+```{r, echo=FALSE, out.width="100%"}
+load("~/R/CancerCovidEndocrineTx/Markdown/IncTxProstate_365.RData")
 inc_qrs_plot <- IncTxProstate_365 %>%  
   filter(denominator_cohort_id == 1) %>%
   filter(analysis_outcome_washout == 0) %>% 
@@ -528,12 +552,13 @@ inc_qrs_plot
 
 
 
-## 4. Incidence of endocrine treatment-related outcomes for breast cancer patients 
-## on Aromatase Inhibitors
+### 4. Incidence of endocrine treatment-related outcomes for breast cancer patients 
+### on Aromatase Inhibitors
 
 Breast cancer patients on aromatase inhibitors strata cohorts specified in the Incidence/Prevalence package with 0 days prior history:
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, out.width="100%"}
+load("~/R/CancerCovidEndocrineTx/Markdown/Breast_AI_counts_0.RData")
 Breast_AI_counts_0
 ```
 
@@ -541,15 +566,16 @@ Breast_AI_counts_0
 Breast cancer patients on aromatase inhibitors strata cohorts specified in the Incidence/Prevalence package with 365 days prior history:
 
 ```{r, echo=FALSE}
+load("~/R/CancerCovidEndocrineTx/Markdown/Breast_AI_counts_365.RData")
 Breast_AI_counts_365
 ```
 
-# 4a. Incidence Rates of endocrine treatment-related outcomes for breast cancer patients 
-# on Aromatase Inhibitors in Quarters Before and After COVID-19 Lockdown 
-# (0 days prior history, 90 days washout)
+#### 4a. Incidence Rates of endocrine treatment-related outcomes for breast cancer patients 
+#### on Aromatase Inhibitors in Quarters Before and After COVID-19 Lockdown 
+#### (0 days prior history, 90 days washout)
 
-```{r, echo=FALSE}
-
+```{r, echo=FALSE, out.width="100%"}
+load("~/R/CancerCovidEndocrineTx/Markdown/IncTxOutcomesBreastAI_0.RData")
 inc_qrs_plot <- IncTxOutcomesBreastAI_0 %>%  
   filter(denominator_cohort_id == 1) %>%
   filter(analysis_outcome_washout == 90) %>% 
@@ -581,12 +607,12 @@ inc_qrs_plot
 ```
 
 
-# 4b. Incidence Rates of endocrine treatment-related outcomes for breast cancer patients 
-# on Aromatase Inhibitors in Quarters Before and After COVID-19 Lockdown 
-# (0 days prior history, 0 days washout)
+#### 4b. Incidence Rates of endocrine treatment-related outcomes for breast cancer patients 
+#### on Aromatase Inhibitors in Quarters Before and After COVID-19 Lockdown 
+#### (0 days prior history, 0 days washout)
 
-```{r, echo=FALSE}
-
+```{r, echo=FALSE, out.width="100%"}
+load("~/R/CancerCovidEndocrineTx/Markdown/IncTxOutcomesBreastAI_0.RData")
 inc_qrs_plot <- IncTxOutcomesBreastAI_0 %>%  
   filter(denominator_cohort_id == 1) %>%
   filter(analysis_outcome_washout == 0) %>% 
@@ -618,12 +644,12 @@ inc_qrs_plot
 ```
 
 
-# 4c. Incidence Rates of endocrine treatment-related outcomes for breast cancer patients 
-# on Aromatase Inhibitors in Quarters Before and After COVID-19 Lockdown 
-# (365 days prior history, 90 days washout)
+#### 4c. Incidence Rates of endocrine treatment-related outcomes for breast cancer patients 
+#### on Aromatase Inhibitors in Quarters Before and After COVID-19 Lockdown 
+#### (365 days prior history, 90 days washout)
 
-```{r, echo=FALSE}
-
+```{r, echo=FALSE, out.width="100%"}
+load("~/R/CancerCovidEndocrineTx/Markdown/IncTxOutcomesBreastAI_365.RData")
 inc_qrs_plot <- IncTxOutcomesBreastAI_365 %>%  
   filter(denominator_cohort_id == 1) %>%
   filter(analysis_outcome_washout == 90) %>% 
@@ -655,12 +681,12 @@ inc_qrs_plot
 ```
 
 
-# 4d. Incidence Rates of endocrine treatment-related outcomes for breast cancer patients 
-# on Aromatase Inhibitors in Quarters Before and After COVID-19 Lockdown 
-# (365 days prior history, 0 days washout)
+#### 4d. Incidence Rates of endocrine treatment-related outcomes for breast cancer patients 
+#### on Aromatase Inhibitors in Quarters Before and After COVID-19 Lockdown 
+#### (365 days prior history, 0 days washout)
 
-```{r, echo=FALSE}
-
+```{r, echo=FALSE, out.width="100%"}
+load("~/R/CancerCovidEndocrineTx/Markdown/IncTxOutcomesBreastAI_365.RData")
 inc_qrs_plot <- IncTxOutcomesBreastAI_365 %>%  
   filter(denominator_cohort_id == 1) %>%
   filter(analysis_outcome_washout == 0) %>% 
@@ -693,12 +719,13 @@ inc_qrs_plot
 
 
 
-## 5. Incidence of endocrine treatment-related outcomes for breast cancer patients 
-## on Tamoxifen
+### 5. Incidence of endocrine treatment-related outcomes for breast cancer patients 
+### on Tamoxifen
 
 Breast cancer patients on tamoxifen strata cohorts specified in the Incidence/Prevalence package with 0 days prior history:
 
 ```{r, echo=FALSE}
+load("~/R/CancerCovidEndocrineTx/Markdown/Breast_tamoxifen_counts_0.RData")
 Breast_tamoxifen_counts_0
 ```
 
@@ -706,15 +733,16 @@ Breast_tamoxifen_counts_0
 Breast cancer patients on tamoxifen strata cohorts specified in the Incidence/Prevalence package with 365 days prior history:
 
 ```{r, echo=FALSE}
+load("~/R/CancerCovidEndocrineTx/Markdown/Breast_tamoxifen_counts_365.RData")
 Breast_tamoxifen_counts_365
 ```
 
-# 5a. Incidence Rates of endocrine treatment-related outcomes for breast cancer patients 
-# on Tamoxifen in Quarters Before and After COVID-19 Lockdown 
-# (0 days prior history, 90 days washout)
+#### 5a. Incidence Rates of endocrine treatment-related outcomes for breast cancer patients 
+#### on Tamoxifen in Quarters Before and After COVID-19 Lockdown 
+#### (0 days prior history, 90 days washout)
 
-```{r, echo=FALSE}
-
+```{r, echo=FALSE, out.width="100%"}
+load("~/R/CancerCovidEndocrineTx/Markdown/IncTxOutcomesBreastTAM_0.RData")
 inc_qrs_plot <- IncTxOutcomesBreastTAM_0 %>%  
   filter(denominator_cohort_id == 1) %>%
   filter(analysis_outcome_washout == 90) %>% 
@@ -746,12 +774,12 @@ inc_qrs_plot
 ```
 
 
-# 5b. Incidence Rates of endocrine treatment-related outcomes for breast cancer patients 
-# on Tamoxifen in Quarters Before and After COVID-19 Lockdown 
-# (0 days prior history, 0 days washout)
+#### 5b. Incidence Rates of endocrine treatment-related outcomes for breast cancer patients 
+#### on Tamoxifen in Quarters Before and After COVID-19 Lockdown 
+#### (0 days prior history, 0 days washout)
 
-```{r, echo=FALSE}
-
+```{r, echo=FALSE, out.width="100%"}
+load("~/R/CancerCovidEndocrineTx/Markdown/IncTxOutcomesBreastTAM_0.RData")
 inc_qrs_plot <- IncTxOutcomesBreastTAM_0 %>%  
   filter(denominator_cohort_id == 1) %>%
   filter(analysis_outcome_washout == 0) %>% 
@@ -783,12 +811,12 @@ inc_qrs_plot
 ```
 
 
-# 5c. Incidence Rates of endocrine treatment-related outcomes for breast cancer patients 
-# on Tamoxifen in Quarters Before and After COVID-19 Lockdown 
-# (365 days prior history, 90 days washout)
+#### 5c. Incidence Rates of endocrine treatment-related outcomes for breast cancer patients 
+#### on Tamoxifen in Quarters Before and After COVID-19 Lockdown 
+#### (365 days prior history, 90 days washout)
 
-```{r, echo=FALSE}
-
+```{r, echo=FALSE, out.width="100%"}
+load("~/R/CancerCovidEndocrineTx/Markdown/IncTxOutcomesBreastTAM_365.RData")
 inc_qrs_plot <- IncTxOutcomesBreastTAM_365 %>%  
   filter(denominator_cohort_id == 1) %>%
   filter(analysis_outcome_washout == 90) %>% 
@@ -820,12 +848,12 @@ inc_qrs_plot
 ```
 
 
-# 5d. Incidence Rates of endocrine treatment-related outcomes for breast cancer patients 
-# on Tamoxifen in Quarters Before and After COVID-19 Lockdown 
-# (365 days prior history, 0 days washout)
+#### 5d. Incidence Rates of endocrine treatment-related outcomes for breast cancer patients 
+#### on Tamoxifen in Quarters Before and After COVID-19 Lockdown 
+#### (365 days prior history, 0 days washout)
 
-```{r, echo=FALSE}
-
+```{r, echo=FALSE, out.width="100%"}
+load("~/R/CancerCovidEndocrineTx/Markdown/IncTxOutcomesBreastTAM_365.RData")
 inc_qrs_plot <- IncTxOutcomesBreastTAM_365 %>%  
   filter(denominator_cohort_id == 1) %>%
   filter(analysis_outcome_washout == 0) %>% 
@@ -860,12 +888,13 @@ inc_qrs_plot
 
 
 
-## 6. Incidence of endocrine treatment-related outcomes for prostate cancer patients 
-## on endocrine treatments
+### 6. Incidence of endocrine treatment-related outcomes for prostate cancer patients 
+### on endocrine treatments
 
 Prostate cancer patients on endocrine treatments strata cohorts specified in the Incidence/Prevalence package with 0 days prior history:
 
 ```{r, echo=FALSE}
+load("~/R/CancerCovidEndocrineTx/Markdown/Prostate_endocrine_counts_0.RData")
 Prostate_endocrine_counts_0
 ```
 
@@ -873,15 +902,16 @@ Prostate_endocrine_counts_0
 Prostate cancer patients on endocrine treatments strata cohorts specified in the Incidence/Prevalence package with 365 days prior history:
 
 ```{r, echo=FALSE}
+load("~/R/CancerCovidEndocrineTx/Markdown/Prostate_endocrine_counts_365.Rdata")
 Prostate_endocrine_counts_365
 ```
 
-# 6a. Incidence Rates of endocrine treatment-related outcomes for prostate cancer patients 
-# on endocrine treatments in Quarters Before and After COVID-19 Lockdown 
-# (0 days prior history, 90 days washout)
+#### 6a. Incidence Rates of endocrine treatment-related outcomes for prostate cancer patients 
+#### on endocrine treatments in Quarters Before and After COVID-19 Lockdown 
+#### (0 days prior history, 90 days washout)
 
-```{r, echo=FALSE}
-
+```{r, echo=FALSE, out.width="100%"}
+load("~/R/CancerCovidEndocrineTx/Markdown/IncTxOutcomesProstate_0.RData")
 inc_qrs_plot <- IncTxOutcomesProstate_0 %>%  
   filter(denominator_cohort_id == 1) %>%
   filter(analysis_outcome_washout == 90) %>% 
@@ -913,12 +943,12 @@ inc_qrs_plot
 ```
 
 
-# 6b. Incidence Rates of endocrine treatment-related outcomes for prostate cancer patients 
-# on endocrine treatments in Quarters Before and After COVID-19 Lockdown 
-# (0 days prior history, 0 days washout)
+#### 6b. Incidence Rates of endocrine treatment-related outcomes for prostate cancer patients 
+#### on endocrine treatments in Quarters Before and After COVID-19 Lockdown 
+#### (0 days prior history, 0 days washout)
 
-```{r, echo=FALSE}
-
+```{r, echo=FALSE, out.width="100%"}
+load("~/R/CancerCovidEndocrineTx/Markdown/IncTxOutcomesProstate_0.RData")
 inc_qrs_plot <- IncTxOutcomesProstate_0 %>%  
   filter(denominator_cohort_id == 1) %>%
   filter(analysis_outcome_washout == 0) %>% 
@@ -950,12 +980,12 @@ inc_qrs_plot
 ```
 
 
-# 6c. Incidence Rates of endocrine treatment-related outcomes for breast cancer patients 
-# on endocrine treatments in Quarters Before and After COVID-19 Lockdown 
-# (365 days prior history, 90 days washout)
+#### 6c. Incidence Rates of endocrine treatment-related outcomes for breast cancer patients 
+#### on endocrine treatments in Quarters Before and After COVID-19 Lockdown 
+#### (365 days prior history, 90 days washout)
 
-```{r, echo=FALSE}
-
+```{r, echo=FALSE, out.width="100%"}
+load("~/R/CancerCovidEndocrineTx/Markdown/IncTxOutcomesProstate_365.RData")
 inc_qrs_plot <- IncTxOutcomesProstate_365 %>%  
   filter(denominator_cohort_id == 1) %>%
   filter(analysis_outcome_washout == 90) %>% 
@@ -987,12 +1017,12 @@ inc_qrs_plot
 ```
 
 
-# 6d. Incidence Rates of endocrine treatment-related outcomes for prostate cancer patients 
-# on endocrine treatments in Quarters Before and After COVID-19 Lockdown 
-# (365 days prior history, 0 days washout)
+#### 6d. Incidence Rates of endocrine treatment-related outcomes for prostate cancer patients 
+#### on endocrine treatments in Quarters Before and After COVID-19 Lockdown 
+#### (365 days prior history, 0 days washout)
 
-```{r, echo=FALSE}
-
+```{r, echo=FALSE, out.width="100%"}
+load("~/R/CancerCovidEndocrineTx/Markdown/IncTxOutcomesProstate_365.RData")
 inc_qrs_plot <- IncTxOutcomesProstate_365 %>%  
   filter(denominator_cohort_id == 1) %>%
   filter(analysis_outcome_washout == 0) %>% 
@@ -1022,3 +1052,11 @@ inc_qrs_plot <-
 
 inc_qrs_plot
 ```
+
+### Feature Extraction
+
+Using the OHDSI FetureExtraction package, on the Breast and Prostate Cancer as Denominator Strata cohorts:
+
+```{r, echo=FALSE}
+
+
