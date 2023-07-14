@@ -528,4 +528,28 @@ inc_qrs_plot <-
 inc_qrs_plot
 ```
 
+### Questions for the team:
+
+#### 1. Are we interested in the prevalence of these drugs over time? Or just how COVID affected new prescriptions (incidence)?
+
+#### 2. What could account for the decreasing trend in incidence of these drugs? No policy changes over time.
+- potential regional differences
+- potential reduction in cancers over time (though can not find data on this)
+- potential increase in use of other treatments
+
+#### 3. Are we interested in forecasting trends across the COVID period based on these data?
+- possibly not due to the decreasing trend
+
+#### 4. Are we interested in running ARIMA time-series analsyes?
+- this method can account for aut-correlation between data points, seasonality, other time trends
+
+#### 5. Are we interested in performing a large scale characterisation of these cohorts?
+- breast / prostate cancer patients
+- breast cancer patients on AIs / breast cancer patients on TAM / prostate cancer patients on any endocrine tx
+
+#### 6. Are we interested in running treatment patterns of the breast and prostate cancer patients?
+- would this be limited to endocrine treatments?
+- stratified by age (given the difference in prescriptions by menospausal status)?
+
+
 
