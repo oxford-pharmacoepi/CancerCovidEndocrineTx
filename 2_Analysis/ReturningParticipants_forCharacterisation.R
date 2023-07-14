@@ -23,7 +23,7 @@ cdm <- generateDenominatorCohortSet(
   strataCohortId = 1,
   ageGroup = list(c(0,150)),
   sex = c("Both"),
-  daysPriorHistory = 365,
+  daysPriorHistory = c(0,365),
   temporary = FALSE
 )
 

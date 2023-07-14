@@ -101,10 +101,9 @@ info(logger, "- Plotting incidence and prevalence results: endocrine tx in breas
 # INCIDENCE IN YEARS FOR ALL AGE STRATA WITH 0 DAYS PRIOR HISTORY AND 90 DAYS WASHOUT
 
 inc_yrs_plot <- IncTxBreast %>%  
-  filter(denominator_cohort_id == 1) %>%
+  filter(denominator_cohort_id == 3) %>% # this denominator cohort is 0 days prior history, and females only as males would not be prescribed these
   filter(analysis_outcome_washout == 90) %>% 
   filter(analysis_interval == "years") %>%
-  filter(daysPriorHistory == "0") %>%
   filter(outcome_cohort_name %in% c("AromataseInhibitors", "AromataseInhibitors_withGnRHAgonistsOrAntagonists","Tamoxifen_withGnRHAgonistsOrAntagonists","Tamoxifen")) %>%
   mutate(outcome = case_when(outcome_cohort_name == "AromataseInhibitors" ~ "Aromatase Inhibitors",
                              outcome_cohort_name == "AromataseInhibitors_withGnRHAgonistsOrAntagonists" ~ "Aromatase Inhibitors with GnRH Agonists Or Antagonists",
@@ -119,12 +118,14 @@ inc_yrs_plot <-
   geom_point() + geom_line() +
   geom_errorbar(width=0) +
   #scale_y_continuous(limits = c(0, 150)) +
-  scale_x_date(date_labels="%Y",date_breaks  ="1 year") +
-    ggtitle("Incidence Rates of Endocrine Treatments in Years in Breast Cancer Patients Before and After COVID-19 Lockdown (0 days prior history, 90 days washout)") +
-  labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100000 person-years") +
+  scale_x_date(date_labels="%Y",date_breaks  ="1 year", expand = c(0.05, 0.05)) +
+  facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
+    ggtitle("Incidence Rates of Endocrine Treatments in Years in Breast Cancer Patients \nBefore and After COVID-19 Lockdown (0 days prior history, 90 days washout)") +
+  labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100,000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
-  theme(plot.title = element_text(size = 12))
+  theme(plot.title = element_text(size = 10))+
+  theme(legend.position = "none")
 
 inc_yrs_plot
 
@@ -140,10 +141,9 @@ ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(plotname, ".jpg")
 
 
 inc_months_plot <- IncTxBreast %>%  
-  filter(denominator_cohort_id == 1) %>%
+  filter(denominator_cohort_id == 3) %>% # this denominator cohort is 0 days prior history for females only
   filter(analysis_outcome_washout == 90) %>% 
   filter(analysis_interval == "months") %>%
-  filter(daysPriorHistory == "0") %>%
   filter(outcome_cohort_name %in% c("AromataseInhibitors", "AromataseInhibitors_withGnRHAgonistsOrAntagonists","Tamoxifen_withGnRHAgonistsOrAntagonists","Tamoxifen")) %>%
   mutate(outcome = case_when(outcome_cohort_name == "AromataseInhibitors" ~ "Aromatase Inhibitors",
                              outcome_cohort_name == "AromataseInhibitors_withGnRHAgonistsOrAntagonists" ~ "Aromatase Inhibitors with GnRH Agonists Or Antagonists",
@@ -158,13 +158,14 @@ inc_months_plot <-
   geom_point() + geom_line() +
   geom_errorbar(width=0) +
   #scale_y_continuous(limits = c(0, NA)) +
-  facet_wrap(~outcome, nrow=2, scales = "free_y") +
-  scale_x_date(date_labels="%b %Y",date_breaks  ="6 months") +
-  ggtitle("Incidence Rates of Endocrine Treatments in Months in Breast Cancer Patients Before and After COVID-19 Lockdown (0 days prior history, 90 days washout)") +
-  labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100000 person-years") +
+  facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
+  scale_x_date(date_labels="%b %Y",date_breaks  ="6 months", expand = c(0.05, 0.05)) +
+  ggtitle("Incidence Rates of Endocrine Treatments in Months in Breast Cancer Patients \nBefore and After COVID-19 Lockdown (0 days prior history, 90 days washout)") +
+  labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100,000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
-  theme(plot.title = element_text(size = 12))
+  theme(plot.title = element_text(size = 10))+
+  theme(legend.position = "none")
 
 inc_months_plot
 
@@ -181,10 +182,9 @@ ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(plotname, ".jpg")
 
 
 inc_qrs_plot <- IncTxBreast %>%  
-  filter(denominator_cohort_id == 1) %>%
+  filter(denominator_cohort_id == 3) %>% # this denominator cohort is 0 days prior history for females only
   filter(analysis_outcome_washout == 90) %>% 
   filter(analysis_interval == "quarters") %>%
-  filter(daysPriorHistory == "0") %>%
   filter(outcome_cohort_name %in% c("AromataseInhibitors", "AromataseInhibitors_withGnRHAgonistsOrAntagonists","Tamoxifen_withGnRHAgonistsOrAntagonists","Tamoxifen")) %>%
   mutate(outcome = case_when(outcome_cohort_name == "AromataseInhibitors" ~ "Aromatase Inhibitors",
                              outcome_cohort_name == "AromataseInhibitors_withGnRHAgonistsOrAntagonists" ~ "Aromatase Inhibitors with GnRH Agonists Or Antagonists",
@@ -199,13 +199,14 @@ inc_qrs_plot <-
   geom_point() + geom_line() +
   geom_errorbar(width=0) +
  # scale_y_continuous(limits = c(0, 150)) +
-  scale_x_date(date_labels="%b %Y",date_breaks  ="3 months") +
-  
-  ggtitle("Incidence Rates of Endocrine Treatments in Quarters in Breast Cancer Patients Before and After COVID-19 Lockdown (0 days prior history, 90 days washout)") +
-  labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100000 person-years") +
+  scale_x_date(date_labels="%b %Y",date_breaks  ="3 months", expand = c(0.05, 0.05)) +
+  facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
+    ggtitle("Incidence Rates of Endocrine Treatments in Quarters in Breast Cancer Patients \nBefore and After COVID-19 Lockdown (0 days prior history, 90 days washout)") +
+  labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100,000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
-  theme(plot.title = element_text(size = 12))
+  theme(plot.title = element_text(size = 10))+
+  theme(legend.position = "none")
 
 inc_qrs_plot
 
@@ -218,10 +219,9 @@ ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(plotname, ".jpg")
 # INCIDENCE IN YEARS FOR ALL AGE STRATA WITH 365 DAYS PRIOR HISTORY AND 90 DAYS WASHOUT
 
 inc_yrs_plot <- IncTxBreast %>%  
-  filter(denominator_cohort_id == 1) %>%
+  filter(denominator_cohort_id == 4) %>% # this denominator cohort is 365 days prior history for females only
   filter(analysis_outcome_washout == 90) %>% 
   filter(analysis_interval == "years") %>%
-  filter(daysPriorHistory == "365") %>%
   filter(outcome_cohort_name %in% c("AromataseInhibitors", "AromataseInhibitors_withGnRHAgonistsOrAntagonists","Tamoxifen_withGnRHAgonistsOrAntagonists","Tamoxifen")) %>%
   mutate(outcome = case_when(outcome_cohort_name == "AromataseInhibitors" ~ "Aromatase Inhibitors",
                              outcome_cohort_name == "AromataseInhibitors_withGnRHAgonistsOrAntagonists" ~ "Aromatase Inhibitors with GnRH Agonists Or Antagonists",
@@ -236,12 +236,14 @@ inc_yrs_plot <-
   geom_point() + geom_line() +
   geom_errorbar(width=0) +
   #scale_y_continuous(limits = c(0, 150)) +
-  scale_x_date(date_labels="%Y",date_breaks  ="1 year") +
-  ggtitle("Incidence Rates of Endocrine Treatments in Years in Breast Cancer Patients Before and After COVID-19 Lockdown (365 days prior history, 90 days washout)") +
+  scale_x_date(date_labels="%Y",date_breaks  ="1 year", expand = c(0.05, 0.05)) +
+  facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
+  ggtitle("Incidence Rates of Endocrine Treatments in Years in Breast Cancer Patients \nBefore and After COVID-19 Lockdown (365 days prior history, 90 days washout)") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100,000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
-  theme(plot.title = element_text(size = 12))
+  theme(plot.title = element_text(size = 10))+
+  theme(legend.position = "none")
 
 inc_yrs_plot
 
@@ -257,10 +259,9 @@ ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(plotname, ".jpg")
 
 
 inc_months_plot <- IncTxBreast %>%  
-  filter(denominator_cohort_id == 1) %>%
+  filter(denominator_cohort_id == 4) %>% # this denominator cohort is 365 days prior history for females only
   filter(analysis_outcome_washout == 90) %>% 
   filter(analysis_interval == "months") %>%
-  filter(daysPriorHistory == "0") %>%
   filter(outcome_cohort_name %in% c("AromataseInhibitors", "AromataseInhibitors_withGnRHAgonistsOrAntagonists","Tamoxifen_withGnRHAgonistsOrAntagonists","Tamoxifen")) %>%
   mutate(outcome = case_when(outcome_cohort_name == "AromataseInhibitors" ~ "Aromatase Inhibitors",
                              outcome_cohort_name == "AromataseInhibitors_withGnRHAgonistsOrAntagonists" ~ "Aromatase Inhibitors with GnRH Agonists Or Antagonists",
@@ -275,13 +276,14 @@ inc_months_plot <-
   geom_point() + geom_line() +
   geom_errorbar(width=0) +
   #scale_y_continuous(limits = c(0, NA)) +
-  facet_wrap(~outcome, nrow=2, scales = "free_y") +
-  scale_x_date(date_labels="%b %Y",date_breaks  ="6 months") +
-  ggtitle("Incidence Rates of Endocrine Treatments in Months in Breast Cancer Patients Before and After COVID-19 Lockdown (365 days prior history, 90 days washout)") +
+  facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
+  scale_x_date(date_labels="%b %Y",date_breaks  ="6 months", expand = c(0.05, 0.05)) +
+  ggtitle("Incidence Rates of Endocrine Treatments in Months in Breast Cancer Patients \nBefore and After COVID-19 Lockdown (365 days prior history, 90 days washout)") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100,000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
-  theme(plot.title = element_text(size = 12))
+  theme(plot.title = element_text(size = 10))+
+  theme(legend.position = "none")
 
 inc_months_plot
 
@@ -298,10 +300,9 @@ ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(plotname, ".jpg")
 
 
 inc_qrs_plot <- IncTxBreast %>%  
-  filter(denominator_cohort_id == 1) %>%
+  filter(denominator_cohort_id == 4) %>% # this denominator cohort is 365 days prior history for females only
   filter(analysis_outcome_washout == 90) %>% 
   filter(analysis_interval == "quarters") %>%
-  filter(daysPriorHistory == "365") %>%
   filter(outcome_cohort_name %in% c("AromataseInhibitors", "AromataseInhibitors_withGnRHAgonistsOrAntagonists","Tamoxifen_withGnRHAgonistsOrAntagonists","Tamoxifen")) %>%
   mutate(outcome = case_when(outcome_cohort_name == "AromataseInhibitors" ~ "Aromatase Inhibitors",
                              outcome_cohort_name == "AromataseInhibitors_withGnRHAgonistsOrAntagonists" ~ "Aromatase Inhibitors with GnRH Agonists Or Antagonists",
@@ -316,13 +317,14 @@ inc_qrs_plot <-
   geom_point() + geom_line() +
   geom_errorbar(width=0) +
   # scale_y_continuous(limits = c(0, 150)) +
-  scale_x_date(date_labels="%b %Y",date_breaks  ="3 months") +
-  
-  ggtitle("Incidence Rates of Endocrine Treatments in Quarters in Breast Cancer Patients Before and After COVID-19 Lockdown (365 days prior history, 90 days washout)") +
+  scale_x_date(date_labels="%b %Y",date_breaks  ="3 months", expand = c(0.05,0.05)) +
+  facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
+  ggtitle("Incidence Rates of Endocrine Treatments in Quarters in Breast Cancer Patients \nBefore and After COVID-19 Lockdown (365 days prior history, 90 days washout)") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100,000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
-  theme(plot.title = element_text(size = 12))
+  theme(plot.title = element_text(size = 10))+
+  theme(legend.position = "none")
 
 inc_qrs_plot
 
@@ -430,10 +432,9 @@ info(logger, "- Plotting incidence and prevalence results: endocrine tx in Prost
 # INCIDENCE IN YEARS FOR ALL AGE STRATA WITH 0 DAYS PRIOR HISTORY AND 90 DAYS WASHOUT
 
 inc_yrs_plot <- IncTxProstate %>%  
-  filter(denominator_cohort_id == 1) %>%
+  filter(denominator_cohort_id == 1) %>% # this denominator cohort is 0 days prior history for males only
   filter(analysis_outcome_washout == 90) %>% 
   filter(analysis_interval == "years") %>%
-  filter(daysPriorHistory == 0) %>%
   filter(outcome_cohort_name %in% c("First_generation_antiandrogens", "GNRH_Agonists_with1stGenADT","GNRH_Agonists","GNRH_LHRH_antagonists", "Second_generation_antiandrogens")) %>%
   mutate(outcome = case_when(outcome_cohort_name == "First_generation_antiandrogens" ~ "First Generation Antiandrogens",
                              outcome_cohort_name == "GNRH_Agonists_with1stGenADT" ~ "GnRH Agonists with First Generation Antiandrogens",
@@ -453,12 +454,14 @@ inc_yrs_plot <-
   geom_point() + geom_line() +
   geom_errorbar(width=0) +
   #scale_y_continuous(limits = c(0, 150)) +
-  scale_x_date(date_labels="%Y",date_breaks  ="1 year") +
-  ggtitle("Incidence Rates of Endocrine Treatments in Years in Prostate Cancer Patients Before and After COVID-19 Lockdown (0 days prior history, 90 days washout)") +
+  scale_x_date(date_labels="%Y",date_breaks  ="1 year", expand = c(0.05,0.05)) +
+  facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
+    ggtitle("Incidence Rates of Endocrine Treatments in Years in Prostate Cancer Patients \nBefore and After COVID-19 Lockdown (0 days prior history, 90 days washout)") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100,000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
-  theme(plot.title = element_text(size = 12))
+  theme(plot.title = element_text(size = 10))+
+  theme(legend.position = "none")
 
 inc_yrs_plot
 
@@ -474,10 +477,9 @@ ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(plotname, ".jpg")
 
 
 inc_months_plot <- IncTxProstate %>%  
-  filter(denominator_cohort_id == 1) %>%
+  filter(denominator_cohort_id == 1) %>% # this is the denominator cohort for 0 days prior history for males only
   filter(analysis_outcome_washout == 90) %>% 
   filter(analysis_interval == "months") %>%
-  filter(daysPriorHistory == 0) %>%
   filter(outcome_cohort_name %in% c("First_generation_antiandrogens", "GNRH_Agonists_with1stGenADT","GNRH_Agonists","GNRH_LHRH_antagonists", "Second_generation_antiandrogens")) %>%
   mutate(outcome = case_when(outcome_cohort_name == "First_generation_antiandrogens" ~ "First Generation Antiandrogens",
                              outcome_cohort_name == "GNRH_Agonists_with1stGenADT" ~ "GnRH Agonists with First Generation Antiandrogens",
@@ -495,13 +497,14 @@ inc_months_plot <-
   geom_point() + geom_line() +
   geom_errorbar(width=0) +
   #scale_y_continuous(limits = c(0, 150)) +
-  facet_wrap(~outcome, nrow=2, scales = "free_y") +
-  scale_x_date(date_labels="%b %Y",date_breaks  ="6 months") +
-  ggtitle("Incidence Rates of Endocrine Treatments in Months in Prostate Cancer Patients Before and After COVID-19 Lockdown (0 days prior history, 90 days washout)") +
+  facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
+  scale_x_date(date_labels="%b %Y",date_breaks  ="6 months", expand = c(0.05,0.05)) +
+  ggtitle("Incidence Rates of Endocrine Treatments in Months in Prostate Cancer Patients \nBefore and After COVID-19 Lockdown (0 days prior history, 90 days washout)") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100,000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
-  theme(plot.title = element_text(size = 12))
+  theme(plot.title = element_text(size = 10))+
+  theme(legend.position = "none")
 
 inc_months_plot
 
@@ -514,10 +517,9 @@ ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(plotname, ".jpg")
 # INCIDENCE IN QUARTERS FOR ALL AGE STRATA
 
 inc_qrs_plot <- IncTxProstate %>%  
-  filter(denominator_cohort_id == 1) %>%
+  filter(denominator_cohort_id == 1) %>% # denominator cohort for 0 days prior history
   filter(analysis_outcome_washout == 90) %>% 
   filter(analysis_interval == "quarters") %>%
-  filter(daysPriorHistory == 0) %>%
   filter(outcome_cohort_name %in% c("First_generation_antiandrogens", "GNRH_Agonists_with1stGenADT","GNRH_Agonists","GNRH_LHRH_antagonists", "Second_generation_antiandrogens")) %>%
   mutate(outcome = case_when(outcome_cohort_name == "First_generation_antiandrogens" ~ "First Generation Antiandrogens",
                              outcome_cohort_name == "GNRH_Agonists_with1stGenADT" ~ "GnRH Agonists with First Generation Antiandrogens",
@@ -535,12 +537,14 @@ inc_qrs_plot <-
   geom_point() + geom_line() +
   geom_errorbar(width=0) +
   #scale_y_continuous(limits = c(0, 150)) +
-  scale_x_date(date_labels="%b %Y",date_breaks  ="3 months") +
-  ggtitle("Incidence Rates of Endocrine Treatments in Quarters in Prostate Cancer Patients Before and After COVID-19 Lockdown (0 days prior history, 90 days washout)") +
+  scale_x_date(date_labels="%b %Y",date_breaks  ="3 months", expand = c(0.05,0.05)) +
+  facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
+  ggtitle("Incidence Rates of Endocrine Treatments in Quarters in Prostate Cancer Patients \nBefore and After COVID-19 Lockdown (0 days prior history, 90 days washout)") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100,000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
-  theme(plot.title = element_text(size = 12))
+  theme(plot.title = element_text(size = 10))+
+  theme(legend.position = "none")
 
 inc_qrs_plot
 
@@ -557,10 +561,9 @@ ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(plotname, ".jpg")
 # INCIDENCE IN YEARS FOR ALL AGE STRATA WITH 365 DAYS PRIOR HISTORY AND 90 DAYS WASHOUT
 
 inc_yrs_plot <- IncTxProstate %>%  
-  filter(denominator_cohort_id == 1) %>%
+  filter(denominator_cohort_id == 2) %>% # denominator cohort id for 365 days ph
   filter(analysis_outcome_washout == 90) %>% 
   filter(analysis_interval == "years") %>%
-  filter(daysPriorHistory == 365) %>%
   filter(outcome_cohort_name %in% c("First_generation_antiandrogens", "GNRH_Agonists_with1stGenADT","GNRH_Agonists","GNRH_LHRH_antagonists", "Second_generation_antiandrogens")) %>%
   mutate(outcome = case_when(outcome_cohort_name == "First_generation_antiandrogens" ~ "First Generation Antiandrogens",
                              outcome_cohort_name == "GNRH_Agonists_with1stGenADT" ~ "GnRH Agonists with First Generation Antiandrogens",
@@ -580,12 +583,14 @@ inc_yrs_plot <-
   geom_point() + geom_line() +
   geom_errorbar(width=0) +
   #scale_y_continuous(limits = c(0, 150)) +
-  scale_x_date(date_labels="%Y",date_breaks  ="1 year") +
-  ggtitle("Incidence Rates of Endocrine Treatments in Years in Prostate Cancer Patients Before and After COVID-19 Lockdown (365 days prior history, 90 days washout)") +
+  scale_x_date(date_labels="%Y",date_breaks  ="1 year", expand = c(0.05,0.05)) +
+  facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
+    ggtitle("Incidence Rates of Endocrine Treatments in Years in Prostate Cancer Patients \nBefore and After COVID-19 Lockdown (365 days prior history, 90 days washout)") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100,000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
-  theme(plot.title = element_text(size = 12))
+  theme(plot.title = element_text(size = 10))+
+  theme(legend.position = "none")
 
 inc_yrs_plot
 
@@ -601,10 +606,9 @@ ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(plotname, ".jpg")
 
 
 inc_months_plot <- IncTxProstate %>%  
-  filter(denominator_cohort_id == 1) %>%
+  filter(denominator_cohort_id == 2) %>% # denominator cohort for 365 days ph
   filter(analysis_outcome_washout == 90) %>% 
   filter(analysis_interval == "months") %>%
-  filter(daysPriorHistory == 365) %>%
   filter(outcome_cohort_name %in% c("First_generation_antiandrogens", "GNRH_Agonists_with1stGenADT","GNRH_Agonists","GNRH_LHRH_antagonists", "Second_generation_antiandrogens")) %>%
   mutate(outcome = case_when(outcome_cohort_name == "First_generation_antiandrogens" ~ "First Generation Antiandrogens",
                              outcome_cohort_name == "GNRH_Agonists_with1stGenADT" ~ "GnRH Agonists with First Generation Antiandrogens",
@@ -622,13 +626,14 @@ inc_months_plot <-
   geom_point() + geom_line() +
   geom_errorbar(width=0) +
   #scale_y_continuous(limits = c(0, 150)) +
-  facet_wrap(~outcome, nrow=2, scales = "free_y") +
-  scale_x_date(date_labels="%b %Y",date_breaks  ="6 months") +
-  ggtitle("Incidence Rates of Endocrine Treatments in Months in Prostate Cancer Patients Before and After COVID-19 Lockdown (365 days prior history, 90 days washout)") +
+  facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
+  scale_x_date(date_labels="%b %Y",date_breaks  ="6 months", expand = c(0.05,0.05)) +
+  ggtitle("Incidence Rates of Endocrine Treatments in Months in Prostate Cancer Patients \nBefore and After COVID-19 Lockdown (365 days prior history, 90 days washout)") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100,000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
-  theme(plot.title = element_text(size = 12))
+  theme(plot.title = element_text(size = 10))+
+  theme(legend.position = "none")
 
 inc_months_plot
 
@@ -641,10 +646,9 @@ ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(plotname, ".jpg")
 # INCIDENCE IN QUARTERS FOR ALL AGE STRATA
 
 inc_qrs_plot <- IncTxProstate %>%  
-  filter(denominator_cohort_id == 1) %>%
+  filter(denominator_cohort_id == 2) %>% # denominator cohort for 365 days ph
   filter(analysis_outcome_washout == 90) %>% 
   filter(analysis_interval == "quarters") %>%
-  filter(daysPriorHistory == 365) %>%
   filter(outcome_cohort_name %in% c("First_generation_antiandrogens", "GNRH_Agonists_with1stGenADT","GNRH_Agonists","GNRH_LHRH_antagonists", "Second_generation_antiandrogens")) %>%
   mutate(outcome = case_when(outcome_cohort_name == "First_generation_antiandrogens" ~ "First Generation Antiandrogens",
                              outcome_cohort_name == "GNRH_Agonists_with1stGenADT" ~ "GnRH Agonists with First Generation Antiandrogens",
@@ -662,12 +666,14 @@ inc_qrs_plot <-
   geom_point() + geom_line() +
   geom_errorbar(width=0) +
   #scale_y_continuous(limits = c(0, 150)) +
-  scale_x_date(date_labels="%b %Y",date_breaks  ="3 months") +
-  ggtitle("Incidence Rates of Endocrine Treatments in Quarters in Prostate Cancer Patients Before and After COVID-19 Lockdown (365 days prior history, 90 days washout)") +
+  scale_x_date(date_labels="%b %Y",date_breaks  ="3 months", expand = c(0.05,0.05)) +
+  facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
+  ggtitle("Incidence Rates of Endocrine Treatments in Quarters in Prostate Cancer Patients \nBefore and After COVID-19 Lockdown (365 days prior history, 90 days washout)") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100,000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
-  theme(plot.title = element_text(size = 12))
+  theme(plot.title = element_text(size = 10))+
+  theme(legend.position = "none")
 
 inc_qrs_plot
 
