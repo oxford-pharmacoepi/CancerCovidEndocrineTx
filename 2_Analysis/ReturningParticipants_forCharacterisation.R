@@ -60,7 +60,7 @@ info(logger, "- Getting incidence endocrine tx in breast cancer populations")
 # THIS RETURNS THE ERROR - Error: Failed to fetch row: ERROR:  relation "inc_participants1" already exists
 # EVEN WHEN I CHANGE THE WRITE PREFIX TO SOMETHING NEW
 
-IncTxBreast_overall2 <- estimateIncidence(
+IncTxBreast_overall <- estimateIncidence(
   cdm = cdm,
   denominatorTable = "denominator",
   outcomeTable = outcome_table_name_1, 
@@ -73,6 +73,8 @@ IncTxBreast_overall2 <- estimateIncidence(
   temporary = FALSE,
   returnParticipants = TRUE
 )
+
+# you can view the participants like this: participants(result = IncTxBreast_overall, analysisId = 1)
 
 IncTxBreast_overall %>%
   glimpse()
@@ -98,11 +100,13 @@ print(paste0("- Exported incidence and prevalence results: endocrine tx in breas
 info(logger, "- Exported incidence and prevalence results: endocrine tx in breast cancer populations")
 
 
+
 # grab the characteristics for each outcome
+drugs_names <- IncTxBreast_overall$outcome_cohort_name
 characteristics <- list()
 
 for(i in seq_along(IncTxBreast_overall$outcome_cohort_id) ){
-  cdm$working_participants <- participants(IncTxBreast_overall, i) %>% 
+  cdm$working_participants <- participants(result = IncTxBreast_overall, i) %>% #participants(IncTxBreast_overall, i) %>% 
     select("subject_id", "outcome_start_date") %>% 
     filter(!is.na(outcome_start_date)) %>% 
     rename("cohort_start_date" = "outcome_start_date")
@@ -186,7 +190,7 @@ for(i in seq_along(IncTxBreast_overall$outcome_cohort_id) ){
       summarise(val = as.character(median(age)))  %>% 
       mutate(var="Median age"),
     working_participants %>% 
-      summarise(val = as.character(median(prior_history)))  %>% 
+      summarise(val = as.character(median(prior_observation)))  %>% 
       mutate(var="Median prior history (days)"),
     working_participants %>% 
       summarise(val = as.character(median(charlson)))  %>% 
@@ -229,31 +233,52 @@ for(i in seq_along(IncTxBreast_overall$outcome_cohort_id) ){
   
   f_names <- colnames(cdm$working_participants)
   f_names <- str_subset(f_names, paste(
-    "subject_id", "cohort_start_date", "age", "sex", "prior_history",
+    "subject_id", "cohort_start_date", "age", "sex", "prior_observation",
     "future_observation", 
-    "myocardial_infarction" , 
-    "congestive_heart_failure",
-    "cerebrovascular_disease" ,
-    "dementia_charlson" ,
-    "chronic_pulmonary_disease",
-    "rheumatologic_disease",
-    "peptic_ulcer_disease",
-    "mild_liver_disease",
-    "diabetes_with_chronic_complications",
-    "hemoplegia_or_paralegia",
-    "renal_disease",
-    "any_malignancy",
-    "moderate_to_severe_liver_disease",
-    "metastatic_solid_tumor",
-    "aids",
-    "anyantidementiadruguser" ,
-    "donepezil",
-    "memantine",
-    "rivastigmine" ,
-    "galantamine",
+    "atrialfibrillation",
+    "coronaryarteriosclerosis",
+    "visualsystemdisorder",
+    "hepatitisc",
+    "utidisease",
+    "chronicliverdisease",
+    "osteoarthritis",
+    "rheumatoidarthritis",
+    "lesionliver",
+    "gastroesophagealrefluxdisease",
+    "pulmonaryembolism",
+    "hpylorigiinfection",
+    "ischemicheartdisease",
+    "peripheralvasculardisease",
+    "hypertension",
+    "renalimpairment",
+    "gastrointestinalhemorrhage",
+    "pneumonia",
+    "heartfailure",
+    "chronicobstructivelungdisease",
+    "diabetesmellitus",
+    "schizophrenia",
+    "crohnsdisease",
+    "psoriasis",
+    "obesity",
+    "venousthrombosis",
+    "dementia",
+    "heartdisease",
+    "cerebrovasculardisease",
+    "depressivedisorder",
+    "hyperlipidemia",
+    "ulcerativecolitis",
+    "hiv",
+    "cohort 3",
+    "cohort 2",
+    "cohort 4",
+    "cohort 1",
+    "cohort_1",
+    "cohort_2",
+    "cohort_3",
+    "cohort_4",
     
     sep="|"), negate = TRUE)
-  
+
   for(j in seq_along(f_names)){
     working_name <- glue::glue("{f_names[[j]]}")
     working_table <- bind_rows(working_table,
@@ -273,7 +298,6 @@ for(i in seq_along(IncTxBreast_overall$outcome_cohort_id) ){
   
 }
 
-# combine into single table
 for(i in 1:(length(characteristics)-1)){
   characteristics[[1]] <- characteristics[[1]] %>% 
     left_join(characteristics[[i+1]])
