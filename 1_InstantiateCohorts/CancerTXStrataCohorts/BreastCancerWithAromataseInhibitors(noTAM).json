@@ -1598,10 +1598,9 @@
     }
   ],
   "EndStrategy": {
-    "CustomEra": {
-      "DrugCodesetId": 1,
-      "GapDays": 90,
-      "Offset": 0
+    "DateOffset": {
+      "DateField": "StartDate",
+      "Offset": 365
     }
   },
   "CensoringCriteria": [

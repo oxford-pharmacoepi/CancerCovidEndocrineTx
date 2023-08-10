@@ -23,9 +23,9 @@ Denominator_counts
 
 
 
-#### 1a. Incidence Rates of Endocrine Treatments for Breast or Prostate Cancer in Quarters 
+#### 1. Incidence Rates of Endocrine Treatments for Breast or Prostate Cancer in Quarters 
 #### in the General Population Before and After COVID-19 Lockdown 
-#### (365 days prior history, 90 days washout)
+#### (365 days prior history, Inf days washout)
 
 ``````{r, echo=FALSE, fig.width=20, fig.height=10}
  load("~/R/CancerCovidEndocrineTx/Results/CPRDGold_202207/1_EndocrineTxDenom/IncTxDenom.RData")
@@ -42,8 +42,7 @@ Denominator_counts
  library(ggplot2)
 
  inc_qrs_plot <- inc %>%
-   filter(denominator_cohort_id == 2) %>% # this is the denominator cohort with 365 days prior history
-   filter(analysis_outcome_washout == 90) %>%
+   filter(denominator_cohort_id == 1) %>%
    filter(analysis_interval == "quarters") %>%
    mutate(outcome = case_when(outcome_cohort_name == "AromataseInhibitors" ~ "Aromatase Inhibitors",
                               outcome_cohort_name == "AromataseInhibitors_withGnRHAgonistsOrAntagonists" ~ "Aromatase Inhibitors with GnRH Agonists Or Antagonists",
@@ -65,7 +64,7 @@ Denominator_counts
    scale_y_continuous(limits = c(0, 150)) +
    scale_x_date(date_labels="%b %Y",date_breaks  ="3 months", expand = c(0.05,0.05)) +
    facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
-    ggtitle("Incidence Rates of Endocrine Treatments for Breast or Prostate Cancer \nin Quarters in the General Population Before and After COVID-19 Lockdown (365 days prior history)") +
+    ggtitle("Incidence Rates of Endocrine Treatments for Breast or Prostate Cancer \nin Quarters in the General Population Before and After COVID-19 Lockdown (365 days prior history, Inf washout)") +
    labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100,000 person-years") +
    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
    geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
@@ -82,7 +81,7 @@ Denominator_counts
 
 ### 2. Incidence of the use of endocrine treatments for breast cancer in breast cancer patients
 
-Breast cancer strata cohorts specified in the Incidence/Prevalence package with 0/365 days prior history:
+Breast cancer strata cohorts specified in the Incidence/Prevalence package:
 
 ```{r, echo=FALSE}
 load("~/R/CancerCovidEndocrineTx/Results/CPRDGold_202207/2_EndocrineTxCancer/Breast_strata_counts.Rdata")
@@ -92,14 +91,13 @@ Breast_strata_counts
 
 #### 2a. Incidence Rates of Endocrine Treatments for Breast Cancer in Quarters 
 #### in Breast Cancer Patients Before and After COVID-19 Lockdown 
-#### (0 days prior history, 90 days washout)
+#### (365 days prior history, Inf days washout)
 
 ```{r, echo=FALSE, out.width="100%"}
 load("~/R/CancerCovidEndocrineTx/Results/CPRDGold_202207/2_EndocrineTxCancer/IncTxBreast.RData")
 
 inc_qrs_plot <- IncTxBreast %>%  
-  filter(denominator_cohort_id == 3) %>% # this denominator cohort is 0 days prior history for females only
-  filter(analysis_outcome_washout == 90) %>% 
+  filter(denominator_cohort_id == 2) %>% 
   filter(analysis_interval == "quarters") %>%
   filter(outcome_cohort_name %in% c("AromataseInhibitors", "AromataseInhibitors_withGnRHAgonistsOrAntagonists","Tamoxifen_withGnRHAgonistsOrAntagonists","Tamoxifen")) %>%
   mutate(outcome = case_when(outcome_cohort_name == "AromataseInhibitors" ~ "Aromatase Inhibitors",
@@ -117,7 +115,7 @@ inc_qrs_plot <-
  # scale_y_continuous(limits = c(0, 150)) +
   scale_x_date(date_labels="%b %Y",date_breaks  ="3 months", expand = c(0.05, 0.05)) +
   facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
-    ggtitle("Incidence Rates of Endocrine Treatments in Quarters in Breast Cancer Patients \nBefore and After COVID-19 Lockdown (0 days prior history, 90 days washout)") +
+    ggtitle("Incidence Rates of Endocrine Treatments in Quarters in Breast Cancer Patients \nBefore and After COVID-19 Lockdown (365 days prior history, Inf days washout)") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100,000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
@@ -127,53 +125,13 @@ inc_qrs_plot <-
 inc_qrs_plot
 ```
 
-
-
-
-
-
-#### 2b. Incidence Rates of Endocrine Treatments for Breast Cancer in Quarters 
-#### in Breast Cancer Patients Before and After COVID-19 Lockdown 
-#### (365 days prior history, 90 days washout)
-
-```{r, echo=FALSE, out.width="100%"}
-load("~/R/CancerCovidEndocrineTx/Results/CPRDGold_202207/2_EndocrineTxCancer/IncTxBreast.RData")
-inc_qrs_plot <- IncTxBreast %>%  
-  filter(denominator_cohort_id == 4) %>% # this denominator cohort is 0 days prior history for females only
-  filter(analysis_outcome_washout == 90) %>% 
-  filter(analysis_interval == "quarters") %>%
-  filter(outcome_cohort_name %in% c("AromataseInhibitors", "AromataseInhibitors_withGnRHAgonistsOrAntagonists","Tamoxifen_withGnRHAgonistsOrAntagonists","Tamoxifen")) %>%
-  mutate(outcome = case_when(outcome_cohort_name == "AromataseInhibitors" ~ "Aromatase Inhibitors",
-                             outcome_cohort_name == "AromataseInhibitors_withGnRHAgonistsOrAntagonists" ~ "Aromatase Inhibitors with GnRH Agonists Or Antagonists",
-                             outcome_cohort_name == "Tamoxifen_withGnRHAgonistsOrAntagonists" ~ "Tamoxifen with GnRH Agonists Or Antagonists",
-                             outcome_cohort_name == "Tamoxifen" ~ "Tamoxifen")) %>% 
-  as.data.frame()
-
-inc_qrs_plot <- 
-  ggplot(inc_qrs_plot, aes(x = incidence_start_date, y=incidence_100000_pys,
-                           ymin = incidence_100000_pys_95CI_lower,
-                           ymax = incidence_100000_pys_95CI_upper, color=outcome, group=outcome)) +
-  geom_point() + geom_line() +
-  geom_errorbar(width=0) +
- # scale_y_continuous(limits = c(0, 150)) +
-  scale_x_date(date_labels="%b %Y",date_breaks  ="3 months", expand = c(0.05, 0.05)) +
-  facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
-    ggtitle("Incidence Rates of Endocrine Treatments in Quarters in Breast Cancer Patients \nBefore and After COVID-19 Lockdown (365 days prior history, 90 days washout)") +
-  labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100,000 person-years") +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-  geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
-  theme(plot.title = element_text(size = 10))+
- theme(legend.position = "none")
-
-inc_qrs_plot
-```
 
 
 
 
 ### 3. Incidence of the use of endocrine treatments for prostate cancer in prostate cancer patients
 
-Prostate cancer strata cohorts specified in the Incidence/Prevalence package with 0/365 days prior history:
+Prostate cancer strata cohorts specified in the Incidence/Prevalence package with 365 days prior history:
 
 ```{r, echo=FALSE}
  load("~/R/CancerCovidEndocrineTx/Results/CPRDGold_202207/2_EndocrineTxCancer/Prostate_strata_counts.RData")
@@ -183,13 +141,12 @@ Prostate_strata_counts
 
 #### 3a. Incidence Rates of Endocrine Treatments for Prostate Cancer in Quarters 
 #### in Prostate Cancer Patients Before and After COVID-19 Lockdown 
-#### (0 days prior history, 90 days washout)
+#### (365 days prior history, Inf days washout)
 
 ```{r, echo=FALSE, out.width="100%"}
 load("~/R/CancerCovidEndocrineTx/Results/CPRDGold_202207/2_EndocrineTxCancer/IncTxProstate.RData")
 inc_qrs_plot <- IncTxProstate %>%  
-  filter(denominator_cohort_id == 1) %>% # denominator cohort for 0 days prior history
-  filter(analysis_outcome_washout == 90) %>% 
+  filter(denominator_cohort_id == 1) %>% 
   filter(analysis_interval == "quarters") %>%
   filter(outcome_cohort_name %in% c("First_generation_antiandrogens", "GNRH_Agonists_with1stGenADT","GNRH_Agonists","GNRH_LHRH_antagonists", "Second_generation_antiandrogens")) %>%
   mutate(outcome = case_when(outcome_cohort_name == "First_generation_antiandrogens" ~ "First Generation Antiandrogens",
@@ -210,49 +167,7 @@ inc_qrs_plot <-
   #scale_y_continuous(limits = c(0, 150)) +
   scale_x_date(date_labels="%b %Y",date_breaks  ="3 months", expand = c(0.05,0.05)) +
   facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
-  ggtitle("Incidence Rates of Endocrine Treatments in Quarters in Prostate Cancer Patients \nBefore and After COVID-19 Lockdown (0 days prior history, 90 days washout)") +
-  labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100,000 person-years") +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-  geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
-  theme(plot.title = element_text(size = 10))+
- theme(legend.position = "none")
-
-inc_qrs_plot
-```
-
-
-
-
-#### 3b. Incidence Rates of Endocrine Treatments for Prostate Cancer in Quarters 
-#### in Prostate Cancer Patients Before and After COVID-19 Lockdown 
-#### (365 days prior history, 90 days washout)
-
-```{r, echo=FALSE, out.width="100%"}
-load("~/R/CancerCovidEndocrineTx/Results/CPRDGold_202207/2_EndocrineTxCancer/IncTxProstate.RData")
-inc_qrs_plot <- IncTxProstate %>%  
-  filter(denominator_cohort_id == 2) %>% # denominator cohort for 365 days prior history
-  filter(analysis_outcome_washout == 90) %>% 
-  filter(analysis_interval == "quarters") %>%
-  filter(outcome_cohort_name %in% c("First_generation_antiandrogens", "GNRH_Agonists_with1stGenADT","GNRH_Agonists","GNRH_LHRH_antagonists", "Second_generation_antiandrogens")) %>%
-  mutate(outcome = case_when(outcome_cohort_name == "First_generation_antiandrogens" ~ "First Generation Antiandrogens",
-                             outcome_cohort_name == "GNRH_Agonists_with1stGenADT" ~ "GnRH Agonists with First Generation Antiandrogens",
-                             outcome_cohort_name == "GNRH_Agonists" ~ "GnRH Agonists",
-                             outcome_cohort_name == "GNRH_LHRH_antagonists" ~ "GnRH Antagonists",
-                             outcome_cohort_name == "Second_generation_antiandrogens" ~ "Second Generation Antiandrogens")) %>% 
-  as.data.frame()
-
-
-
-inc_qrs_plot <- 
-  ggplot(inc_qrs_plot, aes(x = incidence_start_date, y=incidence_100000_pys,
-                           ymin = incidence_100000_pys_95CI_lower,
-                           ymax = incidence_100000_pys_95CI_upper, color=outcome, group=outcome)) +
-  geom_point() + geom_line() +
-  geom_errorbar(width=0) +
-  #scale_y_continuous(limits = c(0, 150)) +
-  scale_x_date(date_labels="%b %Y",date_breaks  ="3 months", expand = c(0.05,0.05)) +
-  facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
-  ggtitle("Incidence Rates of Endocrine Treatments in Quarters in Prostate Cancer Patients \nBefore and After COVID-19 Lockdown (365 days prior history, 90 days washout)") +
+  ggtitle("Incidence Rates of Endocrine Treatments in Quarters in Prostate Cancer Patients \nBefore and After COVID-19 Lockdown (365 days prior history, Inf days washout)") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100,000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
@@ -268,7 +183,7 @@ inc_qrs_plot
 ### 4. Incidence of endocrine treatment-related outcomes for breast cancer patients 
 ### on Aromatase Inhibitors
 
-Breast cancer patients on aromatase inhibitors strata cohorts specified in the Incidence/Prevalence package with 0/365 days prior history:
+Breast cancer patients on aromatase inhibitors strata cohorts specified in the Incidence/Prevalence package with 365 days prior history:
 
 ```{r, echo=FALSE, out.width="100%"}
 load("~/R/CancerCovidEndocrineTx/Results/CPRDGold_202207/3_OsteoDx/Breast_AI_counts.RData")
@@ -276,16 +191,15 @@ Breast_AI_counts
 ```
 
 
-#### 4a. Incidence Rates of endocrine treatment-related outcomes for breast cancer patients 
+#### 4. Incidence Rates of endocrine treatment-related outcomes for breast cancer patients 
 #### on Aromatase Inhibitors in Quarters Before and After COVID-19 Lockdown 
-#### (0 days prior history, 90 days washout)
+#### (365 days prior history, Inf days washout)
 
 ```{r, echo=FALSE, out.width="100%"}
 load("~/R/CancerCovidEndocrineTx/Results/CPRDGold_202207/3_OsteoDx/IncTxOutcomesBreastAI.RData")
 
 inc_qrs_plot <- IncTxOutcomesBreastAI %>%  
-  filter(denominator_cohort_id == 3) %>%
-  filter(analysis_outcome_washout == 90) %>% 
+  filter(denominator_cohort_id == 2) %>%
   filter(analysis_interval == "quarters") %>%
   mutate(outcome = case_when(outcome_cohort_name == "Bisphosphonates" ~ "Bisphosphonates",
                              outcome_cohort_name == "Bone Fracture" ~ "Bone Fracture",
@@ -303,7 +217,7 @@ inc_qrs_plot <-
   #scale_y_continuous(limits = c(0, 150)) +
   scale_x_date(date_labels="%b %Y",date_breaks  ="3 months", expand = c(0.05,0.05)) +
   facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
-  ggtitle("Incidence Rates of Endocrine Treatment-Related Outcomes in Quarters in Breast Cancer Patients \non Aromatase Inhibitors Before and After COVID-19 Lockdown (0 days prior history, 90 days washout)") +
+  ggtitle("Incidence Rates of Endocrine Treatment-Related Outcomes in Quarters in Breast Cancer Patients \non Aromatase Inhibitors Before and After COVID-19 Lockdown (365 days prior history, Inf days washout)") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100,000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
@@ -313,52 +227,13 @@ inc_qrs_plot <-
 inc_qrs_plot
 ```
 
-
-
-
-#### 4b. Incidence Rates of endocrine treatment-related outcomes for breast cancer patients 
-#### on Aromatase Inhibitors in Quarters Before and After COVID-19 Lockdown 
-#### (365 days prior history, 90 days washout)
-
-```{r, echo=FALSE, out.width="100%"}
-load("~/R/CancerCovidEndocrineTx/Results/CPRDGold_202207/3_OsteoDx/IncTxOutcomesBreastAI.RData")
-
-inc_qrs_plot <- IncTxOutcomesBreastAI %>%  
-  filter(denominator_cohort_id == 4) %>%
-  filter(analysis_outcome_washout == 90) %>% 
-  filter(analysis_interval == "quarters") %>%
-  mutate(outcome = case_when(outcome_cohort_name == "Bisphosphonates" ~ "Bisphosphonates",
-                             outcome_cohort_name == "Bone Fracture" ~ "Bone Fracture",
-                             outcome_cohort_name == "Denosumab" ~ "Denosumab",
-                             outcome_cohort_name == "Osteopenia" ~ "Osteopenia",
-                             outcome_cohort_name == "Osteoporosis" ~ "Osteoporosis")) %>% 
-  as.data.frame()
-
-inc_qrs_plot <- 
-  ggplot(inc_qrs_plot, aes(x = incidence_start_date, y=incidence_100000_pys,
-                           ymin = incidence_100000_pys_95CI_lower,
-                           ymax = incidence_100000_pys_95CI_upper, color=outcome, group=outcome)) +
-  geom_point() + geom_line() +
-  geom_errorbar(width=0) +
-  #scale_y_continuous(limits = c(0, 150)) +
-  scale_x_date(date_labels="%b %Y",date_breaks  ="3 months", expand = c(0.05,0.05)) +
-  facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
-  ggtitle("Incidence Rates of Endocrine Treatment-Related Outcomes in Quarters in Breast Cancer Patients \non Aromatase Inhibitors Before and After COVID-19 Lockdown (365 days prior history, 90 days washout)") +
-  labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100,000 person-years") +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-  geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
-  theme(plot.title = element_text(size = 10))+
- theme(legend.position = "none")
-
-inc_qrs_plot
-```
 
 
 
 ### 5. Incidence of endocrine treatment-related outcomes for breast cancer patients 
 ### on Tamoxifen
 
-Breast cancer patients on tamoxifen strata cohorts specified in the Incidence/Prevalence package with 0/365 days prior history:
+Breast cancer patients on tamoxifen strata cohorts specified in the Incidence/Prevalence package with 365 days prior history:
 
 ```{r, echo=FALSE}
 load("~/R/CancerCovidEndocrineTx/Results/CPRDGold_202207/3_OsteoDx/Breast_tamoxifen_counts.RData")
@@ -368,13 +243,12 @@ Breast_tamoxifen_counts
 
 #### 5a. Incidence Rates of endocrine treatment-related outcomes for breast cancer patients 
 #### on Tamoxifen in Quarters Before and After COVID-19 Lockdown 
-#### (0 days prior history, 90 days washout)
+#### (365 days prior history, Inf days washout)
 
 ```{r, echo=FALSE, out.width="100%"}
 load("~/R/CancerCovidEndocrineTx/Results/CPRDGold_202207/3_OsteoDx/IncTxOutcomesBreastTAM.RData")
 inc_qrs_plot <- IncTxOutcomesBreastTAM %>%  
-  filter(denominator_cohort_id == 3) %>%
-  filter(analysis_outcome_washout == 90) %>% 
+  filter(denominator_cohort_id == 2) %>%
   filter(analysis_interval == "quarters") %>%
   mutate(outcome = case_when(outcome_cohort_name == "Bisphosphonates" ~ "Bisphosphonates",
                              outcome_cohort_name == "Bone Fracture" ~ "Bone Fracture",
@@ -392,7 +266,7 @@ inc_qrs_plot <-
   #scale_y_continuous(limits = c(0, 150)) +
   scale_x_date(date_labels="%b %Y",date_breaks  ="3 months", expand = c(0.05,0.05)) +
   facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
-  ggtitle("Incidence Rates of Endocrine Treatment-Related Outcomes in Quarters in Breast Cancer Patients \non Tamoxifen Before and After COVID-19 Lockdown (0 days prior history, 90 days washout)") +
+  ggtitle("Incidence Rates of Endocrine Treatment-Related Outcomes in Quarters in Breast Cancer Patients \non Tamoxifen Before and After COVID-19 Lockdown (365 days prior history, Inf days washout)") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100,000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
@@ -402,44 +276,6 @@ inc_qrs_plot <-
 inc_qrs_plot
 ```
 
-
-
-
-#### 5b. Incidence Rates of endocrine treatment-related outcomes for breast cancer patients 
-#### on Tamoxifen in Quarters Before and After COVID-19 Lockdown 
-#### (365 days prior history, 90 days washout)
-
-```{r, echo=FALSE, out.width="100%"}
-load("~/R/CancerCovidEndocrineTx/Results/CPRDGold_202207/3_OsteoDx/IncTxOutcomesBreastTAM.RData")
-inc_qrs_plot <- IncTxOutcomesBreastTAM %>%  
-  filter(denominator_cohort_id == 4) %>%
-  filter(analysis_outcome_washout == 90) %>% 
-  filter(analysis_interval == "quarters") %>%
-  mutate(outcome = case_when(outcome_cohort_name == "Bisphosphonates" ~ "Bisphosphonates",
-                             outcome_cohort_name == "Bone Fracture" ~ "Bone Fracture",
-                             outcome_cohort_name == "Denosumab" ~ "Denosumab",
-                             outcome_cohort_name == "Osteopenia" ~ "Osteopenia",
-                             outcome_cohort_name == "Osteoporosis" ~ "Osteoporosis")) %>% 
-  as.data.frame()
-
-inc_qrs_plot <- 
-  ggplot(inc_qrs_plot, aes(x = incidence_start_date, y=incidence_100000_pys,
-                           ymin = incidence_100000_pys_95CI_lower,
-                           ymax = incidence_100000_pys_95CI_upper, color=outcome, group=outcome)) +
-  geom_point() + geom_line() +
-  geom_errorbar(width=0) +
-  #scale_y_continuous(limits = c(0, 150)) +
-  scale_x_date(date_labels="%b %Y",date_breaks  ="3 months", expand = c(0.05,0.05)) +
-  facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
-  ggtitle("Incidence Rates of Endocrine Treatment-Related Outcomes in Quarters in Breast Cancer Patients \non Tamoxifen Before and After COVID-19 Lockdown (365 days prior history, 90 days washout)") +
-  labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100,000 person-years") +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-  geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
-  theme(plot.title = element_text(size = 10))+
- theme(legend.position = "none")
-
-inc_qrs_plot
-```
 
 
 ### 6. Incidence of endocrine treatment-related outcomes for prostate cancer patients 
@@ -455,13 +291,12 @@ Prostate_endocrine_counts
 
 #### 6a. Incidence Rates of endocrine treatment-related outcomes for prostate cancer patients 
 #### on endocrine treatments in Quarters Before and After COVID-19 Lockdown 
-#### (0 days prior history, 90 days washout)
+#### (365 days prior history, Inf days washout)
 
 ```{r, echo=FALSE, out.width="100%"}
 load("~/R/CancerCovidEndocrineTx/Results/CPRDGold_202207/3_OsteoDx/IncTxOutcomesProstate.RData")
 inc_qrs_plot <- IncTxOutcomesProstate %>%  
-  filter(denominator_cohort_id == 1) %>%
-  filter(analysis_outcome_washout == 90) %>% 
+  filter(denominator_cohort_id == 1) %>% 
   filter(analysis_interval == "quarters") %>%
   mutate(outcome = case_when(outcome_cohort_name == "Bisphosphonates" ~ "Bisphosphonates",
                              outcome_cohort_name == "Bone Fracture" ~ "Bone Fracture",
@@ -479,46 +314,7 @@ inc_qrs_plot <-
   #scale_y_continuous(limits = c(0, 150)) +
   scale_x_date(date_labels="%b %Y",date_breaks  ="3 months", expand = c(0.05,0.05)) +
   facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
-  ggtitle("Incidence Rates of Endocrine Treatment-Related Outcomes in Quarters in Prostate Cancer Patients \non Endocrine Treatments Before and After COVID-19 Lockdown (0 days prior history, 90 days washout)") +
-  labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100,000 person-years") +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-  geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
-  theme(plot.title = element_text(size = 10))+
- theme(legend.position = "none")
-
-inc_qrs_plot
-```
-
-
-
-
-#### 6b. Incidence Rates of endocrine treatment-related outcomes for breast cancer patients 
-#### on endocrine treatments in Quarters Before and After COVID-19 Lockdown 
-#### (365 days prior history, 90 days washout)
-
-```{r, echo=FALSE, out.width="100%"}
-load("~/R/CancerCovidEndocrineTx/Results/CPRDGold_202207/3_OsteoDx//IncTxOutcomesProstate.RData")
-inc_qrs_plot <- IncTxOutcomesProstate %>%  
-  filter(denominator_cohort_id == 2) %>%
-  filter(analysis_outcome_washout == 90) %>% 
-  filter(analysis_interval == "quarters") %>%
-  mutate(outcome = case_when(outcome_cohort_name == "Bisphosphonates" ~ "Bisphosphonates",
-                             outcome_cohort_name == "Bone Fracture" ~ "Bone Fracture",
-                             outcome_cohort_name == "Denosumab" ~ "Denosumab",
-                             outcome_cohort_name == "Osteopenia" ~ "Osteopenia",
-                             outcome_cohort_name == "Osteoporosis" ~ "Osteoporosis")) %>% 
-  as.data.frame()
-
-inc_qrs_plot <- 
-  ggplot(inc_qrs_plot, aes(x = incidence_start_date, y=incidence_100000_pys,
-                           ymin = incidence_100000_pys_95CI_lower,
-                           ymax = incidence_100000_pys_95CI_upper, color=outcome, group=outcome)) +
-  geom_point() + geom_line() +
-  geom_errorbar(width=0) +
-  #scale_y_continuous(limits = c(0, 150)) +
-  scale_x_date(date_labels="%b %Y",date_breaks  ="3 months", expand = c(0.05,0.05)) +
-  facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
-  ggtitle("Incidence Rates of Endocrine Treatment-Related Outcomes in Quarters in Prostate Cancer Patients \non Endocrine Treatments Before and After COVID-19 Lockdown (365 days prior history, 90 days washout)") +
+  ggtitle("Incidence Rates of Endocrine Treatment-Related Outcomes in Quarters in Prostate Cancer Patients \non Endocrine Treatments Before and After COVID-19 Lockdown (365 days prior history, Inf days washout)") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100,000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +

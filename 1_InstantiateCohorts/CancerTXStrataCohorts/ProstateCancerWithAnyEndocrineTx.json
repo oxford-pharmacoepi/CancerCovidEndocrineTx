@@ -2097,8 +2097,8 @@
   ],
   "EndStrategy": {
     "DateOffset": {
-      "DateField": "EndDate",
-      "Offset": 90
+      "DateField": "StartDate",
+      "Offset": 365
     }
   },
   "CensoringCriteria": [],

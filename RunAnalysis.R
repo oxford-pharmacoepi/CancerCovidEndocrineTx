@@ -1,34 +1,3 @@
-# output files ----
-if (!file.exists(output.folder)){
-  dir.create(output.folder, recursive = TRUE)}
-
-if (!file.exists(output.folder1)){
-  dir.create(output.folder1, recursive = TRUE)}
-
-if (!file.exists(output.folder2)){
-  dir.create(output.folder2, recursive = TRUE)}
-
-if (!file.exists(output.folder3)){
-  dir.create(output.folder3, recursive = TRUE)}
-
-if (!file.exists(output.folder4)){
-  dir.create(output.folder4, recursive = TRUE)}
-
-if (!file.exists(output.folder5)){
-  dir.create(output.folder5, recursive = TRUE)}
-
-if (!file.exists(output.folder6)){
-  dir.create(output.folder6, recursive = TRUE)}
-
-if (!file.exists(output.folder7)){
-  dir.create(output.folder7, recursive = TRUE)}
-
-if (!file.exists(output.folder8)){
-  dir.create(output.folder8, recursive = TRUE)}
-
-if (!file.exists(output.folder9)){
-  dir.create(output.folder9, recursive = TRUE)}
-
 
 
 

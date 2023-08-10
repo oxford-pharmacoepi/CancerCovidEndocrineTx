@@ -17,12 +17,12 @@ info(logger, "- Getting denominator population")
 
 cdm <- generateDenominatorCohortSet(
   cdm = cdm,
-  cohortDateRange = as.Date(c("2017-01-01","2022-07-01")),
+  cohortDateRange = as.Date(c("2016-01-01","2022-07-01")),
   strataTable = strata_table_name_2,
   strataCohortId = 1,
   ageGroup = list(c(0,150), c(20,39), c(40,59), c(60,79), c(80,150)),
   sex = c("Both","Female","Male"),
-  daysPriorHistory = c(0,365),
+  daysPriorHistory = 365,
   temporary = TRUE
 )
 
@@ -55,7 +55,7 @@ IncTxOutcomesBreastAI <- estimateIncidence(
   outcomeCohortId = NULL, # add a filter here to specify which outcome cohorts to focus on specific to breast cancer
   interval = c("months", "quarters", "years"),
   completeDatabaseIntervals = FALSE,
-  outcomeWashout = c(0, 90), 
+  outcomeWashout = Inf, 
   repeatedEvents = TRUE,
   minCellCount = 5,
   temporary = TRUE,
@@ -67,8 +67,7 @@ IncTxOutcomesBreastAI %>%
 
 
 save(IncTxOutcomesBreastAI, file = here("Results", db.name, "3_OsteoDx", "IncTxOutcomesBreastAI.RData"))
-#save(IncTxOutcomesBreastAI_0, file = here("Results", db.name0, "3_OsteoDx", "IncTxOutcomesBreastAI_0.RData"))
-#save(IncTxOutcomesBreastAI_365, file = here("Results", db.name365, "3_OsteoDx", "IncTxOutcomesBreastAI_365.RData"))
+
 
 
 print(paste0("- Got incidence: treatment related outcomes in breast cancer populations on AIs"))
@@ -96,12 +95,11 @@ info(logger, "- Plotting incidence and prevalence results: endocrine tx in breas
 
 
 
-# INCIDENCE IN YEARS FOR ALL AGE STRATA WITH 0 DAYS PRIOR HISTORY AND 90 DAYS WASHOUT
+# INCIDENCE IN YEARS FOR ALL AGE STRATA 
 
 inc_yrs_plot <- IncTxOutcomesBreastAI %>%  
-  filter(denominator_cohort_id == 3) %>%
-  filter(analysis_outcome_washout == 90) %>% 
-  filter(analysis_interval == "years") %>%
+  filter(denominator_cohort_id == 2) %>%
+    filter(analysis_interval == "years") %>%
   mutate(outcome = case_when(outcome_cohort_name == "Bisphosphonates" ~ "Bisphosphonates",
                              outcome_cohort_name == "Bone Fracture" ~ "Bone Fracture",
                              outcome_cohort_name == "Denosumab" ~ "Denosumab",
@@ -118,7 +116,7 @@ inc_yrs_plot <-
   #scale_y_continuous(limits = c(0, 150)) +
   scale_x_date(date_labels="%Y",date_breaks  ="1 year", expand = c(0.05,0.05)) +
   facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
-    ggtitle("Incidence Rates of Endocrine Treatment-Related Outcomes in Years in Breast Cancer Patients \non Aromatase Inhibitors Before and After COVID-19 Lockdown (0 days prior history, 90 days washout)") +
+    ggtitle("Incidence Rates of Endocrine Treatment-Related Outcomes in Years in Breast Cancer Patients one year after diagnosis \non Aromatase Inhibitors Before and After COVID-19 Lockdown") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100,000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
@@ -128,7 +126,7 @@ inc_yrs_plot <-
 inc_yrs_plot
 
 analysis.name <- "txOutcomes_inBreastAIPop"
-plotname <- paste0(analysis.name, db.name, "_inc_yrs_0PH")
+plotname <- paste0(analysis.name, db.name, "_inc_yrs")
 
 # Save the plot as jpg
 ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_yrs_plot, dpi=600, scale = 1, width = 15, height = 10)
@@ -139,9 +137,8 @@ ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_yrs
 # INCIDENCE IN MONTHS FOR ALL AGE STRATA
 
 inc_months_plot <- IncTxOutcomesBreastAI %>%  
-  filter(denominator_cohort_id == 3) %>%
-  filter(analysis_outcome_washout == 90) %>% 
-  filter(analysis_interval == "months") %>%
+  filter(denominator_cohort_id == 2) %>%
+    filter(analysis_interval == "months") %>%
   mutate(outcome = case_when(outcome_cohort_name == "Bisphosphonates" ~ "Bisphosphonates",
                              outcome_cohort_name == "Bone Fracture" ~ "Bone Fracture",
                              outcome_cohort_name == "Denosumab" ~ "Denosumab",
@@ -158,7 +155,7 @@ inc_months_plot <-
   scale_y_continuous(limits = c(0, 20000)) +
   scale_x_date(date_labels="%b %Y",date_breaks="6 months", expand = c(0.05,0.05)) +
   facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen())+
-  ggtitle("Incidence Rates of Endocrine Treatment-Related Outcomes in Months in Breast Cancer Patients \non Aromatase Inhibitors Before and After COVID-19 Lockdown (0 days prior history, 90 days washout)") +
+  ggtitle("Incidence Rates of Endocrine Treatment-Related Outcomes in Months in Breast Cancer Patients one year after diagnosis \non Aromatase Inhibitors Before and After COVID-19 Lockdown") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100,000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
@@ -168,7 +165,7 @@ inc_months_plot <-
 inc_months_plot
 
 analysis.name <- "txOutcomes_inBreastAIPop"
-plotname <- paste0(analysis.name, db.name, "_inc_months_0PH")
+plotname <- paste0(analysis.name, db.name, "_inc_months")
 
 # Save the plot as jpg
 ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_months_plot, dpi=600, scale = 1, width = 15, height = 10)
@@ -180,9 +177,8 @@ ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_mon
 
 
 inc_qrs_plot <- IncTxOutcomesBreastAI %>%  
-  filter(denominator_cohort_id == 3) %>%
-  filter(analysis_outcome_washout == 90) %>% 
-  filter(analysis_interval == "quarters") %>%
+  filter(denominator_cohort_id == 2) %>%
+    filter(analysis_interval == "quarters") %>%
   mutate(outcome = case_when(outcome_cohort_name == "Bisphosphonates" ~ "Bisphosphonates",
                              outcome_cohort_name == "Bone Fracture" ~ "Bone Fracture",
                              outcome_cohort_name == "Denosumab" ~ "Denosumab",
@@ -199,7 +195,7 @@ inc_qrs_plot <-
   #scale_y_continuous(limits = c(0, 150)) +
   scale_x_date(date_labels="%b %Y",date_breaks  ="3 months", expand = c(0.05,0.05)) +
   facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
-  ggtitle("Incidence Rates of Endocrine Treatment-Related Outcomes in Quarters in Breast Cancer Patients \non Aromatase Inhibitors Before and After COVID-19 Lockdown (0 days prior history, 90 days washout)") +
+  ggtitle("Incidence Rates of Endocrine Treatment-Related Outcomes in Quarters in Breast Cancer Patients one year after diagnosis \non Aromatase Inhibitors Before and After COVID-19 Lockdown") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100,000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
@@ -209,129 +205,7 @@ inc_qrs_plot <-
 inc_qrs_plot
 
 analysis.name <- "txOutcomes_inBreastAIPop"
-plotname <- paste0(analysis.name, db.name, "_inc_qrs0PH")
-
-# Save the plot as jpg
-ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_qrs_plot, dpi=600, scale = 1, width = 15, height = 10)
-
-
-
-
-
-# INCIDENCE IN YEARS FOR ALL AGE STRATA WITH 365 DAYS PRIOR HISTORY AND 90 DAYS WASHOUT
-
-inc_yrs_plot <- IncTxOutcomesBreastAI %>%  
-  filter(denominator_cohort_id == 4) %>%
-  filter(analysis_outcome_washout == 90) %>% 
-  filter(analysis_interval == "years") %>%
-  mutate(outcome = case_when(outcome_cohort_name == "Bisphosphonates" ~ "Bisphosphonates",
-                             outcome_cohort_name == "Bone Fracture" ~ "Bone Fracture",
-                             outcome_cohort_name == "Denosumab" ~ "Denosumab",
-                             outcome_cohort_name == "Osteopenia" ~ "Osteopenia",
-                             outcome_cohort_name == "Osteoporosis" ~ "Osteoporosis")) %>% 
-  as.data.frame()
-
-inc_yrs_plot <- 
-  ggplot(inc_yrs_plot, aes(x = incidence_start_date, y=incidence_100000_pys,
-                           ymin = incidence_100000_pys_95CI_lower,
-                           ymax = incidence_100000_pys_95CI_upper, color=outcome, group=outcome)) +
-  geom_point() + geom_line() +
-  geom_errorbar(width=0) +
-  #scale_y_continuous(limits = c(0, 150)) +
-  scale_x_date(date_labels="%Y",date_breaks  ="1 year", expand = c(0.05,0.05)) +
-  facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
-  ggtitle("Incidence Rates of Endocrine Treatment-Related Outcomes in Years in Breast Cancer Patients \non Aromatase Inhibitors Before and After COVID-19 Lockdown (365 days prior history, 90 days washout)") +
-  labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100,000 person-years") +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-  geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
-  theme(plot.title = element_text(size = 10))+
-  theme(legend.position = "none")
-
-inc_yrs_plot
-
-analysis.name <- "txOutcomes_inBreastAIPop"
-plotname <- paste0(analysis.name, db.name, "_inc_yrs_365")
-
-# Save the plot as jpg
-ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_yrs_plot, dpi=600, scale = 1, width = 15, height = 10)
-
-
-
-
-# INCIDENCE IN MONTHS FOR ALL AGE STRATA
-
-inc_months_plot <- IncTxOutcomesBreastAI %>%  
-  filter(denominator_cohort_id == 4) %>%
-  filter(analysis_outcome_washout == 90) %>% 
-  filter(analysis_interval == "months") %>%
-  mutate(outcome = case_when(outcome_cohort_name == "Bisphosphonates" ~ "Bisphosphonates",
-                             outcome_cohort_name == "Bone Fracture" ~ "Bone Fracture",
-                             outcome_cohort_name == "Denosumab" ~ "Denosumab",
-                             outcome_cohort_name == "Osteopenia" ~ "Osteopenia",
-                             outcome_cohort_name == "Osteoporosis" ~ "Osteoporosis")) %>% 
-  as.data.frame()
-
-inc_months_plot <- 
-  ggplot(inc_months_plot, aes(x = incidence_start_date, y=incidence_100000_pys,
-                              ymin = incidence_100000_pys_95CI_lower,
-                              ymax = incidence_100000_pys_95CI_upper, color=outcome, group=outcome)) +
-  geom_point() + geom_line() +
-  geom_errorbar(width=0) +
-  scale_y_continuous(limits = c(0, 20000)) +
-  scale_x_date(date_labels="%b %Y",date_breaks="6 months", expand = c(0.05,0.05)) +
-  facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
-  ggtitle("Incidence Rates of Endocrine Treatment-Related Outcomes in Months in Breast Cancer Patients \non Aromatase Inhibitors Before and After COVID-19 Lockdown (365 days prior history, 90 days washout)") +
-  labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100,000 person-years") +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-  geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
-  theme(plot.title = element_text(size = 10))+
-  theme(legend.position = "none")
-
-inc_months_plot
-
-analysis.name <- "txOutcomes_inBreastAIPop"
-plotname <- paste0(analysis.name, db.name, "_inc_months_365")
-
-# Save the plot as jpg
-ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_months_plot, dpi=600, scale = 1, width = 15, height = 10)
-
-
-
-
-# INCIDENCE IN QUARTERS FOR ALL AGE STRATA
-
-
-inc_qrs_plot <- IncTxOutcomesBreastAI %>%  
-  filter(denominator_cohort_id == 4) %>%
-  filter(analysis_outcome_washout == 90) %>% 
-  filter(analysis_interval == "quarters") %>%
-  mutate(outcome = case_when(outcome_cohort_name == "Bisphosphonates" ~ "Bisphosphonates",
-                             outcome_cohort_name == "Bone Fracture" ~ "Bone Fracture",
-                             outcome_cohort_name == "Denosumab" ~ "Denosumab",
-                             outcome_cohort_name == "Osteopenia" ~ "Osteopenia",
-                             outcome_cohort_name == "Osteoporosis" ~ "Osteoporosis")) %>% 
-  as.data.frame()
-
-inc_qrs_plot <- 
-  ggplot(inc_qrs_plot, aes(x = incidence_start_date, y=incidence_100000_pys,
-                           ymin = incidence_100000_pys_95CI_lower,
-                           ymax = incidence_100000_pys_95CI_upper, color=outcome, group=outcome)) +
-  geom_point() + geom_line() +
-  geom_errorbar(width=0) +
-  #scale_y_continuous(limits = c(0, 150)) +
-  scale_x_date(date_labels="%b %Y",date_breaks  ="3 months", expand = c(0.05,0.05)) +
-  facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
-  ggtitle("Incidence Rates of Endocrine Treatment-Related Outcomes in Quarters in Breast Cancer Patients \non Aromatase Inhibitors Before and After COVID-19 Lockdown (365 days prior history, 90 days washout)") +
-  labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100,000 person-years") +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-  geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
-  theme(plot.title = element_text(size = 10))+
-  theme(legend.position = "none")
-
-inc_qrs_plot
-
-analysis.name <- "txOutcomes_inBreastAIPop"
-plotname <- paste0(analysis.name, db.name, "_inc_qrs365")
+plotname <- paste0(analysis.name, db.name, "_inc_qrs")
 
 # Save the plot as jpg
 ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_qrs_plot, dpi=600, scale = 1, width = 15, height = 10)
@@ -356,12 +230,12 @@ info(logger, "- Getting denominator population")
 
 cdm <- generateDenominatorCohortSet(
   cdm = cdm,
-  cohortDateRange = as.Date(c("2017-01-01","2022-07-01")),
+  cohortDateRange = as.Date(c("2016-01-01","2022-07-01")),
   strataTable = strata_table_name_2,
   strataCohortId = 2,
   ageGroup = list(c(0,150), c(20,39), c(40,59), c(60,79), c(80,150)),
   sex = c("Both","Female","Male"),
-  daysPriorHistory = c(0,365),
+  daysPriorHistory = 365,
   temporary = TRUE
 )
 
@@ -393,7 +267,7 @@ IncTxOutcomesBreastTAM <- estimateIncidence(
   outcomeCohortId = NULL, # add a filter here to specify which outcome cohorts to focus on specific to breast cancer
   interval = c("months", "quarters", "years"),
   completeDatabaseIntervals = FALSE,
-  outcomeWashout = c(0, 90), 
+  outcomeWashout = Inf, 
   repeatedEvents = TRUE,
   minCellCount = 5,
   temporary = TRUE,
@@ -435,8 +309,7 @@ info(logger, "- Plotting incidence and prevalence results: endocrine tx in breas
 # INCIDENCE IN YEARS FOR ALL AGE STRATA WITH 0 DAYS PRIOR HISTORY AND 90 DAYS WASHOUT
 
 inc_yrs_plot <- IncTxOutcomesBreastTAM %>%  
-  filter(denominator_cohort_id == 3) %>%
-  filter(analysis_outcome_washout == 90) %>% 
+  filter(denominator_cohort_id == 2) %>%
   filter(analysis_interval == "years") %>%
   mutate(outcome = case_when(outcome_cohort_name == "Bisphosphonates" ~ "Bisphosphonates",
                              outcome_cohort_name == "Bone Fracture" ~ "Bone Fracture",
@@ -454,7 +327,7 @@ inc_yrs_plot <-
   #scale_y_continuous(limits = c(0, 150)) +
   scale_x_date(date_labels="%Y",date_breaks  ="1 year", expand = c(0.05,0.05)) +
   facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
-  ggtitle("Incidence Rates of Endocrine Treatment-Related Outcomes in Years in Breast Cancer Patients \non Tamoxifen Before and After COVID-19 Lockdown (0 days prior history, 90 days washout)") +
+  ggtitle("Incidence Rates of Endocrine Treatment-Related Outcomes in Years in Breast Cancer Patients one year after diagnosis \non Tamoxifen Before and After COVID-19 Lockdown") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100,000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
@@ -464,7 +337,7 @@ inc_yrs_plot <-
 inc_yrs_plot
 
 analysis.name <- "txOutcomes_inBreastTAMPop"
-plotname <- paste0(analysis.name, db.name, "_inc_yrs_0PH")
+plotname <- paste0(analysis.name, db.name, "_inc_yrs")
 
 # Save the plot as jpg
 ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_yrs_plot, dpi=600, scale = 1, width = 15, height = 10)
@@ -475,8 +348,7 @@ ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_yrs
 # INCIDENCE IN MONTHS FOR ALL AGE STRATA
 
 inc_months_plot <- IncTxOutcomesBreastTAM %>%  
-  filter(denominator_cohort_id == 3) %>%
-  filter(analysis_outcome_washout == 90) %>% 
+  filter(denominator_cohort_id == 2) %>%
   filter(analysis_interval == "months") %>%
   mutate(outcome = case_when(outcome_cohort_name == "Bisphosphonates" ~ "Bisphosphonates",
                              outcome_cohort_name == "Bone Fracture" ~ "Bone Fracture",
@@ -491,10 +363,10 @@ inc_months_plot <-
                               ymax = incidence_100000_pys_95CI_upper, color=outcome, group=outcome)) +
   geom_point() + geom_line() +
   geom_errorbar(width=0) +
-  #scale_y_continuous(limits = c(0, 2000)) +
-  scale_x_date(date_labels="%b %Y",date_breaks  ="6 months", expand = c(0.05,0.05)) +
-  facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
-  ggtitle("Incidence Rates of Endocrine Treatment-Related Outcomes in Months in Breast Cancer Patients \non Tamoxifen Before and After COVID-19 Lockdown (0 days prior history, 90 days washout)") +
+  scale_y_continuous(limits = c(0, 20000)) +
+  scale_x_date(date_labels="%b %Y",date_breaks="6 months", expand = c(0.05,0.05)) +
+  facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen())+
+  ggtitle("Incidence Rates of Endocrine Treatment-Related Outcomes in Months in Breast Cancer Patients one year after diagnosis \non Tamoxifen Before and After COVID-19 Lockdown") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100,000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
@@ -504,7 +376,7 @@ inc_months_plot <-
 inc_months_plot
 
 analysis.name <- "txOutcomes_inBreastTAMPop"
-plotname <- paste0(analysis.name, db.name, "_inc_months_0PH")
+plotname <- paste0(analysis.name, db.name, "_inc_months")
 
 # Save the plot as jpg
 ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_months_plot, dpi=600, scale = 1, width = 15, height = 10)
@@ -516,8 +388,7 @@ ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_mon
 
 
 inc_qrs_plot <- IncTxOutcomesBreastTAM %>%  
-  filter(denominator_cohort_id == 3) %>%
-  filter(analysis_outcome_washout == 90) %>% 
+  filter(denominator_cohort_id == 2) %>%
   filter(analysis_interval == "quarters") %>%
   mutate(outcome = case_when(outcome_cohort_name == "Bisphosphonates" ~ "Bisphosphonates",
                              outcome_cohort_name == "Bone Fracture" ~ "Bone Fracture",
@@ -535,7 +406,7 @@ inc_qrs_plot <-
   #scale_y_continuous(limits = c(0, 150)) +
   scale_x_date(date_labels="%b %Y",date_breaks  ="3 months", expand = c(0.05,0.05)) +
   facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
-  ggtitle("Incidence Rates of Endocrine Treatment-Related Outcomes in Quarters in Breast Cancer Patients \non Tamoxifen Before and After COVID-19 Lockdown (0 days prior history, 90 days washout)") +
+  ggtitle("Incidence Rates of Endocrine Treatment-Related Outcomes in Quarters in Breast Cancer Patients one year after diagnosis  \non Tamoxifen Before and After COVID-19 Lockdown") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100,000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
@@ -545,7 +416,7 @@ inc_qrs_plot <-
 inc_qrs_plot
 
 analysis.name <- "txOutcomes_inBreastTAMPop"
-plotname <- paste0(analysis.name, db.name, "_inc_qrs_0PH")
+plotname <- paste0(analysis.name, db.name, "_inc_qrs")
 
 # Save the plot as jpg
 ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_qrs_plot, dpi=600, scale = 1, width = 15, height = 10)
@@ -555,129 +426,6 @@ ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_qrs
 
 print(paste0("- Analysis of all Endocrine Treatment-Related Outcomes in breast cancer patients done"))
 info(logger, "- Analysis of all Endocrine Treatment-Related Outcomes in breast cancer patients done")
-
-
-
-
-# INCIDENCE IN YEARS FOR ALL AGE STRATA WITH 365 DAYS PRIOR HISTORY AND 90 DAYS WASHOUT
-
-inc_yrs_plot <- IncTxOutcomesBreastTAM %>%  
-  filter(denominator_cohort_id == 4) %>%
-  filter(analysis_outcome_washout == 90) %>% 
-  filter(analysis_interval == "years") %>%
-  mutate(outcome = case_when(outcome_cohort_name == "Bisphosphonates" ~ "Bisphosphonates",
-                             outcome_cohort_name == "Bone Fracture" ~ "Bone Fracture",
-                             outcome_cohort_name == "Denosumab" ~ "Denosumab",
-                             outcome_cohort_name == "Osteopenia" ~ "Osteopenia",
-                             outcome_cohort_name == "Osteoporosis" ~ "Osteoporosis")) %>% 
-  as.data.frame()
-
-inc_yrs_plot <- 
-  ggplot(inc_yrs_plot, aes(x = incidence_start_date, y=incidence_100000_pys,
-                           ymin = incidence_100000_pys_95CI_lower,
-                           ymax = incidence_100000_pys_95CI_upper, color=outcome, group=outcome)) +
-  geom_point() + geom_line() +
-  geom_errorbar(width=0) +
-  #scale_y_continuous(limits = c(0, 150)) +
-  scale_x_date(date_labels="%Y",date_breaks  ="1 year", expand = c(0.05,0.05)) +
-  facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
-  ggtitle("Incidence Rates of Endocrine Treatment-Related Outcomes in Years in Breast Cancer Patients \non Tamoxifen Before and After COVID-19 Lockdown (365 days prior history, 90 days washout)") +
-  labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100,000 person-years") +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-  geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
-  theme(plot.title = element_text(size = 10))+
-  theme(legend.position = "none")
-
-inc_yrs_plot
-
-analysis.name <- "txOutcomes_inBreastTAMPop"
-plotname <- paste0(analysis.name, db.name, "_inc_yrs_365")
-
-# Save the plot as jpg
-ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_yrs_plot, dpi=600, scale = 1, width = 15, height = 10)
-
-
-
-
-# INCIDENCE IN MONTHS FOR ALL AGE STRATA
-
-inc_months_plot <- IncTxOutcomesBreastTAM %>%  
-  filter(denominator_cohort_id == 4) %>%
-  filter(analysis_outcome_washout == 90) %>% 
-  filter(analysis_interval == "months") %>%
-  mutate(outcome = case_when(outcome_cohort_name == "Bisphosphonates" ~ "Bisphosphonates",
-                             outcome_cohort_name == "Bone Fracture" ~ "Bone Fracture",
-                             outcome_cohort_name == "Denosumab" ~ "Denosumab",
-                             outcome_cohort_name == "Osteopenia" ~ "Osteopenia",
-                             outcome_cohort_name == "Osteoporosis" ~ "Osteoporosis")) %>% 
-  as.data.frame()
-
-inc_months_plot <- 
-  ggplot(inc_months_plot, aes(x = incidence_start_date, y=incidence_100000_pys,
-                              ymin = incidence_100000_pys_95CI_lower,
-                              ymax = incidence_100000_pys_95CI_upper, color=outcome, group=outcome)) +
-  geom_point() + geom_line() +
-  geom_errorbar(width=0) +
-  #scale_y_continuous(limits = c(0, 2000)) +
-  scale_x_date(date_labels="%b %Y",date_breaks  ="6 months", expand = c(0.05,0.05)) +
-  facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
-  ggtitle("Incidence Rates of Endocrine Treatment-Related Outcomes in Months in Breast Cancer Patients \non Tamoxifen Before and After COVID-19 Lockdown (365 days prior history, 90 days washout)") +
-  labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100,000 person-years") +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-  geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
-  theme(plot.title = element_text(size = 10))+
-  theme(legend.position = "none")
-
-inc_months_plot
-
-analysis.name <- "txOutcomes_inBreastTAMPop"
-plotname <- paste0(analysis.name, db.name, "_inc_months_365")
-
-# Save the plot as jpg
-ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_months_plot, dpi=600, scale = 1, width = 15, height = 10)
-
-
-
-
-# INCIDENCE IN QUARTERS FOR ALL AGE STRATA
-
-
-inc_qrs_plot <- IncTxOutcomesBreastTAM %>%  
-  filter(denominator_cohort_id == 4) %>%
-  filter(analysis_outcome_washout == 90) %>% 
-  filter(analysis_interval == "quarters") %>%
-  mutate(outcome = case_when(outcome_cohort_name == "Bisphosphonates" ~ "Bisphosphonates",
-                             outcome_cohort_name == "Bone Fracture" ~ "Bone Fracture",
-                             outcome_cohort_name == "Denosumab" ~ "Denosumab",
-                             outcome_cohort_name == "Osteopenia" ~ "Osteopenia",
-                             outcome_cohort_name == "Osteoporosis" ~ "Osteoporosis")) %>% 
-  as.data.frame()
-
-inc_qrs_plot <- 
-  ggplot(inc_qrs_plot, aes(x = incidence_start_date, y=incidence_100000_pys,
-                           ymin = incidence_100000_pys_95CI_lower,
-                           ymax = incidence_100000_pys_95CI_upper, color=outcome, group=outcome)) +
-  geom_point() + geom_line() +
-  geom_errorbar(width=0) +
-  #scale_y_continuous(limits = c(0, 150)) +
-  scale_x_date(date_labels="%b %Y",date_breaks  ="3 months", expand = c(0.05,0.05)) +
-  facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
-  ggtitle("Incidence Rates of Endocrine Treatment-Related Outcomes in Quarters in Breast Cancer Patients \non Tamoxifen Before and After COVID-19 Lockdown (365 days prior history, 90 days washout)") +
-  labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100,000 person-years") +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-  geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
-  theme(plot.title = element_text(size = 10))+
-  theme(legend.position = "none")
-
-inc_qrs_plot
-
-analysis.name <- "txOutcomes_inBreastTAMPop"
-plotname <- paste0(analysis.name, db.name, "_inc_qrs_365")
-
-# Save the plot as jpg
-ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_qrs_plot, dpi=600, scale = 1, width = 15, height = 10)
-
-
 
 
 
@@ -693,12 +441,12 @@ info(logger, "- Getting denominator population")
 
 cdm <- generateDenominatorCohortSet(
   cdm = cdm,
-  cohortDateRange = as.Date(c("2017-01-01","2022-07-01")),
+  cohortDateRange = as.Date(c("2016-01-01","2022-07-01")),
   strataTable = strata_table_name_2,
   strataCohortId = 3,
   ageGroup = list(c(0,150), c(20,39), c(40,59), c(60,79), c(80,150)),
   sex = "Male",
-  daysPriorHistory = c(0,365),
+  daysPriorHistory = 365,
   temporary = TRUE
 )
 
@@ -730,7 +478,7 @@ IncTxOutcomesProstate <- estimateIncidence(
   outcomeCohortId = NULL, # add a filter here to specify which outcome cohorts to focus on specific to breast cancer
   interval = c("months", "quarters", "years"),
   completeDatabaseIntervals = FALSE,
-  outcomeWashout = c(0, 90), 
+  outcomeWashout = Inf, 
   repeatedEvents = TRUE,
   minCellCount = 5,
   temporary = TRUE,
@@ -742,8 +490,7 @@ IncTxOutcomesProstate %>%
 
 
 save(IncTxOutcomesProstate, file = here("Results", db.name, "3_OsteoDx", "IncTxOutcomesProstate.RData"))
-#save(IncTxOutcomesProstate_0, file = here("Results", db.name0, "3_OsteoDx", "IncTxOutcomesProstate_0.RData"))
-#save(IncTxOutcomesProstate_365, file = here("Results", db.name365, "3_OsteoDx", "IncTxOutcomesProstate_365.RData"))
+
 
 
 print(paste0("- Got incidence: treatment related outcomes in Prostate Cancer Cohort on endocrine tx"))
@@ -775,7 +522,6 @@ info(logger, "- Plotting incidence and prevalence results: endocrine tx in Prost
 
 inc_yrs_plot <- IncTxOutcomesProstate %>%  
   filter(denominator_cohort_id == 1) %>%
-  filter(analysis_outcome_washout == 90) %>% 
   filter(analysis_interval == "years") %>%
   mutate(outcome = case_when(outcome_cohort_name == "Bisphosphonates" ~ "Bisphosphonates",
                              outcome_cohort_name == "Bone Fracture" ~ "Bone Fracture",
@@ -793,7 +539,7 @@ inc_yrs_plot <-
   #scale_y_continuous(limits = c(0, 150)) +
   scale_x_date(date_labels="%Y",date_breaks  ="1 year", expand = c(0.05,0.05)) +
   facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
-  ggtitle("Incidence Rates of Endocrine Treatment-Related Outcomes in Years in Prostate Cancer Patients \non Endocrine Treatment Before and After COVID-19 Lockdown (0 days prior history, 90 days washout)") +
+  ggtitle("Incidence Rates of Endocrine Treatment-Related Outcomes in Years in Prostate Cancer Patients one year after diagnosis \non Endocrine Treatment Before and After COVID-19 Lockdown") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100,000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
@@ -803,7 +549,7 @@ inc_yrs_plot <-
 inc_yrs_plot
 
 analysis.name <- "txOutcomes_inProstatePop"
-plotname <- paste0(analysis.name, db.name, "_inc_yrs_0PH")
+plotname <- paste0(analysis.name, db.name, "_inc_yrs")
 
 # Save the plot as jpg
 ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_yrs_plot, dpi=600, scale = 1, width = 15, height = 10)
@@ -815,7 +561,6 @@ ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_yrs
 
 inc_months_plot <- IncTxOutcomesProstate %>%  
   filter(denominator_cohort_id == 1) %>%
-  filter(analysis_outcome_washout == 90) %>% 
   filter(analysis_interval == "months") %>%
   mutate(outcome = case_when(outcome_cohort_name == "Bisphosphonates" ~ "Bisphosphonates",
                              outcome_cohort_name == "Bone Fracture" ~ "Bone Fracture",
@@ -833,7 +578,7 @@ inc_months_plot <-
   #scale_y_continuous(limits = c(0, 150)) +
   scale_x_date(date_labels="%b %Y",date_breaks  ="6 months", expand = c(0.05,0.05)) +
   facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
-  ggtitle("Incidence Rates of Endocrine Treatment-Related Outcomes in Months in Prostate Cancer Patients \non Endocrine Treatment Before and After COVID-19 Lockdown (0 days prior history, 90 days washout)") +
+  ggtitle("Incidence Rates of Endocrine Treatment-Related Outcomes in Months in Prostate Cancer Patients one year after diagnosis \non Endocrine Treatment Before and After COVID-19 Lockdown") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100,000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
@@ -843,7 +588,7 @@ inc_months_plot <-
 inc_months_plot
 
 analysis.name <- "txOutcomes_inProstatePop"
-plotname <- paste0(analysis.name, db.name, "_inc_months_0PH")
+plotname <- paste0(analysis.name, db.name, "_inc_months")
 
 # Save the plot as jpg
 ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_months_plot, dpi=600, scale = 1, width = 15, height = 10)
@@ -856,7 +601,6 @@ ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_mon
 
 inc_qrs_plot <- IncTxOutcomesProstate %>%  
   filter(denominator_cohort_id == 1) %>%
-  filter(analysis_outcome_washout == 90) %>% 
   filter(analysis_interval == "quarters") %>%
   mutate(outcome = case_when(outcome_cohort_name == "Bisphosphonates" ~ "Bisphosphonates",
                              outcome_cohort_name == "Bone Fracture" ~ "Bone Fracture",
@@ -874,7 +618,7 @@ inc_qrs_plot <-
   #scale_y_continuous(limits = c(0, 150)) +
   scale_x_date(date_labels="%b %Y",date_breaks  ="3 months", expand = c(0.05,0.05)) +
   facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
-  ggtitle("Incidence Rates of Endocrine Treatment-Related Outcomes in Quarters in Prostate Cancer Patients \non Endocrine Treatments Before and After COVID-19 Lockdown (0 days prior history, 90 days washout)") +
+  ggtitle("Incidence Rates of Endocrine Treatment-Related Outcomes in Quarters in Prostate Cancer Patients one year after diagnosis \non Endocrine Treatments Before and After COVID-19 Lockdown") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100,000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
@@ -884,133 +628,10 @@ inc_qrs_plot <-
 inc_qrs_plot
 
 analysis.name <- "txOutcomes_inProstatePop"
-plotname <- paste0(analysis.name, db.name, "_inc_qrs_0PH")
+plotname <- paste0(analysis.name, db.name, "_inc_qrs")
 
 # Save the plot as jpg
 ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_qrs_plot, dpi=600, scale = 1, width = 15, height = 10)
-
-
-
-
-# INCIDENCE IN YEARS FOR ALL AGE STRATA WITH 365 DAYS PRIOR HISTORY AND 90 DAYS WASHOUT
-
-inc_yrs_plot <- IncTxOutcomesProstate %>%  
-  filter(denominator_cohort_id == 2) %>%
-  filter(analysis_outcome_washout == 90) %>% 
-  filter(analysis_interval == "years") %>%
-  mutate(outcome = case_when(outcome_cohort_name == "Bisphosphonates" ~ "Bisphosphonates",
-                             outcome_cohort_name == "Bone Fracture" ~ "Bone Fracture",
-                             outcome_cohort_name == "Denosumab" ~ "Denosumab",
-                             outcome_cohort_name == "Osteopenia" ~ "Osteopenia",
-                             outcome_cohort_name == "Osteoporosis" ~ "Osteoporosis")) %>% 
-  as.data.frame()
-
-inc_yrs_plot <- 
-  ggplot(inc_yrs_plot, aes(x = incidence_start_date, y=incidence_100000_pys,
-                           ymin = incidence_100000_pys_95CI_lower,
-                           ymax = incidence_100000_pys_95CI_upper, color=outcome, group=outcome)) +
-  geom_point() + geom_line() +
-  geom_errorbar(width=0) +
-  #scale_y_continuous(limits = c(0, 150)) +
-  scale_x_date(date_labels="%Y",date_breaks  ="1 year", expand = c(0.05,0.05)) +
-  facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
-  ggtitle("Incidence Rates of Endocrine Treatment-Related Outcomes in Years in Prostate Cancer Patients \non Endocrine Treatment Before and After COVID-19 Lockdown (365 days prior history, 90 days washout)") +
-  labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100,000 person-years") +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-  geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
-  theme(plot.title = element_text(size = 10))+
-  theme(legend.position = "none")
-
-inc_yrs_plot
-
-analysis.name <- "txOutcomes_inProstatePop"
-plotname <- paste0(analysis.name, db.name, "_inc_yrs_365")
-
-# Save the plot as jpg
-ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_yrs_plot, dpi=600, scale = 1, width = 15, height = 10)
-
-
-
-
-# INCIDENCE IN MONTHS FOR ALL AGE STRATA
-
-inc_months_plot <- IncTxOutcomesProstate %>%  
-  filter(denominator_cohort_id == 2) %>%
-  filter(analysis_outcome_washout == 90) %>% 
-  filter(analysis_interval == "months") %>%
-  mutate(outcome = case_when(outcome_cohort_name == "Bisphosphonates" ~ "Bisphosphonates",
-                             outcome_cohort_name == "Bone Fracture" ~ "Bone Fracture",
-                             outcome_cohort_name == "Denosumab" ~ "Denosumab",
-                             outcome_cohort_name == "Osteopenia" ~ "Osteopenia",
-                             outcome_cohort_name == "Osteoporosis" ~ "Osteoporosis")) %>% 
-  as.data.frame()
-
-inc_months_plot <- 
-  ggplot(inc_months_plot, aes(x = incidence_start_date, y=incidence_100000_pys,
-                              ymin = incidence_100000_pys_95CI_lower,
-                              ymax = incidence_100000_pys_95CI_upper, color=outcome, group=outcome)) +
-  geom_point() + geom_line() +
-  geom_errorbar(width=0) +
-  #scale_y_continuous(limits = c(0, 150)) +
-  scale_x_date(date_labels="%b %Y",date_breaks  ="6 months", expand = c(0.05,0.05)) +
-  facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
-  ggtitle("Incidence Rates of Endocrine Treatment-Related Outcomes in Months in Prostate Cancer Patients \non Endocrine Treatment Before and After COVID-19 Lockdown (365 days prior history, 90 days washout)") +
-  labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100,000 person-years") +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-  geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
-  theme(plot.title = element_text(size = 10))+
-  theme(legend.position = "none")
-
-inc_months_plot
-
-analysis.name <- "txOutcomes_inProstatePop"
-plotname <- paste0(analysis.name, db.name, "_inc_months_365")
-
-# Save the plot as jpg
-ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_months_plot, dpi=600, scale = 1, width = 15, height = 10)
-
-
-
-
-# INCIDENCE IN QUARTERS FOR ALL AGE STRATA
-
-
-inc_qrs_plot <- IncTxOutcomesProstate %>%  
-  filter(denominator_cohort_id == 2) %>%
-  filter(analysis_outcome_washout == 90) %>% 
-  filter(analysis_interval == "quarters") %>%
-  mutate(outcome = case_when(outcome_cohort_name == "Bisphosphonates" ~ "Bisphosphonates",
-                             outcome_cohort_name == "Bone Fracture" ~ "Bone Fracture",
-                             outcome_cohort_name == "Denosumab" ~ "Denosumab",
-                             outcome_cohort_name == "Osteopenia" ~ "Osteopenia",
-                             outcome_cohort_name == "Osteoporosis" ~ "Osteoporosis")) %>% 
-  as.data.frame()
-
-inc_qrs_plot <- 
-  ggplot(inc_qrs_plot, aes(x = incidence_start_date, y=incidence_100000_pys,
-                           ymin = incidence_100000_pys_95CI_lower,
-                           ymax = incidence_100000_pys_95CI_upper, color=outcome, group=outcome)) +
-  geom_point() + geom_line() +
-  geom_errorbar(width=0) +
-  #scale_y_continuous(limits = c(0, 150)) +
-  scale_x_date(date_labels="%b %Y",date_breaks  ="3 months", expand = c(0.05,0.05)) +
-  facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
-  ggtitle("Incidence Rates of Endocrine Treatment-Related Outcomes in Quarters in Prostate Cancer Patients \non Endocrine Treatments Before and After COVID-19 Lockdown (365 days prior history, 90 days washout)") +
-  labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100000 person-years") +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-  geom_vline(xintercept=as.numeric(as.Date(c("2020-03-23"))),linetype=2, color="red") +
-  theme(plot.title = element_text(size = 10))+
-  theme(legend.position = "none")
-
-inc_qrs_plot
-
-analysis.name <- "txOutcomes_inProstatePop"
-plotname <- paste0(analysis.name, db.name, "_inc_qrs_365")
-
-# Save the plot as jpg
-ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_qrs_plot, dpi=600, scale = 1, width = 15, height = 10)
-
-
 
 
 
