@@ -2,7 +2,7 @@
 #                Data preparation for incidence rate ratio                     #
 #       calculation for endocrine treatments in breast cancer patients         #
 #                              Nicola Barclay                                  #
-#                               15-06-2023                                     #
+#                               17-08-2023                                     #
 # THIS IMPORTS CSV FILE FROM INCPREV PACKAGE AND PREPARES IT FOR ANALYSIS      #
 # ============================================================================ #
 
@@ -14,15 +14,15 @@ library(here)
 
 # Read the csv file of incidence results from the IncPrev package ----
 
+incidence_estimates_EndoTx_in_breast <- read_csv("0_DataPrep/incidence_estimates_EndoTx_in_breast.csv")
 
-incidence_estimates_EndoTx_in_breast <- read_csv("0_DataPrep/Data/incidence_estimates_EndoTx_in_breast.csv")
 View(incidence_estimates_EndoTx_in_breast)
 
 inc_data <- incidence_estimates_EndoTx_in_breast
 
 
 # columns to remove from inc_data - remove all those that do not vary
-inc_data <- inc_data %>% dplyr::select(c(-analysis_id, -cohort_obscured, -analysis_repeated_events, - denominator_days_prior_history,
+inc_data <- inc_data %>% dplyr::select(c(-analysis_id, -cohort_obscured,  -analysis_repeated_events, - denominator_days_prior_history,
                                          -analysis_complete_database_intervals,-analysis_min_cell_count, -denominator_strata_cohort_definition_id,
                                        -denominator_strata_cohort_name, -cdm_name)) %>%
                                        # name outcomes
@@ -33,9 +33,12 @@ inc_data <- inc_data %>% dplyr::select(c(-analysis_id, -cohort_obscured, -analys
 
                                        # save only data for months not years
                                          filter(analysis_interval == "months") %>%
+  
+                                        # save only data for outcomes relevant to breast cancer
+                                        filter(!is.na(outcome))
 
-                                        # save only data for with washout of 0 days
-                                          filter(analysis_outcome_washout == "0")
+
+                                      
 
 exclusion_table <- tibble(N_current=nrow(inc_data), exclusion_reason=NA)
 
@@ -45,6 +48,9 @@ exclusion_table<-rbind(exclusion_table,
                        c(nrow(inc_data),
                          "Result obscured"))
 
+# filter only data from 2017
+inc_data <- inc_data %>% filter(incidence_start_date>="2017-01-01")
+                                
 # create year column
 inc_data <- inc_data %>% mutate(year = as.Date(inc_data$incidence_start_date, format="%d/%m/%Y")) %>%
                                 mutate(year = format(year, format = "%Y"))
@@ -117,7 +123,7 @@ inc_data_endo_tx_in_breast <- inc_data_final
 
 
 # save General Pop----
-save(inc_data_endo_tx_in_breast, file = here("0_DataPrep", "Data", "inc_data_endo_tx_in_breast.RData"))
+save(inc_data_endo_tx_in_breast, file = here("0_DataPrep", "inc_data_endo_tx_in_breast.RData"))
 
-write.csv(inc_data_endo_tx_in_breast, file=here("0_DataPrep", "Data", "inc_data_endo_tx_in_breast.csv"))
+write.csv(inc_data_endo_tx_in_breast, file=here("0_DataPrep", "inc_data_endo_tx_in_breast.csv"))
 

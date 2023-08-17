@@ -1,8 +1,8 @@
 # ============================================================================ #
 #                Data preparation for incidence rate ratio                     #
-#    calculation for endocrine treatments in prostate cancer patients          #
+#       calculation for endocrine treatments in prostate cancer patients       #
 #                              Nicola Barclay                                  #
-#                               15-06-2023                                     #
+#                               17-08-2023                                     #
 # THIS IMPORTS CSV FILE FROM INCPREV PACKAGE AND PREPARES IT FOR ANALYSIS      #
 # ============================================================================ #
 
@@ -14,32 +14,29 @@ library(here)
 
 # Read the csv file of incidence results from the IncPrev package ----
 
+incidence_estimates_EndoTx_in_prostate <- read_csv("0_DataPrep/incidence_estimates_EndoTx_in_prostate.csv")
 
-incidence_estimates_EndoTx_in_prostate <- read_csv("0_DataPrep/Data/incidence_estimates_EndoTx_in_prostate.csv")
-View(incidence_estimates_EndoTx_in_prostate)
+#View(incidence_estimates_EndoTx_in_prostate)
 
 inc_data <- incidence_estimates_EndoTx_in_prostate
 
 
 # columns to remove from inc_data - remove all those that do not vary
-inc_data <- inc_data %>% dplyr::select(c(-analysis_id, -cohort_obscured, -analysis_repeated_events, - denominator_days_prior_history,
+inc_data <- inc_data %>% dplyr::select(c(-analysis_id, -cohort_obscured,  -analysis_repeated_events, - denominator_days_prior_history,
                                          -analysis_complete_database_intervals,-analysis_min_cell_count, -denominator_strata_cohort_definition_id,
                                        -denominator_strata_cohort_name, -cdm_name)) %>%
-                                        # filter out the outcomes related to breast cancer
-                                        filter(outcome_cohort_name == c("First_generation_antiandrogens","GNRH_Agonists_with1stGenADT","GNRH_Agonists","GNRH_LHRH_antagonists",
-                                                                        "Second_generation_antiandrogens")) %>%
                                        # name outcomes
-                                        mutate(outcome = case_when(outcome_cohort_name == "First_generation_antiandrogens" ~ "First Generation Antiandrogens",
-                                                                   outcome_cohort_name == "GNRH_Agonists_with1stGenADT" ~ "GnRH Agonists with 1st Generation ADT",
-                                                                   outcome_cohort_name == "GNRH_Agonists" ~ "GNRH_Agonists",
-                                                                   outcome_cohort_name == "GNRH_LHRH_antagonists" ~ "GnRH Antagonists",
-                                                                   outcome_cohort_name == "Second_generation_antiandrogens" ~ "Second Generation Antiandrogens")) %>%
-                                      
+                                        mutate(outcome = case_when(outcome_cohort_name == "First_generation_antiandrogens" ~ "First generation antiandrogens",
+                                                                   outcome_cohort_name == "GNRH_Agonists_with1stGenADT" ~ "GNRH Agonists with 1st Generation ADT",
+                                                                   outcome_cohort_name == "GNRH_Agonists" ~ "GNRH Agonists",
+                                                                   outcome_cohort_name == "GNRH_LHRH_antagonists" ~ "GNRH / LHRH antagonists",
+                                                                   outcome_cohort_name == "Second_generation_antiandrogens" ~ "Second generation antiandrogens")) %>% 
+
                                        # save only data for months not years
                                          filter(analysis_interval == "months") %>%
 
-                                        # save only data for with washout of 0 days
-                                          filter(analysis_outcome_washout == "0")
+                                        # save only data for outcomes relevant to prostate cancer
+                                        filter(!is.na(outcome))
 
 exclusion_table <- tibble(N_current=nrow(inc_data), exclusion_reason=NA)
 
@@ -49,6 +46,9 @@ exclusion_table<-rbind(exclusion_table,
                        c(nrow(inc_data),
                          "Result obscured"))
 
+# filter only data from 2017
+inc_data <- inc_data %>% filter(incidence_start_date>="2017-01-01")
+                                
 # create year column
 inc_data <- inc_data %>% mutate(year = as.Date(inc_data$incidence_start_date, format="%d/%m/%Y")) %>%
                                 mutate(year = format(year, format = "%Y"))
@@ -121,7 +121,7 @@ inc_data_endo_tx_in_prostate <- inc_data_final
 
 
 # save General Pop----
-save(inc_data_endo_tx_in_prostate, file = here("0_DataPrep", "Data", "inc_data_endo_tx_in_prostate.RData"))
+save(inc_data_endo_tx_in_prostate, file = here("0_DataPrep", "inc_data_endo_tx_in_prostate.RData"))
 
-write.csv(inc_data_endo_tx_in_prostate, file=here("0_DataPrep", "Data", "inc_data_endo_tx_in_prostate.csv"))
+write.csv(inc_data_endo_tx_in_prostate, file=here("0_DataPrep", "inc_data_endo_tx_in_prostate.csv"))
 

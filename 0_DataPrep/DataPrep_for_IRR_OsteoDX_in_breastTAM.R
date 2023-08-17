@@ -1,9 +1,9 @@
 # ============================================================================ #
 #                Data preparation for incidence rate ratio                     #
-#       calculation for endocrine treatments in breast cancer patients         #
-#                               on tamoxifen                                   #
+#       calculation for treatment-related outcomes in breast cancer patients   #
+#                             on Tamoxifen                                     #
 #                              Nicola Barclay                                  #
-#                               20-06-2023                                     #
+#                               17-08-2023                                     #
 # THIS IMPORTS CSV FILE FROM INCPREV PACKAGE AND PREPARES IT FOR ANALYSIS      #
 # ============================================================================ #
 
@@ -15,15 +15,15 @@ library(here)
 
 # Read the csv file of incidence results from the IncPrev package ----
 
+incidence_estimates_EndoDxOutcomes_in_breastTAM <- read_csv("0_DataPrep/incidence_estimates_EndoDxOutcomes_in_breastTAM.csv")
 
-incidence_estimates_OsteoDx_in_breastTAM <- read_csv("0_DataPrep/Data/incidence_estimates_OsteoDx_in_BreastTAM.csv")
-View(incidence_estimates_OsteoDx_in_breastTAM)
+View(incidence_estimates_EndoDxOutcomes_in_breastTAM)
 
-inc_data <- incidence_estimates_OsteoDx_in_breastTAM
+inc_data <- incidence_estimates_EndoDxOutcomes_in_breastTAM
 
 
 # columns to remove from inc_data - remove all those that do not vary
-inc_data <- inc_data %>% dplyr::select(c(-analysis_id, -cohort_obscured, -analysis_repeated_events, - denominator_days_prior_history,
+inc_data <- inc_data %>% dplyr::select(c(-analysis_id, -cohort_obscured,  -analysis_repeated_events, - denominator_days_prior_history,
                                          -analysis_complete_database_intervals,-analysis_min_cell_count, -denominator_strata_cohort_definition_id,
                                        -denominator_strata_cohort_name, -cdm_name)) %>%
                                        # name outcomes
@@ -35,9 +35,12 @@ inc_data <- inc_data %>% dplyr::select(c(-analysis_id, -cohort_obscured, -analys
 
                                        # save only data for months not years
                                          filter(analysis_interval == "months") %>%
+  
+                                        # save only data for outcomes relevant to breast cancer
+                                        filter(!is.na(outcome))
 
-                                        # save only data for with washout of 0 days
-                                          filter(analysis_outcome_washout == "0")
+
+                                      
 
 exclusion_table <- tibble(N_current=nrow(inc_data), exclusion_reason=NA)
 
@@ -47,6 +50,9 @@ exclusion_table<-rbind(exclusion_table,
                        c(nrow(inc_data),
                          "Result obscured"))
 
+# filter only data from 2017
+inc_data <- inc_data %>% filter(incidence_start_date>="2017-01-01")
+                                
 # create year column
 inc_data <- inc_data %>% mutate(year = as.Date(inc_data$incidence_start_date, format="%d/%m/%Y")) %>%
                                 mutate(year = format(year, format = "%Y"))
@@ -115,11 +121,11 @@ inc_data_final <- inc_data_final %>% rename("n" = "n_persons", "days" = "person_
 head(inc_data_final)
 
 # rename rdata object so can re-use
-inc_data_OsteoDx_in_breastTAM <- inc_data_final
+inc_data_endo_dx_outcomes_in_breast_TAM <- inc_data_final
 
 
 # save General Pop----
-save(inc_data_OsteoDx_in_breastTAM, file = here("0_DataPrep", "Data", "inc_data_OsteoDx_in_breastTAM.RData"))
+save(inc_data_endo_dx_outcomes_in_breast_TAM, file = here("0_DataPrep", "inc_data_endo_dx_outcomes_in_breast_TAM.RData"))
 
-write.csv(inc_data_OsteoDx_in_breastTAM, file=here("0_DataPrep", "Data", "inc_data_OsteoDx_in_breastTAM.csv"))
+write.csv(inc_data_endo_dx_outcomes_in_breast_TAM, file=here("0_DataPrep", "inc_data_endo_dx_outcomes_in_breast_TAM.csv"))
 
