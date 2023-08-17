@@ -62,6 +62,7 @@ inc <- estimateIncidence(
   returnParticipants = FALSE
 )
 
+
 inc %>%
   glimpse()
 
@@ -116,7 +117,7 @@ inc_yrs_plot <-
                            ymax = incidence_100000_pys_95CI_upper, color=outcome, group=outcome)) +
   geom_point() + geom_line() +
   geom_errorbar(width=0) +
-  scale_y_continuous(limits = c(0, 150)) +
+  scale_y_continuous(limits = c(0, NA)) +
   scale_x_date(date_labels="%Y",date_breaks  ="1 year", expand = c(0.05,0.05)) +
   facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
   ggtitle("Incidence Rates of Endocrine Treatments for Breast or Prostate Cancer in Years \nin the General Population Before and After COVID-19 Lockdown") +
@@ -158,7 +159,7 @@ inc_months_plot <-
                            ymax = incidence_100000_pys_95CI_upper, color=outcome, group=outcome)) +
   geom_point() + geom_line() +
   geom_errorbar(width=0) +
-  scale_y_continuous(limits = c(0, 150)) +
+  scale_y_continuous(limits = c(0, NA)) +
   scale_x_date(date_labels="%b %Y",date_breaks  ="6 months",expand = c(0.05,0.05)) +
   facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
   ggtitle("Incidence Rates of Endocrine Treatments for Breast or Prostate Cancer in Months \nin the General Population Before and After COVID-19 Lockdown") +
@@ -199,7 +200,7 @@ inc_qrs_plot <-
                            ymax = incidence_100000_pys_95CI_upper, color=outcome, group=outcome)) +
   geom_point() + geom_line() +
   geom_errorbar(width=0) +
-  scale_y_continuous(limits = c(0, 150)) +
+  scale_y_continuous(limits = c(0, NA)) +
   scale_x_date(date_labels="%b %Y",date_breaks  ="3 months", expand = c(0.05,0.05)) +
   facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
   ggtitle("Incidence Rates of Endocrine Treatments for Breast or Prostate Cancer in Quarters \nin the General Population Before and After COVID-19 Lockdown") +

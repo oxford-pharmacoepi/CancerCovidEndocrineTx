@@ -171,16 +171,17 @@ if (table_one_analysis == TRUE) {
   
 disease_cohorts <- readCohortSet(here("1_InstantiateCohorts","DiseaseCohorts"))
   
+
 cdm <- generateCohortSet(cdm, 
-                         disease_cohorts,
-                         name = feature_disease_table_name,
+                         cohortSet = disease_cohorts,
+                         name = feature_disease_table_name_3,
                          overwrite = TRUE)
 
-cohortCount(cdm[[feature_disease_table_name]]) %>%  glimpse()
+cohortCount(cdm[[feature_disease_table_name_3]]) %>%  glimpse()
 
-cohortAttrition(cdm[[feature_disease_table_name]]) %>%  glimpse()
+cohortAttrition(cdm[[feature_disease_table_name_3]]) %>%  glimpse()
 
-cohortSet(cdm[[feature_disease_table_name]]) %>%  glimpse()
+cohortSet(cdm[[feature_disease_table_name_3]]) %>%  glimpse()
 
 info(logger, "- got features for diseases")
 
@@ -195,15 +196,15 @@ info(logger, "- getting feature for medications definitions")
 medication_cohorts <- readCohortSet(here("1_InstantiateCohorts","MedicationCohorts"))
 
 cdm <- generateCohortSet(cdm, 
-                         medication_cohorts,
-                         name = feature_medication_table_name,
+                         cohortSet = medication_cohorts,
+                         name = feature_medication_table_name_3,
                          overwrite = TRUE)
 
-cohortCount(cdm[[feature_medication_table_name]]) %>%  glimpse()
+cohortCount(cdm[[feature_medication_table_name_3]]) %>%  glimpse()
 
-cohortAttrition(cdm[[feature_medication_table_name]]) %>%  glimpse()
+cohortAttrition(cdm[[feature_medication_table_name_3]]) %>%  glimpse()
 
-cohortSet(cdm[[feature_medication_table_name]]) %>%  glimpse()
+cohortSet(cdm[[feature_medication_table_name_3]]) %>%  glimpse()
 
 info(logger, "- got features for medications")
 
