@@ -105,23 +105,23 @@ IRR_Bisphosphonates <- get_IR_df_function(rateratios_Bisphosphonates, "Bisphosph
 IRR_BoneFracture <-  get_IR_df_function(rateratios_BoneFracture, "Bone Fracture")
 
 # JOIN THE TABLES
-IRR_table_endodx_breastAI <- rbind(IRR_Osteopenia, IRR_Osteoporosis, IRR_Bisphosphonates, IRR_BoneFracture)
+IRR_table_endodx_breastTAM <- rbind(IRR_Osteopenia, IRR_Osteoporosis, IRR_Bisphosphonates, IRR_BoneFracture)
 # REMOVE PRE-covid COLUMN
-IRR_table_endodx_breastAI <- IRR_table_endodx_breastAI[-1]
+IRR_table_endodx_breastTAM <- IRR_table_endodx_breastTAM[-1]
 # CONVERT THE ROWNAMES TO A NORMAL DATA COLUMN
-IRR_table_endodx_breastAI <- tibble::rownames_to_column(IRR_table_endodx_breastAI, "Endocrine Treatment")
+IRR_table_endodx_breastTAM <- tibble::rownames_to_column(IRR_table_endodx_breastTAM, "Endocrine Treatment")
 
 
 #### Save IRR
-write.csv(IRR_table_endodx_breastAI, file=here::here("3_IRR", "IRR_table_endodx_breastAI.csv"))
-save(IRR_table_endodx_breastAI, file=here::here("3_IRR", "IRR_table_endodx_breastAI.Rdata"))
+write.csv(IRR_table_endodx_breastTAM, file=here::here("3_IRR", "IRR_table_endodx_breastTAM.csv"))
+save(IRR_table_endodx_breastTAM, file=here::here("3_IRR", "IRR_table_endodx_breastTAM.Rdata"))
 
 #### Make pretty table
-Pretty_IRR_table_endodx_breastAI <- flextable(IRR_table_endodx_breastAI) %>% theme_vanilla() %>% 
+Pretty_IRR_table_endodx_breastTAM <- flextable(IRR_table_endodx_breastTAM) %>% theme_vanilla() %>% 
   set_caption(caption = "Incidence rate ratios of treatment-related outcomes in breast cancer patients on aromatase inhibitors over the lockdown periods compared to pre-COVID period") %>% 
   width(width = 1.4) 
 
-save_as_docx('Pretty_IRR_table_endodx_breastAI' = Pretty_IRR_table_endodx_breastAI, path=here("3_IRR", "Pretty_IRR_table_endodx_breastAI.docx"))
+save_as_docx('Pretty_IRR_table_endodx_breastTAM' = Pretty_IRR_table_endodx_breastTAM, path=here("3_IRR", "Pretty_IRR_table_endodx_breastTAM.docx"))
 
 
 
@@ -148,16 +148,16 @@ IRR_BoneFracture_Sep <-  get_IR_df_function_CIs_Sep(rateratios_BoneFracture, "Bo
 
 
 # JOIN THE RATIO OUTPUTS   
-IRR_FOREST_endodx_breastAI <- rbind(IRR_Osteopenia_Sep, IRR_Osteoporosis_Sep, IRR_Bisphosphonates_Sep,  IRR_BoneFracture_Sep)
+IRR_FOREST_endodx_breastTAM <- rbind(IRR_Osteopenia_Sep, IRR_Osteoporosis_Sep, IRR_Bisphosphonates_Sep,  IRR_BoneFracture_Sep)
 
 # filter out pre-covid 
-IRR_FOREST_endodx_breastAI <- IRR_FOREST_endodx_breastAI %>% filter(periods !="Pre-COVID")
+IRR_FOREST_endodx_breastTAM <- IRR_FOREST_endodx_breastTAM %>% filter(periods !="Pre-COVID")
 
 # RENAME PERIODS
-IRR_FOREST_endodx_breastAI <- IRR_FOREST_endodx_breastAI %>% rename("Lockdown Periods" = periods) 
+IRR_FOREST_endodx_breastTAM <- IRR_FOREST_endodx_breastTAM %>% rename("Lockdown Periods" = periods) 
 
 
-IRR_FOREST_endodx_breastAI <- IRR_FOREST_endodx_breastAI  %>%
+IRR_FOREST_endodx_breastTAM <- IRR_FOREST_endodx_breastTAM  %>%
   mutate(`Lockdown Periods` = factor(`Lockdown Periods`, levels=rev(c("Lockdown", "Post-lockdown1", "Second lockdown", 
                                                                       "Third lockdown", "Easing of restrictions", "Legal restrictions removed"))) )
 
@@ -165,11 +165,11 @@ IRR_FOREST_endodx_breastAI <- IRR_FOREST_endodx_breastAI  %>%
 # The palette with grey:
 #cbPalette <- c("#CC79A7", "#D55E00", "#0072B2", "#F0E442", "#009E73", "#56B4E9", "#E69F00", "#999999")
 
-IRR_FOREST_endodx_breastAI_plot =
-  ggplot(data=IRR_FOREST_endodx_breastAI, aes(x = `Lockdown Periods`,y = estimate, ymin = lower, ymax = upper ))+
+IRR_FOREST_endodx_breastTAM_plot =
+  ggplot(data=IRR_FOREST_endodx_breastTAM, aes(x = `Lockdown Periods`,y = estimate, ymin = lower, ymax = upper ))+
   geom_pointrange(aes(col=`Lockdown Periods`, shape=`Lockdown Periods`))+
   geom_hline(aes(fill=`Lockdown Periods`),yintercept =1, linetype=2)+
-  xlab('Endocrine Treatment Outcome in Breast Cancer Patients on Aromatase Inhibitors')+ ylab("Incidence Rate Ratio (95% Confidence Interval - Pre-Pandemic as reference)")+
+  xlab('Endocrine Treatment Outcome in Breast Cancer Patients on Tamoxifen')+ ylab("Incidence Rate Ratio (95% Confidence Interval - Pre-Pandemic as reference)")+
   geom_errorbar(aes(ymin=lower, ymax=upper,col=`Lockdown Periods`),width=0.5,cex=0.8)+ 
   facet_wrap(~`Endocrine Treatment`,strip.position="left",nrow=4,scales = "free_y",labeller = label_wrap_gen()) +
   theme(plot.title=element_text(size=14,face="bold"),
@@ -189,10 +189,10 @@ IRR_FOREST_endodx_breastAI_plot =
   coord_flip()
 
 
-IRR_FOREST_endodx_breastAI_plot
+IRR_FOREST_endodx_breastTAM_plot
 
 # Save
 
-ggsave(here("3_IRR", "IRR_FOREST_endodx_breastAI_plot.tiff"), IRR_FOREST_endodx_breastAI_plot, dpi=600, scale = 1.3,  width = 10, height = 8)
-ggsave(here("3_IRR", "IRR_FOREST_endodx_breastAI_plot.jpg"), IRR_FOREST_endodx_breastAI_plot, dpi=600, scale = 1.3,  width = 10, height = 8)
+ggsave(here("3_IRR", "IRR_FOREST_endodx_breastTAM_plot.tiff"), IRR_FOREST_endodx_breastTAM_plot, dpi=600, scale = 1.3,  width = 10, height = 8)
+ggsave(here("3_IRR", "IRR_FOREST_endodx_breastTAM_plot.jpg"), IRR_FOREST_endodx_breastTAM_plot, dpi=600, scale = 1.3,  width = 10, height = 8)
 

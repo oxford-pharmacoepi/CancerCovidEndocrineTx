@@ -930,7 +930,7 @@
     "Type": "First"
   },
   "ExpressionLimit": {
-    "Type": "All"
+    "Type": "First"
   },
   "InclusionRules": [
     {
@@ -946,9 +946,11 @@
             },
             "StartWindow": {
               "Start": {
+                "Days": 30,
                 "Coeff": -1
               },
               "End": {
+                "Days": 30,
                 "Coeff": 1
               },
               "UseEventEnd": false
@@ -966,9 +968,11 @@
             },
             "StartWindow": {
               "Start": {
+                "Days": 30,
                 "Coeff": -1
               },
               "End": {
+                "Days": 30,
                 "Coeff": 1
               },
               "UseEventEnd": false

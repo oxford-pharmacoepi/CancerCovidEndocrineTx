@@ -1,8 +1,8 @@
 # ============================================================================ #
 #     Create tables with incidence incidence rate ratios compared to the       #
 #                             pre-covid reference                              #
-#         for treatment related outcomes in breast cancer patients             #
-#                         on Aromatase Inhibitors                              #
+#         for treatment related outcomes in prostate cancer patients           #
+#                         on any endocrine treatment                           #
 #                              Nicola Barclay                                  #
 #                                18-08-2023                                    #
 # ============================================================================ #
@@ -15,7 +15,7 @@ library(data.table)
 # Load the cleaned screening test data object which is from the csv file of 
 # incidence results from the IncPrev package ----
 
-inc_data <- read_csv("0_DataPrep/inc_data_endo_dx_outcomes_in_breast_AI.csv")
+inc_data <- read_csv("0_DataPrep/inc_data_endo_dx_outcomes_in_prostate.csv")
 
 
 # ============ CALCULATE IRR FOR EACH CANCER OVER PERIODS ==================== #
@@ -26,7 +26,7 @@ inc_data <- read_csv("0_DataPrep/inc_data_endo_dx_outcomes_in_breast_AI.csv")
 # This code calculates the IRR for each of the cancers
 # separately, but loops over each period of interest
 
-IR.overall <- inc_data %>% filter(denominator_cohort_id ==2)# this is females only
+IR.overall <- inc_data %>% filter(denominator_cohort_id ==1)
 
 IR <- IR.overall
 
@@ -105,23 +105,23 @@ IRR_Bisphosphonates <- get_IR_df_function(rateratios_Bisphosphonates, "Bisphosph
 IRR_BoneFracture <-  get_IR_df_function(rateratios_BoneFracture, "Bone Fracture")
 
 # JOIN THE TABLES
-IRR_table_endodx_breastAI <- rbind(IRR_Osteopenia, IRR_Osteoporosis, IRR_Bisphosphonates, IRR_BoneFracture)
+IRR_table_endodx_prostate <- rbind(IRR_Bisphosphonates, IRR_BoneFracture)
 # REMOVE PRE-covid COLUMN
-IRR_table_endodx_breastAI <- IRR_table_endodx_breastAI[-1]
+IRR_table_endodx_prostate <- IRR_table_endodx_prostate[-1]
 # CONVERT THE ROWNAMES TO A NORMAL DATA COLUMN
-IRR_table_endodx_breastAI <- tibble::rownames_to_column(IRR_table_endodx_breastAI, "Endocrine Treatment")
+IRR_table_endodx_prostate <- tibble::rownames_to_column(IRR_table_endodx_prostate, "Endocrine Treatment")
 
 
 #### Save IRR
-write.csv(IRR_table_endodx_breastAI, file=here::here("3_IRR", "IRR_table_endodx_breastAI.csv"))
-save(IRR_table_endodx_breastAI, file=here::here("3_IRR", "IRR_table_endodx_breastAI.Rdata"))
+write.csv(IRR_table_endodx_prostate, file=here::here("3_IRR", "IRR_table_endodx_prostate.csv"))
+save(IRR_table_endodx_prostate, file=here::here("3_IRR", "IRR_table_endodx_prostate.Rdata"))
 
 #### Make pretty table
-Pretty_IRR_table_endodx_breastAI <- flextable(IRR_table_endodx_breastAI) %>% theme_vanilla() %>% 
-  set_caption(caption = "Incidence rate ratios of treatment-related outcomes in breast cancer patients on aromatase inhibitors over the lockdown periods compared to pre-COVID period") %>% 
+Pretty_IRR_table_endodx_prostate <- flextable(IRR_table_endodx_prostate) %>% theme_vanilla() %>% 
+  set_caption(caption = "Incidence rate ratios of treatment-related outcomes in prostate cancer patients on endocrine treatments over the lockdown periods compared to pre-COVID period") %>% 
   width(width = 1.4) 
 
-save_as_docx('Pretty_IRR_table_endodx_breastAI' = Pretty_IRR_table_endodx_breastAI, path=here("3_IRR", "Pretty_IRR_table_endodx_breastAI.docx"))
+save_as_docx('Pretty_IRR_table_endodx_prostate' = Pretty_IRR_table_endodx_prostate, path=here("3_IRR", "Pretty_IRR_table_endodx_prostate.docx"))
 
 
 
@@ -167,22 +167,21 @@ N_EVENTS_PD_BoneFracture <-  get_n_events_pd_function(rateratios_BoneFracture, "
 
 
 # JOIN THE TABLES
-N_EVENTS_PD_table_endodx_breastAI <- rbind(N_EVENTS_PD_Osteopenia, N_EVENTS_PD_Osteoporosis, N_EVENTS_PD_Bisphosphonates, N_EVENTS_PD_BoneFracture)
+N_EVENTS_PD_table_endodx_prostate <- rbind(N_EVENTS_PD_Bisphosphonates, N_EVENTS_PD_BoneFracture)
 # CONVERT THE ROWNAMES TO A NORMAL DATA COLUMN
-N_EVENTS_PD_table_endodx_breastAI <- tibble::rownames_to_column(N_EVENTS_PD_table_endodx_breastAI, "Endocrine Treatment-Related Outcome")
+N_EVENTS_PD_table_endodx_prostate <- tibble::rownames_to_column(N_EVENTS_PD_table_endodx_prostate, "Endocrine Treatment-Related Outcome")
 
 
 #### Save n EVENTS AND PERSON DAYS
-write.csv(N_EVENTS_PD_table_endodx_breastAI, file=here::here("3_IRR", "N_EVENTS_PD_table_endodx_breastAI.csv"))
-save(N_EVENTS_PD_table_endodx_breastAI, file=here::here("3_IRR", "N_EVENTS_PD_table_endodx_breastAI.Rdata"))
+write.csv(N_EVENTS_PD_table_endodx_prostate, file=here::here("3_IRR", "N_EVENTS_PD_table_endodx_prostate.csv"))
+save(N_EVENTS_PD_table_endodx_prostate, file=here::here("3_IRR", "N_EVENTS_PD_table_endodx_prostate.Rdata"))
 
 #### Make pretty table
-Pretty_N_EVENTS_PD_table_endodx_breastAI <- flextable(N_EVENTS_PD_table_endodx_breastAI) %>% theme_vanilla() %>% 
-  set_caption(caption = "Number of events and person days of treatment-related outcomes in breast cancer patients on aromatase inhibitors over the lockdown periods compared to pre-COVID period") %>% 
+Pretty_N_EVENTS_PD_table_endodx_prostate <- flextable(N_EVENTS_PD_table_endodx_prostate) %>% theme_vanilla() %>% 
+  set_caption(caption = "Number of events and person days of treatment-related outcomes in prostate cancer patients on endocrine treatments over the lockdown periods compared to pre-COVID period") %>% 
   width(width = 1.4) 
 
-save_as_docx('Pretty_N_EVENTS_PD_table_endodx_breastAI' = Pretty_N_EVENTS_PD_table_endodx_breastAI, path=here("3_IRR", "Pretty_N_EVENTS_PD_table_endodx_breastAI.docx"))
-
+save_as_docx('Pretty_N_EVENTS_PD_table_endodx_prostate' = Pretty_N_EVENTS_PD_table_endodx_prostate, path=here("3_IRR", "Pretty_N_EVENTS_PD_table_endodx_prostate.docx"))
 
 
 # ============== CREATE FOREST PLOT OF INCIDENCE RATE RATIOS ================= #
@@ -201,23 +200,21 @@ get_IR_df_function_CIs_Sep <- function(yourrateratiosname, title){
 }
 
 # RUN THE FUNCTION FOR EACH OF THE RATERATIO LISTS
-IRR_Osteopenia_Sep  <-  get_IR_df_function_CIs_Sep(rateratios_Osteopenia, "Osteopenia")
-IRR_Osteoporosis_Sep <-  get_IR_df_function_CIs_Sep(rateratios_Osteoporosis, "Osteoporosis")
 IRR_Bisphosphonates_Sep <- get_IR_df_function_CIs_Sep(rateratios_Bisphosphonates, "Bisphosphonates") 
 IRR_BoneFracture_Sep <-  get_IR_df_function_CIs_Sep(rateratios_BoneFracture, "Bone Fracture")
 
 
 # JOIN THE RATIO OUTPUTS   
-IRR_FOREST_endodx_breastAI <- rbind(IRR_Osteopenia_Sep, IRR_Osteoporosis_Sep, IRR_Bisphosphonates_Sep,  IRR_BoneFracture_Sep)
+IRR_FOREST_endodx_prostate <- rbind(IRR_Bisphosphonates_Sep,  IRR_BoneFracture_Sep)
 
 # filter out pre-covid 
-IRR_FOREST_endodx_breastAI <- IRR_FOREST_endodx_breastAI %>% filter(periods !="Pre-COVID")
+IRR_FOREST_endodx_prostate <- IRR_FOREST_endodx_prostate %>% filter(periods !="Pre-COVID")
 
 # RENAME PERIODS
-IRR_FOREST_endodx_breastAI <- IRR_FOREST_endodx_breastAI %>% rename("Lockdown Periods" = periods) 
+IRR_FOREST_endodx_prostate <- IRR_FOREST_endodx_prostate %>% rename("Lockdown Periods" = periods) 
 
 
-IRR_FOREST_endodx_breastAI <- IRR_FOREST_endodx_breastAI  %>%
+IRR_FOREST_endodx_prostate <- IRR_FOREST_endodx_prostate  %>%
   mutate(`Lockdown Periods` = factor(`Lockdown Periods`, levels=rev(c("Lockdown", "Post-lockdown1", "Second lockdown", 
                                                                       "Third lockdown", "Easing of restrictions", "Legal restrictions removed"))) )
 
@@ -225,11 +222,11 @@ IRR_FOREST_endodx_breastAI <- IRR_FOREST_endodx_breastAI  %>%
 # The palette with grey:
 #cbPalette <- c("#CC79A7", "#D55E00", "#0072B2", "#F0E442", "#009E73", "#56B4E9", "#E69F00", "#999999")
 
-IRR_FOREST_endodx_breastAI_plot =
-  ggplot(data=IRR_FOREST_endodx_breastAI, aes(x = `Lockdown Periods`,y = estimate, ymin = lower, ymax = upper ))+
+IRR_FOREST_endodx_prostate_plot =
+  ggplot(data=IRR_FOREST_endodx_prostate, aes(x = `Lockdown Periods`,y = estimate, ymin = lower, ymax = upper ))+
   geom_pointrange(aes(col=`Lockdown Periods`, shape=`Lockdown Periods`))+
   geom_hline(aes(fill=`Lockdown Periods`),yintercept =1, linetype=2)+
-  xlab('Endocrine Treatment Outcome in Breast Cancer Patients on Aromatase Inhibitors')+ ylab("Incidence Rate Ratio (95% Confidence Interval - Pre-Pandemic as reference)")+
+  xlab('Endocrine Treatment Outcomes in Prostate Cancer Patients on Endocrine Treatments')+ ylab("Incidence Rate Ratio (95% Confidence Interval - Pre-Pandemic as reference)")+
   geom_errorbar(aes(ymin=lower, ymax=upper,col=`Lockdown Periods`),width=0.5,cex=0.8)+ 
   facet_wrap(~`Endocrine Treatment`,strip.position="left",nrow=4,scales = "free_y",labeller = label_wrap_gen()) +
   theme(plot.title=element_text(size=14,face="bold"),
@@ -249,10 +246,10 @@ IRR_FOREST_endodx_breastAI_plot =
   coord_flip()
 
 
-IRR_FOREST_endodx_breastAI_plot
+IRR_FOREST_endodx_prostate_plot
 
 # Save
 
-ggsave(here("3_IRR", "IRR_FOREST_endodx_breastAI_plot.tiff"), IRR_FOREST_endodx_breastAI_plot, dpi=600, scale = 1.3,  width = 10, height = 8)
-ggsave(here("3_IRR", "IRR_FOREST_endodx_breastAI_plot.jpg"), IRR_FOREST_endodx_breastAI_plot, dpi=600, scale = 1.3,  width = 10, height = 8)
+ggsave(here("3_IRR", "IRR_FOREST_endodx_prostate_plot.tiff"), IRR_FOREST_endodx_prostate_plot, dpi=600, scale = 1.3,  width = 10, height = 8)
+ggsave(here("3_IRR", "IRR_FOREST_endodx_prostate_plot.jpg"), IRR_FOREST_endodx_prostate_plot, dpi=600, scale = 1.3,  width = 10, height = 8)
 

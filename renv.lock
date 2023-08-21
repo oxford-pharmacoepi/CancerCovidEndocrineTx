@@ -152,6 +152,23 @@
       ],
       "Hash": "97b73909c1d33550b1ba3f563e45cfe5"
     },
+     "epiR": {
+      "Package": "epiR",
+      "Version": "2.0.57",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "dd7c47e7f21d76d5295a905bbb901264",
+      "Requirements": [
+        "BiasedUrn",
+        "flextable",
+        "officer",
+        "pander",
+        "sf",
+        "survival",
+        "zoo"
+      ]
+    },
+   
     "MASS": {
       "Package": "MASS",
       "Version": "7.3-60",

@@ -17,7 +17,7 @@ info(logger, "- Getting denominator population")
 
 cdm <- generateDenominatorCohortSet(
   cdm = cdm,
-  cohortDateRange = as.Date(c("2016-01-01","2022-07-01")),
+  cohortDateRange = as.Date(c("2017-01-01","2022-07-01")),
   strataTable = strata_table_name_2,
   strataCohortId = 1,
   ageGroup = list(c(0,150), c(20,39), c(40,59), c(60,79), c(80,150)),
@@ -230,7 +230,7 @@ info(logger, "- Getting denominator population")
 
 cdm <- generateDenominatorCohortSet(
   cdm = cdm,
-  cohortDateRange = as.Date(c("2016-01-01","2022-07-01")),
+  cohortDateRange = as.Date(c("2017-01-01","2022-07-01")),
   strataTable = strata_table_name_2,
   strataCohortId = 2,
   ageGroup = list(c(0,150), c(20,39), c(40,59), c(60,79), c(80,150)),
@@ -441,7 +441,7 @@ info(logger, "- Getting denominator population")
 
 cdm <- generateDenominatorCohortSet(
   cdm = cdm,
-  cohortDateRange = as.Date(c("2016-01-01","2022-07-01")),
+  cohortDateRange = as.Date(c("2017-01-01","2022-07-01")),
   strataTable = strata_table_name_2,
   strataCohortId = 3,
   ageGroup = list(c(0,150), c(20,39), c(40,59), c(60,79), c(80,150)),

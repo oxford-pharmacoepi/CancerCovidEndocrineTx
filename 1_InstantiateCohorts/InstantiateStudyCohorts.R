@@ -50,7 +50,7 @@ cohortCount(cdm[[outcome_table_name_1]]) %>%  glimpse()
 
 cohortAttrition(cdm[[outcome_table_name_1]]) %>%  glimpse()
 
-cohortSet(cdm[[outcome_table_name_1]]) %>%  glimpse()
+cohortSet(cdm[[outcome_table_name_1]]) %>%  print(n = 9)
 
 info(logger, "- got endocrine outcomes")
 

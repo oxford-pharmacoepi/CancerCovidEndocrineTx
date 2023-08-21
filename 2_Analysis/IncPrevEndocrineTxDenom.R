@@ -18,7 +18,7 @@ info(logger, "- Getting denominator population")
 cdm <- generateDenominatorCohortSet(
   cdm = cdm,
   name = "denominator",
-  cohortDateRange = as.Date(c("2016-01-01","2022-07-01")),
+  cohortDateRange = as.Date(c("2017-01-01","2022-07-01")),
   ageGroup = list(c(0,150), c(0,19), c(20,39), c(40,59), c(60,79), c(80,150)),
   sex = c("Both", "Male", "Female"),
   daysPriorHistory = 365,
@@ -101,13 +101,13 @@ inc_yrs_plot <- inc %>%
   filter(denominator_cohort_id == 1) %>% # this is the denominator cohort with 365 days prior history
   filter(analysis_interval == "years") %>%
   mutate(outcome = case_when(outcome_cohort_name == "AromataseInhibitors" ~ "Aromatase Inhibitors",
-                             outcome_cohort_name == "AromataseInhibitors_withGnRHAgonistsOrAntagonists" ~ "Aromatase Inhibitors with GnRH Agonists Or Antagonists",
+                             outcome_cohort_name == "AromataseInhibitors_withGnRHAgonistsOrAntagonists_UPDATED" ~ "Aromatase Inhibitors with GnRH Agonists Or Antagonists",
                              outcome_cohort_name == "First_generation_antiandrogens" ~ "First Generation Antiandrogens",
-                             outcome_cohort_name == "GNRH_Agonists_with1stGenADT" ~ "GnRH Agonists with First Generation Antiandrogens",
+                             outcome_cohort_name == "GNRH_Agonists_with1stGenADT_UPDATED" ~ "GnRH Agonists with First Generation Antiandrogens",
                              outcome_cohort_name == "GNRH_Agonists" ~ "GnRH Agonists",
                              outcome_cohort_name == "GNRH_LHRH_antagonists" ~ "GnRH Antagonists",
                              outcome_cohort_name == "Second_generation_antiandrogens" ~ "Second Generation Antiandrogens",
-                             outcome_cohort_name == "Tamoxifen_withGnRHAgonistsOrAntagonists" ~ "Tamoxifen with GnRH Agonists Or Antagonists",
+                             outcome_cohort_name == "Tamoxifen_withGnRHAgonistsOrAntagonists_UPDATED" ~ "Tamoxifen with GnRH Agonists Or Antagonists",
                              outcome_cohort_name == "Tamoxifen" ~ "Tamoxifen")) %>% 
   as.data.frame()
 
@@ -143,13 +143,13 @@ inc_months_plot <- inc %>%
   filter(denominator_cohort_id == 1) %>% # this is the denominator cohort with 365 days prior history
   filter(analysis_interval == "months") %>%
   mutate(outcome = case_when(outcome_cohort_name == "AromataseInhibitors" ~ "Aromatase Inhibitors",
-                             outcome_cohort_name == "AromataseInhibitors_withGnRHAgonistsOrAntagonists" ~ "Aromatase Inhibitors with GnRH Agonists Or Antagonists",
+                             outcome_cohort_name == "AromataseInhibitors_withGnRHAgonistsOrAntagonists_UPDATED" ~ "Aromatase Inhibitors with GnRH Agonists Or Antagonists",
                              outcome_cohort_name == "First_generation_antiandrogens" ~ "First Generation Antiandrogens",
-                             outcome_cohort_name == "GNRH_Agonists_with1stGenADT" ~ "GnRH Agonists with First Generation Antiandrogens",
+                             outcome_cohort_name == "GNRH_Agonists_with1stGenADT_UPDATED" ~ "GnRH Agonists with First Generation Antiandrogens",
                              outcome_cohort_name == "GNRH_Agonists" ~ "GnRH Agonists",
                              outcome_cohort_name == "GNRH_LHRH_antagonists" ~ "GnRH Antagonists",
                              outcome_cohort_name == "Second_generation_antiandrogens" ~ "Second Generation Antiandrogens",
-                             outcome_cohort_name == "Tamoxifen_withGnRHAgonistsOrAntagonists" ~ "Tamoxifen with GnRH Agonists Or Antagonists",
+                             outcome_cohort_name == "Tamoxifen_withGnRHAgonistsOrAntagonists_UPDATED" ~ "Tamoxifen with GnRH Agonists Or Antagonists",
                              outcome_cohort_name == "Tamoxifen" ~ "Tamoxifen")) %>% 
   as.data.frame()
 
@@ -184,13 +184,13 @@ inc_qrs_plot <- inc %>%
   filter(denominator_cohort_id == 1) %>% # this is the denominator cohort with 365 days prior history
   filter(analysis_interval == "quarters") %>%
   mutate(outcome = case_when(outcome_cohort_name == "AromataseInhibitors" ~ "Aromatase Inhibitors",
-                             outcome_cohort_name == "AromataseInhibitors_withGnRHAgonistsOrAntagonists" ~ "Aromatase Inhibitors with GnRH Agonists Or Antagonists",
+                             outcome_cohort_name == "AromataseInhibitors_withGnRHAgonistsOrAntagonists_UPDATED" ~ "Aromatase Inhibitors with GnRH Agonists Or Antagonists",
                              outcome_cohort_name == "First_generation_antiandrogens" ~ "First Generation Antiandrogens",
-                             outcome_cohort_name == "GNRH_Agonists_with1stGenADT" ~ "GnRH Agonists with First Generation Antiandrogens",
+                             outcome_cohort_name == "GNRH_Agonists_with1stGenADT_UPDATED" ~ "GnRH Agonists with First Generation Antiandrogens",
                              outcome_cohort_name == "GNRH_Agonists" ~ "GnRH Agonists",
                              outcome_cohort_name == "GNRH_LHRH_antagonists" ~ "GnRH Antagonists",
                              outcome_cohort_name == "Second_generation_antiandrogens" ~ "Second Generation Antiandrogens",
-                             outcome_cohort_name == "Tamoxifen_withGnRHAgonistsOrAntagonists" ~ "Tamoxifen with GnRH Agonists Or Antagonists",
+                             outcome_cohort_name == "Tamoxifen_withGnRHAgonistsOrAntagonists_UPDATED" ~ "Tamoxifen with GnRH Agonists Or Antagonists",
                              outcome_cohort_name == "Tamoxifen" ~ "Tamoxifen")) %>% 
   as.data.frame()
 

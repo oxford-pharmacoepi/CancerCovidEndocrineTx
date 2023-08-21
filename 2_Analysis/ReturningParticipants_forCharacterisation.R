@@ -322,7 +322,7 @@ table_characteristics <- characteristics[[1]] %>%
 # save the results
 write_csv(
   table_characteristics, 
-  here::here("Results", "4_Characterisations",db.name, paste0("table_characteristics", ".csv"))
+  here::here("Results", db.name, "4_Characterisations",paste0("table_characteristics_breast", ".csv"))
 )
 
 
@@ -330,7 +330,7 @@ write_csv(
 
 
 # get denominator to get participants
-## ============== ENDOCRINE TREATMENTS IN BREAST CANCER POPULATION ========== ##
+## ============== ENDOCRINE TREATMENTS IN PROSTATE CANCER POPULATION ========== ##
 ## ============== SET THE PROSTATE CANCER STRATA DENOMINATOR COHORTS ========== ##
 
 print(paste0("- Getting prostate denominator population"))

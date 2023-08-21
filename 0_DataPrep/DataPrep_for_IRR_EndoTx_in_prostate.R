@@ -27,7 +27,7 @@ inc_data <- inc_data %>% dplyr::select(c(-analysis_id, -cohort_obscured,  -analy
                                        -denominator_strata_cohort_name, -cdm_name)) %>%
                                        # name outcomes
                                         mutate(outcome = case_when(outcome_cohort_name == "First_generation_antiandrogens" ~ "First generation antiandrogens",
-                                                                   outcome_cohort_name == "GNRH_Agonists_with1stGenADT" ~ "GNRH Agonists with 1st Generation ADT",
+                                                                   outcome_cohort_name == "GNRH_Agonists_with1stGenADT_UPDATED" ~ "GNRH Agonists with 1st Generation ADT",
                                                                    outcome_cohort_name == "GNRH_Agonists" ~ "GNRH Agonists",
                                                                    outcome_cohort_name == "GNRH_LHRH_antagonists" ~ "GNRH / LHRH antagonists",
                                                                    outcome_cohort_name == "Second_generation_antiandrogens" ~ "Second generation antiandrogens")) %>% 

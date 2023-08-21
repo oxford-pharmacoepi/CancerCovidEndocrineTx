@@ -27,8 +27,8 @@ inc_data <- inc_data %>% dplyr::select(c(-analysis_id, -cohort_obscured,  -analy
                                        -denominator_strata_cohort_name, -cdm_name)) %>%
                                        # name outcomes
                                         mutate(outcome = case_when(outcome_cohort_name == "AromataseInhibitors" ~ "Aromatase Inhibitors",
-                                                                   outcome_cohort_name == "AromataseInhibitors_withGnRHAgonistsOrAntagonists" ~ "Aromatase Inhibitors with GnRH Agonists Or Antagonists",
-                                                                   outcome_cohort_name == "Tamoxifen_withGnRHAgonistsOrAntagonists" ~ "Tamoxifen with GnRH Agonists Or Antagonists",
+                                                                   outcome_cohort_name == "AromataseInhibitors_withGnRHAgonistsOrAntagonists_UPDATED" ~ "Aromatase Inhibitors with GnRH Agonists Or Antagonists",
+                                                                   outcome_cohort_name == "Tamoxifen_withGnRHAgonistsOrAntagonists_UPDATED" ~ "Tamoxifen with GnRH Agonists Or Antagonists",
                                                                    outcome_cohort_name == "Tamoxifen" ~ "Tamoxifen")) %>% 
 
                                        # save only data for months not years
