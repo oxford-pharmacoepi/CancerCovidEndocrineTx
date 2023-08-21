@@ -170,7 +170,8 @@ N_EVENTS_PD_BoneFracture <-  get_n_events_pd_function(rateratios_BoneFracture, "
 N_EVENTS_PD_table_endodx_breastAI <- rbind(N_EVENTS_PD_Osteopenia, N_EVENTS_PD_Osteoporosis, N_EVENTS_PD_Bisphosphonates, N_EVENTS_PD_BoneFracture)
 # CONVERT THE ROWNAMES TO A NORMAL DATA COLUMN
 N_EVENTS_PD_table_endodx_breastAI <- tibble::rownames_to_column(N_EVENTS_PD_table_endodx_breastAI, "Endocrine Treatment-Related Outcome")
-
+# re-order the rows
+N_EVENTS_PD_table_endodx_breastAI <- N_EVENTS_PD_table_endodx_breastAI[c(3,4,1,2),]
 
 #### Save n EVENTS AND PERSON DAYS
 write.csv(N_EVENTS_PD_table_endodx_breastAI, file=here::here("3_IRR", "N_EVENTS_PD_table_endodx_breastAI.csv"))
@@ -255,4 +256,85 @@ IRR_FOREST_endodx_breastAI_plot
 
 ggsave(here("3_IRR", "IRR_FOREST_endodx_breastAI_plot.tiff"), IRR_FOREST_endodx_breastAI_plot, dpi=600, scale = 1.3,  width = 10, height = 8)
 ggsave(here("3_IRR", "IRR_FOREST_endodx_breastAI_plot.jpg"), IRR_FOREST_endodx_breastAI_plot, dpi=600, scale = 1.3,  width = 10, height = 8)
+
+
+
+#### INCIDENCE RATES TABLES FOR PAPER --------------------------------------- ##
+
+#This gives you all the rates calculated in each of the time periods
+overall <-IR.overall%>% group_by(covid, outcome) %>% summarise( events_t = sum(events),person_months_at_risk = sum(months),)
+
+ir <- rbind(overall)%>% arrange(covid, outcome)
+
+ir1 <-as.matrix(ir[,3:4])
+ci <- round(epi.conf(ir1, ctype = "inc.rate", method = "exact", N = 100000, design = 1, 
+                     conf.level = 0.95) * 100000,1)
+
+ir_ci <- cbind(ir, ci)
+ir_ci <- ir_ci %>% 
+  mutate(ir = paste0(paste(est),"(", paste(lower), " to ", paste(upper), ")"))%>%
+  dplyr::select(covid, outcome, events_t, person_months_at_risk, ir)%>%
+  arrange(covid, outcome)
+
+
+write.csv(ir_ci, file=here("3_IRR", "IR_table_endodx_breastAI.csv"))
+save(ir_ci, file=here("3_IRR", "IR_table_endodx_breastAI.RData"))
+
+
+
+# add combined periods post-lockdown - this gives you all the IR calculated anytime after lockdown.These are not averaged but caluclated
+overall.post <-IR.overall%>% 
+  filter(months.since.start >=43)%>%
+  group_by(outcome) %>% summarise( events_t = sum(events),person_months_at_risk = sum(months),)
+
+ir_post <- bind_rows(overall.post)%>% arrange(outcome)
+ir2 <-as.matrix(ir_post[,2:3])
+ci2 <- round(epi.conf(ir2, ctype = "inc.rate", method = "exact", N = 100000, design = 1, 
+                      conf.level = 0.95) * 100000,1)
+
+ir_ci2 <- cbind(ir_post, ci2)
+ir.post_ci <- ir_ci2 %>% 
+  mutate(ir = paste0(paste(est)," (", paste(lower), " to ", paste(upper), ")"))%>%
+  mutate(covid="Post-lockdown")%>%
+  dplyr::select(covid,outcome,  events_t, person_months_at_risk, ir)%>%
+  arrange(covid, outcome)
+
+
+write.csv(ir.post_ci, file=here("3_IRR", "IR_table_endodx_breastAI_with_post_lockdown.csv"))
+save(ir.post_ci, file=here("3_IRR", "IR_table_endodx_breastAI_with_post_lockdown.RData"))
+
+
+# JOIN ALL PERIODS WITH POST-COVID
+
+ir_ci_pre_post <- rbind(ir_ci, ir.post_ci)
+
+write.csv(ir_ci_pre_post, file=here("3_IRR", "IR_table_endodx_breastAI_with_pre_post_lockdown.csv"))
+save(ir_ci_pre_post, file=here("3_IRR", "IR_table_endodx_breastAI_with_pre_post_lockdown.RData"))
+
+# Change table structure to remove events and person months, and pivot the covid categories
+ir_ci_pre_post_pivot <- ir_ci_pre_post %>% dplyr::select(c(-events_t, -person_months_at_risk)) %>% tidyr::pivot_wider(names_from = covid, values_from = ir) 
+# re-order columns
+ir_ci_pre_post_pivot <- ir_ci_pre_post_pivot[c(1, 6,4,5,7,8,2,3,9)]
+#ir_ci_pre_post_pivot <- ir_ci_pre_post_pivot[c(2,4,8,10,12,13,3,6,14,5,7,9,1,11), c(1, 2, 5, 9, 6, 7, 8, 3,4)]
+ir_ci_pre_post_pivot <- ir_ci_pre_post_pivot %>% rename("Pre-COVID (Jan 2017-Feb 2020)" = "Pre-COVID", 
+                                                        "Lockdown (March 2020-June 2020)" = "Lockdown",
+                                                        "Post-lockdown (July 2020-Dec 2021)" = "Post-lockdown", 
+                                                        "Post-first lockdown 1 (July 2020-Oct 2020)" = "Post-lockdown1",
+                                                        "Second lockdown (Nov 2020-Dec 2020)" = "Second lockdown", 
+                                                        "Third lockdown (Jan 2021-Feb 2021)" = "Third lockdown",
+                                                        "Easing of restrictions (March 2021-June 2021" = "Easing of restrictions", 
+                                                        "Legal restrictions removed (July 2021-Dec 2021)"= "Legal restrictions removed")
+
+
+Pretty_observed_IR_results_endodx_breastAI <- flextable(ir_ci_pre_post_pivot) %>% theme_vanilla() %>% 
+  set_caption(caption = "Incidence rates of endocrine-treatment related outcomes in breast cancer patients on aromatase inhibitors in each of the time periods") %>% 
+  width(width = 1.4) 
+
+save(ir_ci_pre_post_pivot, file=here("3_IRR", "IR_table_endodx_breastAI_with_pre_post_lockdown_pivot.RData"))
+write.csv(ir_ci_pre_post_pivot, file=here("3_IRR", "IR_table_endodx_breastAI_with_pre_post_lockdown_pivot.csv"))
+
+save_as_docx('Pretty_observed_IR_results_endodx_breastAI' = Pretty_observed_IR_results_endodx_breastAI, path=here("3_IRR", "Pretty_obs_IR_results_endodx_breastAI.docx"))
+
+
+
 

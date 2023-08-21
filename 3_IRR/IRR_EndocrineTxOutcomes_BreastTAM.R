@@ -105,7 +105,7 @@ IRR_Bisphosphonates <- get_IR_df_function(rateratios_Bisphosphonates, "Bisphosph
 IRR_BoneFracture <-  get_IR_df_function(rateratios_BoneFracture, "Bone Fracture")
 
 # JOIN THE TABLES
-IRR_table_endodx_breastTAM <- rbind(IRR_Osteopenia, IRR_Osteoporosis, IRR_Bisphosphonates, IRR_BoneFracture)
+IRR_table_endodx_breastTAM <- rbind(IRR_Bisphosphonates, IRR_BoneFracture)
 # REMOVE PRE-covid COLUMN
 IRR_table_endodx_breastTAM <- IRR_table_endodx_breastTAM[-1]
 # CONVERT THE ROWNAMES TO A NORMAL DATA COLUMN
