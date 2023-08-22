@@ -184,6 +184,9 @@ IRR_table_breast_endo <- IRR_table_breast_endo[-1]
 IRR_table_breast_endo <- tibble::rownames_to_column(IRR_table_breast_endo, "Endocrine Treatment")
 # RE-ORDER THE COLUMNS
 IRR_table_breast_endo <- IRR_table_breast_endo[c(1,2,3,6,7,4,5)]
+# RE-ORDER ROWS
+IRR_table_breast_endo <- IRR_table_breast_endo[c(2,1,4,3),]
+
 
 #### Save IRR
 write.csv(IRR_table_breast_endo, file=here::here("3_IRR", "IRR_table_breast_endo.csv"))

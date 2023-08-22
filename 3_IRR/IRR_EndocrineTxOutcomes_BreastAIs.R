@@ -110,7 +110,7 @@ IRR_table_endodx_breastAI <- rbind(IRR_Osteopenia, IRR_Osteoporosis, IRR_Bisphos
 IRR_table_endodx_breastAI <- IRR_table_endodx_breastAI[-1]
 # CONVERT THE ROWNAMES TO A NORMAL DATA COLUMN
 IRR_table_endodx_breastAI <- tibble::rownames_to_column(IRR_table_endodx_breastAI, "Endocrine Treatment")
-
+IRR_table_endodx_breastAI <- IRR_table_endodx_breastAI[c(3,4,1,2),]
 
 #### Save IRR
 write.csv(IRR_table_endodx_breastAI, file=here::here("3_IRR", "IRR_table_endodx_breastAI.csv"))
