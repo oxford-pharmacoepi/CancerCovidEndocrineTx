@@ -296,29 +296,50 @@ save_as_docx('Pretty_N_EVENTS_PD_table_endodx_prostate' = Pretty_N_EVENTS_PD_tab
 # Format the data. First create table with the estimates and CIs in separate columns
 # FUNCTION TO EXTRACT ALL THE IRR AND CIS FROM ALL OF THE LISTS 
 
-get_IR_df_function_CIs_Sep <- function(yourrateratiosname, title){
+get_IR_df_function_CIs_Sep_bf <- function(yourrateratiosname, title){
   
   `Endocrine Treatment` <- c(title)
   IR_CIS <- as.data.frame(yourrateratiosname[[2]])
   IR_CIS <- IR_CIS %>% mutate_if(is.numeric, round, digits=2)
-  IR_CIS <-cbind(`Endocrine Treatment`, periods, IR_CIS)
+  IR_CIS <-cbind(`Endocrine Treatment`, periods_bf, IR_CIS)
+  
+  return(IR_CIS)
+}
+
+
+get_IR_df_function_CIs_Sep_bis <- function(yourrateratiosname, title){
+  
+  `Endocrine Treatment` <- c(title)
+  IR_CIS <- as.data.frame(yourrateratiosname[[2]])
+  IR_CIS <- IR_CIS %>% mutate_if(is.numeric, round, digits=2)
+  IR_CIS <-cbind(`Endocrine Treatment`, periods_bis, IR_CIS)
   
   return(IR_CIS)
 }
 
 # RUN THE FUNCTION FOR EACH OF THE RATERATIO LISTS
-IRR_Bisphosphonates_Sep <- get_IR_df_function_CIs_Sep(rateratios_Bisphosphonates, "Bisphosphonates") 
-IRR_BoneFracture_Sep <-  get_IR_df_function_CIs_Sep(rateratios_BoneFracture, "Bone Fracture")
+IRR_Bisphosphonates_Sep <- get_IR_df_function_CIs_Sep_bis(rateratios_Bisphosphonates, "Bisphosphonates") 
+IRR_BoneFracture_Sep <-  get_IR_df_function_CIs_Sep_bf(rateratios_BoneFracture, "Bone Fracture")
 
+# ADD ROWS FOR MISSING PERIODS, WITH NAS
+new_row = c(`Endocrine Treatment` = "Bisphosphonates", periods_bis="Third lockdown", estimate = NA, lower = NA, upper = NA)
+IRR_Bisphosphonates_Sep <- rbind(IRR_Bisphosphonates_Sep,new_row)
+IRR_Bisphosphonates_Sep<- IRR_Bisphosphonates_Sep[c(1,2,3,4,7,5,6),]
+IRR_Bisphosphonates_Sep <- IRR_Bisphosphonates_Sep %>% rename("Periods" = periods_bis)
+
+new_row2 = c(`Endocrine Treatment` = "Bone Fracture", periods_bf="Lockdown", estimate = NA, lower = NA, upper = NA)
+IRR_BoneFracture_Sep <- rbind(IRR_BoneFracture_Sep, new_row2)
+IRR_BoneFracture_Sep <- IRR_BoneFracture_Sep[c(1,7,2,3,4,5,6),]
+IRR_BoneFracture_Sep <- IRR_BoneFracture_Sep %>% rename("Periods" = periods_bf)
 
 # JOIN THE RATIO OUTPUTS   
 IRR_FOREST_endodx_prostate <- rbind(IRR_Bisphosphonates_Sep,  IRR_BoneFracture_Sep)
 
 # filter out pre-covid 
-IRR_FOREST_endodx_prostate <- IRR_FOREST_endodx_prostate %>% filter(periods !="Pre-COVID")
+IRR_FOREST_endodx_prostate <- IRR_FOREST_endodx_prostate %>% filter(Periods !="Pre-COVID")
 
 # RENAME PERIODS
-IRR_FOREST_endodx_prostate <- IRR_FOREST_endodx_prostate %>% rename("Lockdown Periods" = periods) 
+IRR_FOREST_endodx_prostate <- IRR_FOREST_endodx_prostate %>% rename("Lockdown Periods" = Periods) 
 
 
 IRR_FOREST_endodx_prostate <- IRR_FOREST_endodx_prostate  %>%
@@ -330,9 +351,10 @@ IRR_FOREST_endodx_prostate <- IRR_FOREST_endodx_prostate  %>%
 #cbPalette <- c("#CC79A7", "#D55E00", "#0072B2", "#F0E442", "#009E73", "#56B4E9", "#E69F00", "#999999")
 
 IRR_FOREST_endodx_prostate_plot =
-  ggplot(data=IRR_FOREST_endodx_prostate, aes(x = `Lockdown Periods`,y = estimate, ymin = lower, ymax = upper ))+
+  ggplot(IRR_FOREST_endodx_prostate, aes(x = `Lockdown Periods`,y = estimate, ymin = lower, ymax = upper ))+
   geom_pointrange(aes(col=`Lockdown Periods`, shape=`Lockdown Periods`))+
-  geom_hline(aes(fill=`Lockdown Periods`),yintercept =1, linetype=2)+
+  #geom_hline(yintercept=1)+
+  geom_hline(aes(fill=`Lockdown Periods`),yintercept =15, linetype=2)+
   xlab('Endocrine Treatment Outcomes in Prostate Cancer Patients on Endocrine Treatments')+ ylab("Incidence Rate Ratio (95% Confidence Interval - Pre-Pandemic as reference)")+
   geom_errorbar(aes(ymin=lower, ymax=upper,col=`Lockdown Periods`),width=0.5,cex=0.8)+ 
   facet_wrap(~`Endocrine Treatment`,strip.position="left",nrow=4,scales = "free_y",labeller = label_wrap_gen()) +
@@ -351,6 +373,7 @@ IRR_FOREST_endodx_prostate_plot =
   # scale_fill_manual(values=cbPalette)+
   #scale_colour_manual(values=cbPalette)+
   coord_flip()
+
 
 
 IRR_FOREST_endodx_prostate_plot
