@@ -113,15 +113,15 @@ IRR_table_endodx_breastAI <- tibble::rownames_to_column(IRR_table_endodx_breastA
 IRR_table_endodx_breastAI <- IRR_table_endodx_breastAI[c(3,4,1,2),]
 
 #### Save IRR
-write.csv(IRR_table_endodx_breastAI, file=here::here("3_IRR", "IRR_table_endodx_breastAI.csv"))
-save(IRR_table_endodx_breastAI, file=here::here("3_IRR", "IRR_table_endodx_breastAI.Rdata"))
+write.csv(IRR_table_endodx_breastAI, file=here::here(output.folder5, "IRR_table_endodx_breastAI.csv"))
+save(IRR_table_endodx_breastAI, file=here::here(output.folder5, "IRR_table_endodx_breastAI.Rdata"))
 
 #### Make pretty table
 Pretty_IRR_table_endodx_breastAI <- flextable(IRR_table_endodx_breastAI) %>% theme_vanilla() %>% 
   set_caption(caption = "Incidence rate ratios of treatment-related outcomes in breast cancer patients on aromatase inhibitors over the lockdown periods compared to pre-COVID period") %>% 
   width(width = 1.4) 
 
-save_as_docx('Pretty_IRR_table_endodx_breastAI' = Pretty_IRR_table_endodx_breastAI, path=here("3_IRR", "Pretty_IRR_table_endodx_breastAI.docx"))
+save_as_docx('Pretty_IRR_table_endodx_breastAI' = Pretty_IRR_table_endodx_breastAI, path=here(output.folder5, "Pretty_IRR_table_endodx_breastAI.docx"))
 
 
 
@@ -174,15 +174,15 @@ N_EVENTS_PD_table_endodx_breastAI <- tibble::rownames_to_column(N_EVENTS_PD_tabl
 N_EVENTS_PD_table_endodx_breastAI <- N_EVENTS_PD_table_endodx_breastAI[c(3,4,1,2),]
 
 #### Save n EVENTS AND PERSON DAYS
-write.csv(N_EVENTS_PD_table_endodx_breastAI, file=here::here("3_IRR", "N_EVENTS_PD_table_endodx_breastAI.csv"))
-save(N_EVENTS_PD_table_endodx_breastAI, file=here::here("3_IRR", "N_EVENTS_PD_table_endodx_breastAI.Rdata"))
+write.csv(N_EVENTS_PD_table_endodx_breastAI, file=here::here(output.folder5, "N_EVENTS_PD_table_endodx_breastAI.csv"))
+save(N_EVENTS_PD_table_endodx_breastAI, file=here::here(output.folder5, "N_EVENTS_PD_table_endodx_breastAI.Rdata"))
 
 #### Make pretty table
 Pretty_N_EVENTS_PD_table_endodx_breastAI <- flextable(N_EVENTS_PD_table_endodx_breastAI) %>% theme_vanilla() %>% 
   set_caption(caption = "Number of events and person days of treatment-related outcomes in breast cancer patients on aromatase inhibitors over the lockdown periods compared to pre-COVID period") %>% 
   width(width = 1.4) 
 
-save_as_docx('Pretty_N_EVENTS_PD_table_endodx_breastAI' = Pretty_N_EVENTS_PD_table_endodx_breastAI, path=here("3_IRR", "Pretty_N_EVENTS_PD_table_endodx_breastAI.docx"))
+save_as_docx('Pretty_N_EVENTS_PD_table_endodx_breastAI' = Pretty_N_EVENTS_PD_table_endodx_breastAI, path=here(output.folder5, "Pretty_N_EVENTS_PD_table_endodx_breastAI.docx"))
 
 
 
@@ -254,8 +254,8 @@ IRR_FOREST_endodx_breastAI_plot
 
 # Save
 
-ggsave(here("3_IRR", "IRR_FOREST_endodx_breastAI_plot.tiff"), IRR_FOREST_endodx_breastAI_plot, dpi=600, scale = 1.3,  width = 10, height = 8)
-ggsave(here("3_IRR", "IRR_FOREST_endodx_breastAI_plot.jpg"), IRR_FOREST_endodx_breastAI_plot, dpi=600, scale = 1.3,  width = 10, height = 8)
+ggsave(here(output.folder5, "IRR_FOREST_endodx_breastAI_plot.tiff"), IRR_FOREST_endodx_breastAI_plot, dpi=600, scale = 1.3,  width = 10, height = 8)
+ggsave(here(output.folder5, "IRR_FOREST_endodx_breastAI_plot.jpg"), IRR_FOREST_endodx_breastAI_plot, dpi=600, scale = 1.3,  width = 10, height = 8)
 
 
 
@@ -277,8 +277,8 @@ ir_ci <- ir_ci %>%
   arrange(covid, outcome)
 
 
-write.csv(ir_ci, file=here("3_IRR", "IR_table_endodx_breastAI.csv"))
-save(ir_ci, file=here("3_IRR", "IR_table_endodx_breastAI.RData"))
+write.csv(ir_ci, file=here(output.folder5, "IR_table_endodx_breastAI.csv"))
+save(ir_ci, file=here(output.folder5, "IR_table_endodx_breastAI.RData"))
 
 
 
@@ -300,16 +300,11 @@ ir.post_ci <- ir_ci2 %>%
   arrange(covid, outcome)
 
 
-write.csv(ir.post_ci, file=here("3_IRR", "IR_table_endodx_breastAI_with_post_lockdown.csv"))
-save(ir.post_ci, file=here("3_IRR", "IR_table_endodx_breastAI_with_post_lockdown.RData"))
-
-
 # JOIN ALL PERIODS WITH POST-COVID
 
 ir_ci_pre_post <- rbind(ir_ci, ir.post_ci)
 
-write.csv(ir_ci_pre_post, file=here("3_IRR", "IR_table_endodx_breastAI_with_pre_post_lockdown.csv"))
-save(ir_ci_pre_post, file=here("3_IRR", "IR_table_endodx_breastAI_with_pre_post_lockdown.RData"))
+
 
 # Change table structure to remove events and person months, and pivot the covid categories
 ir_ci_pre_post_pivot <- ir_ci_pre_post %>% dplyr::select(c(-events_t, -person_months_at_risk)) %>% tidyr::pivot_wider(names_from = covid, values_from = ir) 
@@ -330,10 +325,10 @@ Pretty_observed_IR_results_endodx_breastAI <- flextable(ir_ci_pre_post_pivot) %>
   set_caption(caption = "Incidence rates of endocrine-treatment related outcomes in breast cancer patients on aromatase inhibitors in each of the time periods") %>% 
   width(width = 1.4) 
 
-save(ir_ci_pre_post_pivot, file=here("3_IRR", "IR_table_endodx_breastAI_with_pre_post_lockdown_pivot.RData"))
-write.csv(ir_ci_pre_post_pivot, file=here("3_IRR", "IR_table_endodx_breastAI_with_pre_post_lockdown_pivot.csv"))
+save(ir_ci_pre_post_pivot, file=here(output.folder5, "IR_table_endodx_breastAI_with_pre_post_lockdown_pivot.RData"))
+write.csv(ir_ci_pre_post_pivot, file=here(output.folder5, "IR_table_endodx_breastAI_with_pre_post_lockdown_pivot.csv"))
 
-save_as_docx('Pretty_observed_IR_results_endodx_breastAI' = Pretty_observed_IR_results_endodx_breastAI, path=here("3_IRR", "Pretty_obs_IR_results_endodx_breastAI.docx"))
+save_as_docx('Pretty_observed_IR_results_endodx_breastAI' = Pretty_observed_IR_results_endodx_breastAI, path=here(output.folder5, "Pretty_obs_IR_results_endodx_breastAI.docx"))
 
 
 

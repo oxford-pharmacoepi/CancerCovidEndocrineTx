@@ -68,7 +68,8 @@ for (y in 1:length(outcome_bf)){
          rateratios[[y]] <- NA)
 } 
 
-
+# EXTRACT THE  LISTS
+rateratios_BoneFracture <- rateratios$`Bone Fracture`
 
 # for bisphosphonates
 
@@ -103,7 +104,6 @@ for (y in 1:length(outcome_bis)){
 
 # EXTRACT THE  LISTS
 rateratios_Bisphosphonates <- rateratios$`Bisphosphonates`
-rateratios_BoneFracture <- rateratios$`Bone Fracture`
 
 
 ################################################################################
@@ -166,10 +166,10 @@ IRR_Bisphosphonates <- get_IR_df_function_bis(rateratios_Bisphosphonates, "Bisph
 IRR_BoneFracture <-  get_IR_df_function_bf(rateratios_BoneFracture, "Bone Fracture")
 
 # ADD COLUMNS FOR MISSING PERIODS, WITH NAS
-IRR_Bisphosphonates$`Third lockdown` <- c("NA")
+IRR_Bisphosphonates$`Third lockdown` <- c(NA)
 IRR_Bisphosphonates<-IRR_Bisphosphonates[c(1,2,3,4,7,5,6)]
 
-IRR_BoneFracture$`Lockdown` <- c("NA")
+IRR_BoneFracture$`Lockdown` <- c(NA)
 IRR_BoneFracture<-IRR_BoneFracture[c(1,7,2,3,4,5,6)]
 
 # JOIN THE TABLES
@@ -181,15 +181,15 @@ IRR_table_endodx_prostate <- tibble::rownames_to_column(IRR_table_endodx_prostat
 
 
 #### Save IRR
-write.csv(IRR_table_endodx_prostate, file=here::here("3_IRR", "IRR_table_endodx_prostate.csv"))
-save(IRR_table_endodx_prostate, file=here::here("3_IRR", "IRR_table_endodx_prostate.Rdata"))
+write.csv(IRR_table_endodx_prostate, file=here::here(output.folder6, "IRR_table_endodx_prostate.csv"))
+save(IRR_table_endodx_prostate, file=here::here(output.folder6, "IRR_table_endodx_prostate.Rdata"))
 
 #### Make pretty table
 Pretty_IRR_table_endodx_prostate <- flextable(IRR_table_endodx_prostate) %>% theme_vanilla() %>% 
   set_caption(caption = "Incidence rate ratios of treatment-related outcomes in prostate cancer patients on endocrine treatments over the lockdown periods compared to pre-COVID period") %>% 
   width(width = 1.4) 
 
-save_as_docx('Pretty_IRR_table_endodx_prostate' = Pretty_IRR_table_endodx_prostate, path=here("3_IRR", "Pretty_IRR_table_endodx_prostate.docx"))
+save_as_docx('Pretty_IRR_table_endodx_prostate' = Pretty_IRR_table_endodx_prostate, path=here(output.folder6, "Pretty_IRR_table_endodx_prostate.docx"))
 
 
 
@@ -266,10 +266,10 @@ N_EVENTS_PD_Bisphosphonates <- get_n_events_pd_function_bis(rateratios_Bisphosph
 N_EVENTS_PD_BoneFracture <-  get_n_events_pd_function_bf(rateratios_BoneFracture, "Bone Fracture")
 
 # ADD COLUMNS FOR MISSING PERIODS, WITH NAS
-N_EVENTS_PD_Bisphosphonates$`Third lockdown` <- c("NA")
+N_EVENTS_PD_Bisphosphonates$`Third lockdown` <- c(NA)
 N_EVENTS_PD_Bisphosphonates<- N_EVENTS_PD_Bisphosphonates[c(1,2,3,4,7,5,6)]
 
-N_EVENTS_PD_BoneFracture$`Lockdown` <- c("NA")
+N_EVENTS_PD_BoneFracture$`Lockdown` <- c(NA)
 N_EVENTS_PD_BoneFracture <- N_EVENTS_PD_BoneFracture[c(1,7,2,3,4,5,6)]
 
 
@@ -280,15 +280,15 @@ N_EVENTS_PD_table_endodx_prostate <- tibble::rownames_to_column(N_EVENTS_PD_tabl
 
 
 #### Save n EVENTS AND PERSON DAYS
-write.csv(N_EVENTS_PD_table_endodx_prostate, file=here::here("3_IRR", "N_EVENTS_PD_table_endodx_prostate.csv"))
-save(N_EVENTS_PD_table_endodx_prostate, file=here::here("3_IRR", "N_EVENTS_PD_table_endodx_prostate.Rdata"))
+write.csv(N_EVENTS_PD_table_endodx_prostate, file=here::here(output.folder6, "N_EVENTS_PD_table_endodx_prostate.csv"))
+save(N_EVENTS_PD_table_endodx_prostate, file=here::here(output.folder6, "N_EVENTS_PD_table_endodx_prostate.Rdata"))
 
 #### Make pretty table
 Pretty_N_EVENTS_PD_table_endodx_prostate <- flextable(N_EVENTS_PD_table_endodx_prostate) %>% theme_vanilla() %>% 
   set_caption(caption = "Number of events and person days of treatment-related outcomes in prostate cancer patients on endocrine treatments over the lockdown periods compared to pre-COVID period") %>% 
   width(width = 1.4) 
 
-save_as_docx('Pretty_N_EVENTS_PD_table_endodx_prostate' = Pretty_N_EVENTS_PD_table_endodx_prostate, path=here("3_IRR", "Pretty_N_EVENTS_PD_table_endodx_prostate.docx"))
+save_as_docx('Pretty_N_EVENTS_PD_table_endodx_prostate' = Pretty_N_EVENTS_PD_table_endodx_prostate, path=here(output.folder6, "Pretty_N_EVENTS_PD_table_endodx_prostate.docx"))
 
 
 # ============== CREATE FOREST PLOT OF INCIDENCE RATE RATIOS ================= #
@@ -380,8 +380,8 @@ IRR_FOREST_endodx_prostate_plot
 
 # Save
 
-ggsave(here("3_IRR", "IRR_FOREST_endodx_prostate_plot.tiff"), IRR_FOREST_endodx_prostate_plot, dpi=600, scale = 1.3,  width = 10, height = 8)
-ggsave(here("3_IRR", "IRR_FOREST_endodx_prostate_plot.jpg"), IRR_FOREST_endodx_prostate_plot, dpi=600, scale = 1.3,  width = 10, height = 8)
+ggsave(here(output.folder6, "IRR_FOREST_endodx_prostate_plot.tiff"), IRR_FOREST_endodx_prostate_plot, dpi=600, scale = 1.3,  width = 10, height = 8)
+ggsave(here(output.folder6, "IRR_FOREST_endodx_prostate_plot.jpg"), IRR_FOREST_endodx_prostate_plot, dpi=600, scale = 1.3,  width = 10, height = 8)
 
 
 
@@ -428,8 +428,6 @@ ir.post_ci <- ir_ci2 %>%
 
 ir_ci_pre_post <- rbind(ir_ci, ir.post_ci)
 
-write.csv(ir_ci_pre_post, file=here("3_IRR", "IR_table_endodx_prostate_with_pre_post_lockdown.csv"))
-save(ir_ci_pre_post, file=here("3_IRR", "IR_table_endodx_prostate_with_pre_post_lockdown.RData"))
 
 # Change table structure to remove events and person months, and pivot the covid categories
 ir_ci_pre_post_pivot <- ir_ci_pre_post %>% dplyr::select(c(-events_t, -person_months_at_risk)) %>% tidyr::pivot_wider(names_from = covid, values_from = ir) 
@@ -450,10 +448,10 @@ Pretty_observed_IR_results_endodx_prostate <- flextable(ir_ci_pre_post_pivot) %>
   set_caption(caption = "Incidence rates of endocrine-treatment related outcomes in prostate cancer patients on any endocrine treatment in each of the time periods") %>% 
   width(width = 1.4) 
 
-save(ir_ci_pre_post_pivot, file=here("3_IRR", "IR_table_endodx_prostate_with_pre_post_lockdown_pivot.RData"))
-write.csv(ir_ci_pre_post_pivot, file=here("3_IRR", "IR_table_endodx_prostate_with_pre_post_lockdown_pivot.csv"))
+save(ir_ci_pre_post_pivot, file=here(output.folder6, "IR_table_endodx_prostate_with_pre_post_lockdown_pivot.RData"))
+write.csv(ir_ci_pre_post_pivot, file=here(output.folder6, "IR_table_endodx_prostate_with_pre_post_lockdown_pivot.csv"))
 
-save_as_docx('Pretty_observed_IR_results_endodx_prostate' = Pretty_observed_IR_results_endodx_prostate, path=here("3_IRR", "Pretty_observed_IR_results_endodx_prostate.docx"))
+save_as_docx('Pretty_observed_IR_results_endodx_prostate' = Pretty_observed_IR_results_endodx_prostate, path=here(output.folder6, "Pretty_observed_IR_results_endodx_prostate.docx"))
 
 
 
