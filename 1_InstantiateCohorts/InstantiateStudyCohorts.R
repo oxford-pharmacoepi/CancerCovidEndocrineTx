@@ -163,7 +163,7 @@ info(logger, "- got breast and prostate populations before, during and after loc
 # ============================================================================ #
 
 
-if (table_one_analysis == TRUE) {
+#if (table_one_analysis == TRUE) {
   
   
 #instantiate feature cohorts (disease)
@@ -174,14 +174,14 @@ disease_cohorts <- readCohortSet(here("1_InstantiateCohorts","DiseaseCohorts"))
 
 cdm <- generateCohortSet(cdm, 
                          cohortSet = disease_cohorts,
-                         name = feature_disease_table_name_3,
+                         name = feature_disease_table_name_1,
                          overwrite = TRUE)
 
-cohortCount(cdm[[feature_disease_table_name_3]]) %>%  glimpse()
+cohortCount(cdm[[feature_disease_table_name_1]]) %>%  glimpse()
 
-cohortAttrition(cdm[[feature_disease_table_name_3]]) %>%  glimpse()
+cohortAttrition(cdm[[feature_disease_table_name_1]]) %>%  glimpse()
 
-cohortSet(cdm[[feature_disease_table_name_3]]) %>%  glimpse()
+cohortSet(cdm[[feature_disease_table_name_1]]) %>%  glimpse()
 
 info(logger, "- got features for diseases")
 
@@ -197,17 +197,17 @@ medication_cohorts <- readCohortSet(here("1_InstantiateCohorts","MedicationCohor
 
 cdm <- generateCohortSet(cdm, 
                          cohortSet = medication_cohorts,
-                         name = feature_medication_table_name_3,
+                         name = feature_medication_table_name_1,
                          overwrite = TRUE)
 
-cohortCount(cdm[[feature_medication_table_name_3]]) %>%  glimpse()
+cohortCount(cdm[[feature_medication_table_name_1]]) %>%  glimpse()
 
-cohortAttrition(cdm[[feature_medication_table_name_3]]) %>%  glimpse()
+cohortAttrition(cdm[[feature_medication_table_name_1]]) %>%  glimpse()
 
-cohortSet(cdm[[feature_medication_table_name_3]]) %>%  glimpse()
+cohortSet(cdm[[feature_medication_table_name_1]]) %>%  glimpse()
 
 info(logger, "- got features for medications")
 
-} else {
-  
-  print("Not instantiating table 1 cohorts") }
+# } else {
+#   
+#   print("Not instantiating table 1 cohorts") }

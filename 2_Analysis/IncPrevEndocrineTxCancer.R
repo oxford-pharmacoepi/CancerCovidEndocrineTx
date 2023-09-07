@@ -65,8 +65,11 @@ IncTxBreast <- estimateIncidence(
 IncTxBreast %>%
   glimpse()
 
+IncBreastAtt <- IncTxBreast %>%
+  incidenceAttrition()
 
 save(IncTxBreast, file = here("Results", db.name, "2_EndocrineTxCancer", "IncTxBreast.RData"))
+write.csv(IncBreastAtt, file = here("Results", db.name, "2_EndocrineTxCancer", "IncTxBreast_attrition_estimates.csv"))
 
 print(paste0("- Got incidence: endocrine tx in breast cancer populations"))
 info(logger, "- Got incidence: endocrine tx in breast cancer populations")
@@ -127,8 +130,8 @@ inc_yrs_plot
 analysis.name <- "endocrine_inBreastPop"
 plotname <- paste0(analysis.name, db.name, "_inc_yrs")
 
-# Save the plot as jpg
-ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(plotname, ".jpg")), inc_yrs_plot, dpi=600, scale = 1, width = 18, height = 9)
+# Save the plot as tiff
+ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(plotname, ".tiff")), inc_yrs_plot, dpi=600, scale = 1, width = 18, height = 9)
 
 
 
@@ -167,8 +170,8 @@ inc_months_plot
 
 plotname <- paste0(analysis.name, db.name, "_inc_months")
 
-# Save the plot as jpg
-ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(plotname, ".jpg")), inc_months_plot, dpi=600, scale = 1, width = 18, height = 9)
+# Save the plot as tiff
+ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(plotname, ".tiff")), inc_months_plot, dpi=600, scale = 1, width = 18, height = 9)
 
 
 
@@ -206,8 +209,8 @@ inc_qrs_plot
 
 plotname <- paste0(analysis.name, db.name, "_inc_qrs")
 
-# Save the plot as jpg
-ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(plotname, ".jpg")), inc_qrs_plot, dpi=600, scale = 1, width = 12, height = 9)
+# Save the plot as tiff
+ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(plotname, ".tiff")), inc_qrs_plot, dpi=600, scale = 1, width = 12, height = 9)
 
 
 
@@ -273,7 +276,13 @@ IncTxProstate %>%
   glimpse()
 
 
+IncTxProstateAtt <-IncTxProstate %>%
+  incidenceAttrition()
+
 save(IncTxProstate, file = here("Results", db.name, "2_EndocrineTxCancer", "IncTxProstate.RData"))
+write.csv(IncTxProstate, file = here("Results", db.name, "2_EndocrineTxCancer", "IncTxProstate_attrition_estimates.csv"))
+
+
 
 print(paste0("- Got incidence: endocrine tx in Prostate cancer populations"))
 info(logger, "- Got incidence: endocrine tx in Prostate cancer populations")
@@ -338,8 +347,8 @@ inc_yrs_plot
 analysis.name <- "endocrine_inProstatePop"
 plotname <- paste0(analysis.name, db.name, "_inc_yrs")
 
-# Save the plot as jpg
-ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(plotname, ".jpg")), inc_yrs_plot, dpi=600, scale = 1, width = 12, height = 9)
+# Save the plot as tiff
+ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(plotname, ".tiff")), inc_yrs_plot, dpi=600, scale = 1, width = 12, height = 9)
 
 
 
@@ -379,8 +388,8 @@ inc_months_plot
 
 plotname <- paste0(analysis.name, db.name, "_inc_months")
 
-# Save the plot as jpg
-ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(plotname, ".jpg")), inc_months_plot, dpi=600, scale = 1, width = 18, height = 9)
+# Save the plot as tiff
+ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(plotname, ".tiff")), inc_months_plot, dpi=600, scale = 1, width = 18, height = 9)
 
 
 # INCIDENCE IN QUARTERS FOR ALL AGE STRATA
@@ -418,8 +427,8 @@ inc_qrs_plot
 
 plotname <- paste0(analysis.name, db.name, "_inc_qrs")
 
-# Save the plot as jpg
-ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(plotname, ".jpg")), inc_qrs_plot, dpi=600, scale = 1, width = 12, height = 9)
+# Save the plot as tiff
+ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(plotname, ".tiff")), inc_qrs_plot, dpi=600, scale = 1, width = 12, height = 9)
 
 
 

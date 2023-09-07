@@ -65,8 +65,11 @@ IncTxOutcomesBreastAI <- estimateIncidence(
 IncTxOutcomesBreastAI %>%
   glimpse()
 
+IncTxOutcomesBreastAIAtt <- IncTxOutcomesBreastAI %>%
+  incidenceAttrition()
 
 save(IncTxOutcomesBreastAI, file = here("Results", db.name, "3_OsteoDx", "IncTxOutcomesBreastAI.RData"))
+write.csv(IncTxOutcomesBreastAIAtt, file = here("Results", db.name, "3_OsteoDx", "IncTxOutcomesBreastAI_attrition_estimates.csv"))
 
 
 
@@ -128,8 +131,8 @@ inc_yrs_plot
 analysis.name <- "txOutcomes_inBreastAIPop"
 plotname <- paste0(analysis.name, db.name, "_inc_yrs")
 
-# Save the plot as jpg
-ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_yrs_plot, dpi=600, scale = 1, width = 15, height = 10)
+# Save the plot as tiff
+ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".tiff")), inc_yrs_plot, dpi=600, scale = 1, width = 15, height = 10)
 
 
 
@@ -167,8 +170,8 @@ inc_months_plot
 analysis.name <- "txOutcomes_inBreastAIPop"
 plotname <- paste0(analysis.name, db.name, "_inc_months")
 
-# Save the plot as jpg
-ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_months_plot, dpi=600, scale = 1, width = 15, height = 10)
+# Save the plot as tiff
+ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".tiff")), inc_months_plot, dpi=600, scale = 1, width = 15, height = 10)
 
 
 
@@ -207,8 +210,8 @@ inc_qrs_plot
 analysis.name <- "txOutcomes_inBreastAIPop"
 plotname <- paste0(analysis.name, db.name, "_inc_qrs")
 
-# Save the plot as jpg
-ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_qrs_plot, dpi=600, scale = 1, width = 15, height = 10)
+# Save the plot as tiff
+ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".tiff")), inc_qrs_plot, dpi=600, scale = 1, width = 15, height = 10)
 
 
 
@@ -277,6 +280,13 @@ IncTxOutcomesBreastTAM <- estimateIncidence(
 IncTxOutcomesBreastTAM %>%
   glimpse()
 
+IncTxOutcomesBreastTAMAtt <- IncTxOutcomesBreastTAM %>%
+  incidenceAttrition()
+
+save(IncTxOutcomesBreastAI, file = here("Results", db.name, "3_OsteoDx", "IncTxOutcomesBreastAI.RData"))
+write.csv(IncTxOutcomesBreastTAMAtt, file = here("Results", db.name, "3_OsteoDx", "IncTxOutcomesBreastTAM_attrition_estimates.csv"))
+
+
 
 save(IncTxOutcomesBreastTAM, file = here("Results", db.name, "3_OsteoDx", "IncTxOutcomesBreastTAM.RData"))
 
@@ -339,8 +349,8 @@ inc_yrs_plot
 analysis.name <- "txOutcomes_inBreastTAMPop"
 plotname <- paste0(analysis.name, db.name, "_inc_yrs")
 
-# Save the plot as jpg
-ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_yrs_plot, dpi=600, scale = 1, width = 15, height = 10)
+# Save the plot as tiff
+ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".tiff")), inc_yrs_plot, dpi=600, scale = 1, width = 15, height = 10)
 
 
 
@@ -378,8 +388,8 @@ inc_months_plot
 analysis.name <- "txOutcomes_inBreastTAMPop"
 plotname <- paste0(analysis.name, db.name, "_inc_months")
 
-# Save the plot as jpg
-ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_months_plot, dpi=600, scale = 1, width = 15, height = 10)
+# Save the plot as tiff
+ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".tiff")), inc_months_plot, dpi=600, scale = 1, width = 15, height = 10)
 
 
 
@@ -418,8 +428,8 @@ inc_qrs_plot
 analysis.name <- "txOutcomes_inBreastTAMPop"
 plotname <- paste0(analysis.name, db.name, "_inc_qrs")
 
-# Save the plot as jpg
-ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_qrs_plot, dpi=600, scale = 1, width = 15, height = 10)
+# Save the plot as tiff
+ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".tiff")), inc_qrs_plot, dpi=600, scale = 1, width = 15, height = 10)
 
 
 
@@ -488,6 +498,12 @@ IncTxOutcomesProstate <- estimateIncidence(
 IncTxOutcomesProstate %>%
   glimpse()
 
+IncTxOutcomesProstateAtt <- IncTxOutcomesProstate %>%
+  incidenceAttrition()
+
+save(IncTxOutcomesBreastAI, file = here("Results", db.name, "3_OsteoDx", "IncTxOutcomesBreastAI.RData"))
+write.csv(IncTxOutcomesProstateAtt, file = here("Results", db.name, "3_OsteoDx", "IncTxOutcomesProstateAtt_attrition_estimates.csv"))
+
 
 save(IncTxOutcomesProstate, file = here("Results", db.name, "3_OsteoDx", "IncTxOutcomesProstate.RData"))
 
@@ -551,8 +567,8 @@ inc_yrs_plot
 analysis.name <- "txOutcomes_inProstatePop"
 plotname <- paste0(analysis.name, db.name, "_inc_yrs")
 
-# Save the plot as jpg
-ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_yrs_plot, dpi=600, scale = 1, width = 15, height = 10)
+# Save the plot as tiff
+ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".tiff")), inc_yrs_plot, dpi=600, scale = 1, width = 15, height = 10)
 
 
 
@@ -590,8 +606,8 @@ inc_months_plot
 analysis.name <- "txOutcomes_inProstatePop"
 plotname <- paste0(analysis.name, db.name, "_inc_months")
 
-# Save the plot as jpg
-ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_months_plot, dpi=600, scale = 1, width = 15, height = 10)
+# Save the plot as tiff
+ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".tiff")), inc_months_plot, dpi=600, scale = 1, width = 15, height = 10)
 
 
 
@@ -630,8 +646,8 @@ inc_qrs_plot
 analysis.name <- "txOutcomes_inProstatePop"
 plotname <- paste0(analysis.name, db.name, "_inc_qrs")
 
-# Save the plot as jpg
-ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".jpg")), inc_qrs_plot, dpi=600, scale = 1, width = 15, height = 10)
+# Save the plot as tiff
+ggsave(here("Results", db.name , "3_OsteoDx", paste0(plotname, ".tiff")), inc_qrs_plot, dpi=600, scale = 1, width = 15, height = 10)
 
 
 

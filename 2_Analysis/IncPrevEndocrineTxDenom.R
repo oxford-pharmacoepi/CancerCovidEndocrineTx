@@ -134,6 +134,7 @@ plotname <- paste0(analysis.name, db.name, "_inc_yrs")
 
 # Save the plot as jpg
 ggsave(here("Results", db.name , "1_EndocrineTxDenom", paste0(plotname, ".jpg")), inc_yrs_plot, dpi=900, scale = 1, width = 18, height = 9)
+ggsave(here("Results", db.name , "1_EndocrineTxDenom", paste0(plotname, ".tiff")), inc_yrs_plot, dpi=900, scale = 1, width = 18, height = 9)
 
 
 
@@ -176,6 +177,7 @@ plotname <- paste0(analysis.name, db.name, "_inc_months")
 # Save the plot as jpg
 ggsave(here("Results", db.name , "1_EndocrineTxDenom", paste0(plotname, ".jpg")), inc_months_plot, dpi=900, scale = 1, width = 18, height = 9)
 
+ggsave(here("Results", db.name , "1_EndocrineTxDenom", paste0(plotname, ".tiff")), inc_months_plot, dpi=900, scale = 1, width = 18, height = 9)
 
 
 # INCIDENCE IN QUARTERS FOR ALL AGE STRATA
@@ -217,6 +219,7 @@ plotname <- paste0(analysis.name, db.name, "_inc_qrs")
 
 # Save the plot as jpg
 ggsave(here("Results", db.name , "1_EndocrineTxDenom", paste0(plotname, ".jpg")), inc_qrs_plot, dpi=900, scale = 1, width = 18, height = 9)
+ggsave(here("Results", db.name , "1_EndocrineTxDenom", paste0(plotname, ".tiff")), inc_qrs_plot, dpi=900, scale = 1, width = 18, height = 9)
 
 
 
