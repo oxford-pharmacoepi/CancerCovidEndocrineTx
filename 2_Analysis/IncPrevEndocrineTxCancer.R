@@ -280,7 +280,7 @@ IncTxProstateAtt <-IncTxProstate %>%
   incidenceAttrition()
 
 save(IncTxProstate, file = here("Results", db.name, "2_EndocrineTxCancer", "IncTxProstate.RData"))
-write.csv(IncTxProstate, file = here("Results", db.name, "2_EndocrineTxCancer", "IncTxProstate_attrition_estimates.csv"))
+write.csv(IncTxProstateAtt, file = here("Results", db.name, "2_EndocrineTxCancer", "IncTxProstate_attrition_estimates.csv"))
 
 
 
