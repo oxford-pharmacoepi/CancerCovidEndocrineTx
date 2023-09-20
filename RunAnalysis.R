@@ -29,10 +29,16 @@ info(logger, 'RUNNING INCIDENCE ANALYSIS OF ENDOCRINE TREATMENT RELATED OUTCOMES
 source(here("2_Analysis","IncPrevOsteoDx.R"))
 info(logger, 'INCIDENCE ANALYSIS OF ENDOCRINE TREATMENT RELATED OUTCOMES RAN')
 
-# Run incidence analysis of screening tests as outcomes ----
-info(logger, 'RUNNING INCIDENCE ANALYSIS OF SCREENING TESTS OUTCOMES')
-source(here("2_Analysis","IncScreening.R"))
-info(logger, 'INCIDENCE ANALYSIS OF SCREENING TESTS OUTCOMES RAN')
+# Run incidence analysis to return participants for characterisations ----
+
+if (table_one_analysis == TRUE) {
+info(logger, 'RUNNING INCIDENCE ANALYSIS TO RETURN PARTICIPANTS FOR CHARACTERISATIONS')
+source(here("2_Analysis","ReturningParticipants_forCharacterisation.R"))
+info(logger, 'INCIDENCE ANALYSIS TO RETURN PARTICIPANTS FOR CHARACTERISATIONS RAN')
+} else {
+  
+  print("Not instantiating table 1 cohorts") }
+
 
 # add code for combining and exporting results - this bit needs editing to reflect all my output folders
 

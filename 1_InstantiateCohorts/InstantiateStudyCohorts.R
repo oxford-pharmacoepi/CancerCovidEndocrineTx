@@ -136,34 +136,13 @@ info(logger, "- got denominator populations before, during and after lockdown")
 
 
 
-# ============================================================================ #
-#      6.  BREAST AND PROSTATE CANCER BEFORE, DURING AND AFTER LOCKDOWN        #
-# ============================================================================ #
-info(logger, "- getting breast and prostate populations before, during and after lockdown")
-
-outcome_cohorts_3 <- readCohortSet(here("1_InstantiateCohorts", "BreastProstate3TimePeriods"))
-
-
-cdm <- generateCohortSet(cdm = cdm, 
-                         cohortSet = outcome_cohorts_3,
-                         name = outcome_table_name_3,
-                         overwrite = TRUE) 
-
-
-cohortCount(cdm[[outcome_table_name_3]]) %>%  glimpse()
-
-cohortAttrition(cdm[[outcome_table_name_3]]) %>%  glimpse()
-
-cohortSet(cdm[[outcome_table_name_3]]) %>%  glimpse()
-
-info(logger, "- got breast and prostate populations before, during and after lockdown")
 
 # ============================================================================ #
-#                 7.  DISEASES FOR CHARACTERISATION                            #
+#                 6.  DISEASES FOR CHARACTERISATION                            #
 # ============================================================================ #
 
 
-#if (table_one_analysis == TRUE) {
+if (table_one_analysis == TRUE) {
   
   
 #instantiate feature cohorts (disease)
@@ -186,7 +165,7 @@ cohortSet(cdm[[feature_disease_table_name_1]]) %>%  glimpse()
 info(logger, "- got features for diseases")
 
 # ============================================================================ #
-#                 8.  MEDICATIONS FOR CHARACTERISATION                         #
+#                 7.  MEDICATIONS FOR CHARACTERISATION                         #
 # ============================================================================ #
 
 
@@ -208,6 +187,6 @@ cohortSet(cdm[[feature_medication_table_name_1]]) %>%  glimpse()
 
 info(logger, "- got features for medications")
 
-# } else {
-#   
-#   print("Not instantiating table 1 cohorts") }
+} else {
+
+  print("Not instantiating table 1 cohorts") }
