@@ -68,7 +68,8 @@ for (y in 1:length(outcome_bf)){
          rateratios[[y]] <- NA)
 } 
 
-
+# EXTRACT THE  LISTS
+rateratios_BoneFracture <- rateratios$`Bone Fracture`
 
 # for bisphosphonates
 
@@ -103,7 +104,6 @@ for (y in 1:length(outcome_bis)){
 
 # EXTRACT THE  LISTS
 rateratios_Bisphosphonates <- rateratios$`Bisphosphonates`
-rateratios_BoneFracture <- rateratios$`Bone Fracture`
 
 
 ################################################################################
@@ -166,10 +166,10 @@ IRR_Bisphosphonates <- get_IR_df_function_bis(rateratios_Bisphosphonates, "Bisph
 IRR_BoneFracture <-  get_IR_df_function_bf(rateratios_BoneFracture, "Bone Fracture")
 
 # ADD COLUMNS FOR MISSING PERIODS, WITH NAS
-IRR_Bisphosphonates$`Third lockdown` <- c("NA")
+IRR_Bisphosphonates$`Third lockdown` <- c('NA')
 IRR_Bisphosphonates<-IRR_Bisphosphonates[c(1,2,3,4,7,5,6)]
 
-IRR_BoneFracture$`Lockdown` <- c("NA")
+IRR_BoneFracture$`Lockdown` <- c('NA')
 IRR_BoneFracture<-IRR_BoneFracture[c(1,7,2,3,4,5,6)]
 
 # JOIN THE TABLES
@@ -181,15 +181,15 @@ IRR_table_endodx_prostate <- tibble::rownames_to_column(IRR_table_endodx_prostat
 
 
 #### Save IRR
-write.csv(IRR_table_endodx_prostate, file=here::here("3_IRR", "IRR_table_endodx_prostate.csv"))
-save(IRR_table_endodx_prostate, file=here::here("3_IRR", "IRR_table_endodx_prostate.Rdata"))
+write.csv(IRR_table_endodx_prostate, file=here::here(output.folder6, "IRR_table_endodx_prostate.csv"))
+save(IRR_table_endodx_prostate, file=here::here(output.folder6, "IRR_table_endodx_prostate.Rdata"))
 
 #### Make pretty table
 Pretty_IRR_table_endodx_prostate <- flextable(IRR_table_endodx_prostate) %>% theme_vanilla() %>% 
   set_caption(caption = "Incidence rate ratios of treatment-related outcomes in prostate cancer patients on endocrine treatments over the lockdown periods compared to pre-COVID period") %>% 
   width(width = 1.4) 
 
-save_as_docx('Pretty_IRR_table_endodx_prostate' = Pretty_IRR_table_endodx_prostate, path=here("3_IRR", "Pretty_IRR_table_endodx_prostate.docx"))
+save_as_docx('Pretty_IRR_table_endodx_prostate' = Pretty_IRR_table_endodx_prostate, path=here(output.folder6, "Pretty_IRR_table_endodx_prostate.docx"))
 
 
 
@@ -266,10 +266,10 @@ N_EVENTS_PD_Bisphosphonates <- get_n_events_pd_function_bis(rateratios_Bisphosph
 N_EVENTS_PD_BoneFracture <-  get_n_events_pd_function_bf(rateratios_BoneFracture, "Bone Fracture")
 
 # ADD COLUMNS FOR MISSING PERIODS, WITH NAS
-N_EVENTS_PD_Bisphosphonates$`Third lockdown` <- c("NA")
+N_EVENTS_PD_Bisphosphonates$`Third lockdown` <- c(NA)
 N_EVENTS_PD_Bisphosphonates<- N_EVENTS_PD_Bisphosphonates[c(1,2,3,4,7,5,6)]
 
-N_EVENTS_PD_BoneFracture$`Lockdown` <- c("NA")
+N_EVENTS_PD_BoneFracture$`Lockdown` <- c(NA)
 N_EVENTS_PD_BoneFracture <- N_EVENTS_PD_BoneFracture[c(1,7,2,3,4,5,6)]
 
 
@@ -280,15 +280,15 @@ N_EVENTS_PD_table_endodx_prostate <- tibble::rownames_to_column(N_EVENTS_PD_tabl
 
 
 #### Save n EVENTS AND PERSON DAYS
-write.csv(N_EVENTS_PD_table_endodx_prostate, file=here::here("3_IRR", "N_EVENTS_PD_table_endodx_prostate.csv"))
-save(N_EVENTS_PD_table_endodx_prostate, file=here::here("3_IRR", "N_EVENTS_PD_table_endodx_prostate.Rdata"))
+write.csv(N_EVENTS_PD_table_endodx_prostate, file=here::here(output.folder6, "N_EVENTS_PD_table_endodx_prostate.csv"))
+save(N_EVENTS_PD_table_endodx_prostate, file=here::here(output.folder6, "N_EVENTS_PD_table_endodx_prostate.Rdata"))
 
 #### Make pretty table
 Pretty_N_EVENTS_PD_table_endodx_prostate <- flextable(N_EVENTS_PD_table_endodx_prostate) %>% theme_vanilla() %>% 
   set_caption(caption = "Number of events and person days of treatment-related outcomes in prostate cancer patients on endocrine treatments over the lockdown periods compared to pre-COVID period") %>% 
   width(width = 1.4) 
 
-save_as_docx('Pretty_N_EVENTS_PD_table_endodx_prostate' = Pretty_N_EVENTS_PD_table_endodx_prostate, path=here("3_IRR", "Pretty_N_EVENTS_PD_table_endodx_prostate.docx"))
+save_as_docx('Pretty_N_EVENTS_PD_table_endodx_prostate' = Pretty_N_EVENTS_PD_table_endodx_prostate, path=here(output.folder6, "Pretty_N_EVENTS_PD_table_endodx_prostate.docx"))
 
 
 # ============== CREATE FOREST PLOT OF INCIDENCE RATE RATIOS ================= #
@@ -322,18 +322,21 @@ IRR_Bisphosphonates_Sep <- get_IR_df_function_CIs_Sep_bis(rateratios_Bisphosphon
 IRR_BoneFracture_Sep <-  get_IR_df_function_CIs_Sep_bf(rateratios_BoneFracture, "Bone Fracture")
 
 # ADD ROWS FOR MISSING PERIODS, WITH NAS
-new_row = c(`Endocrine Treatment` = "Bisphosphonates", periods_bis="Third lockdown", estimate = NA, lower = NA, upper = NA)
-IRR_Bisphosphonates_Sep <- rbind(IRR_Bisphosphonates_Sep,new_row)
-IRR_Bisphosphonates_Sep<- IRR_Bisphosphonates_Sep[c(1,2,3,4,7,5,6),]
-IRR_Bisphosphonates_Sep <- IRR_Bisphosphonates_Sep %>% rename("Periods" = periods_bis)
-
-new_row2 = c(`Endocrine Treatment` = "Bone Fracture", periods_bf="Lockdown", estimate = NA, lower = NA, upper = NA)
-IRR_BoneFracture_Sep <- rbind(IRR_BoneFracture_Sep, new_row2)
-IRR_BoneFracture_Sep <- IRR_BoneFracture_Sep[c(1,7,2,3,4,5,6),]
-IRR_BoneFracture_Sep <- IRR_BoneFracture_Sep %>% rename("Periods" = periods_bf)
+# new_row = c(`Endocrine Treatment` = "Bisphosphonates", periods_bis="Third lockdown", estimate = NA, lower = NA, upper = NA)
+# IRR_Bisphosphonates_Sep <- rbind(IRR_Bisphosphonates_Sep,new_row)
+# IRR_Bisphosphonates_Sep<- IRR_Bisphosphonates_Sep[c(1,2,3,4,7,5,6),]
+# IRR_Bisphosphonates_Sep <- IRR_Bisphosphonates_Sep %>% rename("Periods" = periods_bis)
+# 
+# new_row2 = c(`Endocrine Treatment` = "Bone Fracture", periods_bf="Lockdown", estimate = NA, lower = NA, upper = NA)
+# IRR_BoneFracture_Sep <- rbind(IRR_BoneFracture_Sep, new_row2)
+# IRR_BoneFracture_Sep <- IRR_BoneFracture_Sep[c(1,7,2,3,4,5,6),]
+# IRR_BoneFracture_Sep <- IRR_BoneFracture_Sep %>% rename("Periods" = periods_bf)
 
 # JOIN THE RATIO OUTPUTS   
-IRR_FOREST_endodx_prostate <- rbind(IRR_Bisphosphonates_Sep,  IRR_BoneFracture_Sep)
+#IRR_FOREST_endodx_prostate <- rbind(IRR_Bisphosphonates_Sep,  IRR_BoneFracture_Sep)
+
+
+IRR_FOREST_endodx_prostate <- IRR_Bisphosphonates_Sep
 
 # filter out pre-covid 
 IRR_FOREST_endodx_prostate <- IRR_FOREST_endodx_prostate %>% filter(Periods !="Pre-COVID")
@@ -345,6 +348,9 @@ IRR_FOREST_endodx_prostate <- IRR_FOREST_endodx_prostate %>% rename("Lockdown Pe
 IRR_FOREST_endodx_prostate <- IRR_FOREST_endodx_prostate  %>%
   mutate(`Lockdown Periods` = factor(`Lockdown Periods`, levels=rev(c("Lockdown", "Post-lockdown1", "Second lockdown", 
                                                                       "Third lockdown", "Easing of restrictions", "Legal restrictions removed"))) )
+# FILTER OUT BONE FRACTURE IF NOT INCLUDING
+IRR_FOREST_endodx_prostate <- IRR_FOREST_endodx_prostate %>% filter(`Endocrine Treatment` !="Bone Fracture")
+
 
 # color blind palette
 # The palette with grey:
@@ -353,11 +359,10 @@ IRR_FOREST_endodx_prostate <- IRR_FOREST_endodx_prostate  %>%
 IRR_FOREST_endodx_prostate_plot =
   ggplot(IRR_FOREST_endodx_prostate, aes(x = `Lockdown Periods`,y = estimate, ymin = lower, ymax = upper ))+
   geom_pointrange(aes(col=`Lockdown Periods`, shape=`Lockdown Periods`))+
-  #geom_hline(yintercept=1)+
-  geom_hline(aes(fill=`Lockdown Periods`),yintercept =15, linetype=2)+
+  geom_hline(aes(fill=`Lockdown Periods`),yintercept=7.25, linetype=2)+
   xlab('Endocrine Treatment Outcomes in Prostate Cancer Patients on Endocrine Treatments')+ ylab("Incidence Rate Ratio (95% Confidence Interval - Pre-Pandemic as reference)")+
   geom_errorbar(aes(ymin=lower, ymax=upper,col=`Lockdown Periods`),width=0.5,cex=0.8)+ 
-  facet_wrap(~`Endocrine Treatment`,strip.position="left",nrow=4,scales = "free_y",labeller = label_wrap_gen()) +
+  facet_wrap(~`Endocrine Treatment`,strip.position="left",nrow=4,labeller = label_wrap_gen()) +
   theme(plot.title=element_text(size=14,face="bold"),
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank(),
@@ -370,6 +375,7 @@ IRR_FOREST_endodx_prostate_plot =
   #panel.grid.major = element_line(color = "grey", size = 0.2, linetype = "dashed"))+
   #guides(color=guide_legend(title="Lockdown Periods"), shape=guide_legend(title="Lockdown Periods"))+
   guides(color = guide_legend(reverse = TRUE), shape = guide_legend(reverse = TRUE))+
+  #scale_y_continuous(limits = c(0.2,2.5), breaks = seq(0.2, 2.4, 0.2))+ # limits and tic marks on X axis (flipped specification do to coord_flip)
   # scale_fill_manual(values=cbPalette)+
   #scale_colour_manual(values=cbPalette)+
   coord_flip()
@@ -378,10 +384,52 @@ IRR_FOREST_endodx_prostate_plot =
 
 IRR_FOREST_endodx_prostate_plot
 
+# without bone fractures
+
+# RENAME PERIODS
+
+# # FILTER OUT BONE FRACTURE IF NOT INCLUDING
+# IRR_FOREST_endodx_prostate <- IRR_FOREST_endodx_prostate %>% filter(`Endocrine Treatment` !="Bone Fracture")
+# 
+# IRR_FOREST_endodx_prostate <- IRR_FOREST_endodx_prostate %>% filter(`Lockdown Periods` !="Third lockdown")
+# 
+# IRR_FOREST_endodx_prostate <- IRR_FOREST_endodx_prostate  %>%
+#   mutate(`Lockdown Periods` = factor(`Lockdown Periods`, levels=rev(c("Lockdown", "Post-lockdown1", "Second lockdown", 
+#                                                                        "Easing of restrictions", "Legal restrictions removed"))) )
+
+
+IRR_FOREST_endodx_prostate_plot_ex_bf =
+  ggplot(IRR_FOREST_endodx_prostate, aes(x = `Lockdown Periods`,y = estimate, ymin = lower, ymax = upper ))+
+  geom_pointrange(aes(col=`Lockdown Periods`, shape=`Lockdown Periods`))+
+  geom_hline(aes(fill=`Lockdown Periods`),yintercept=7.25, linetype=2)+
+  xlab('Endocrine Treatment Outcomes in Prostate Cancer Patients on Endocrine Treatments')+ ylab("Incidence Rate Ratio (95% Confidence Interval - Pre-Pandemic as reference)")+
+  geom_errorbar(aes(ymin=lower, ymax=upper,col=`Lockdown Periods`),width=0.5,cex=0.8)+ 
+  facet_wrap(~`Endocrine Treatment`,strip.position="left",nrow=4,labeller = label_wrap_gen()) +
+  theme(plot.title=element_text(size=14,face="bold"),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.text.x=element_text(size=12,face="bold"),
+        axis.title=element_text(size=14,face="bold"),
+        legend.text=element_text(size=12),
+        legend.title=element_text(size=12),
+        strip.text.y = element_text(hjust=0,vjust = 1,angle=180,face="bold", size=12))+
+  #panel.background = element_blank(),
+  #panel.grid.major = element_line(color = "grey", size = 0.2, linetype = "dashed"))+
+  #guides(color=guide_legend(title="Lockdown Periods"), shape=guide_legend(title="Lockdown Periods"))+
+  guides(color = guide_legend(reverse = TRUE), shape = guide_legend(reverse = TRUE))+
+  #scale_y_continuous(limits = c(0.2,2.5), breaks = seq(0.2, 2.4, 0.2))+ # limits and tic marks on X axis (flipped specification do to coord_flip)
+  # scale_fill_manual(values=cbPalette)+
+  #scale_colour_manual(values=cbPalette)+
+  coord_flip()
+
+
+
+IRR_FOREST_endodx_prostate_plot_ex_bf
+
 # Save
 
-ggsave(here("3_IRR", "IRR_FOREST_endodx_prostate_plot.tiff"), IRR_FOREST_endodx_prostate_plot, dpi=600, scale = 1.3,  width = 10, height = 8)
-ggsave(here("3_IRR", "IRR_FOREST_endodx_prostate_plot.jpg"), IRR_FOREST_endodx_prostate_plot, dpi=600, scale = 1.3,  width = 10, height = 8)
+ggsave(here(output.folder6, "IRR_FOREST_endodx_prostate_plot_ex_bf.tiff"), IRR_FOREST_endodx_prostate_plot_ex_bf, dpi=600, scale = 1.3,  width = 10, height = 8)
+ggsave(here(output.folder6, "IRR_FOREST_endodx_prostate_plot_ex_bf.jpg"), IRR_FOREST_endodx_prostate_plot_ex_bf, dpi=600, scale = 1.3,  width = 10, height = 8)
 
 
 
@@ -428,8 +476,6 @@ ir.post_ci <- ir_ci2 %>%
 
 ir_ci_pre_post <- rbind(ir_ci, ir.post_ci)
 
-write.csv(ir_ci_pre_post, file=here("3_IRR", "IR_table_endodx_prostate_with_pre_post_lockdown.csv"))
-save(ir_ci_pre_post, file=here("3_IRR", "IR_table_endodx_prostate_with_pre_post_lockdown.RData"))
 
 # Change table structure to remove events and person months, and pivot the covid categories
 ir_ci_pre_post_pivot <- ir_ci_pre_post %>% dplyr::select(c(-events_t, -person_months_at_risk)) %>% tidyr::pivot_wider(names_from = covid, values_from = ir) 
@@ -450,10 +496,10 @@ Pretty_observed_IR_results_endodx_prostate <- flextable(ir_ci_pre_post_pivot) %>
   set_caption(caption = "Incidence rates of endocrine-treatment related outcomes in prostate cancer patients on any endocrine treatment in each of the time periods") %>% 
   width(width = 1.4) 
 
-save(ir_ci_pre_post_pivot, file=here("3_IRR", "IR_table_endodx_prostate_with_pre_post_lockdown_pivot.RData"))
-write.csv(ir_ci_pre_post_pivot, file=here("3_IRR", "IR_table_endodx_prostate_with_pre_post_lockdown_pivot.csv"))
+save(ir_ci_pre_post_pivot, file=here(output.folder6, "IR_table_endodx_prostate_with_pre_post_lockdown_pivot.RData"))
+write.csv(ir_ci_pre_post_pivot, file=here(output.folder6, "IR_table_endodx_prostate_with_pre_post_lockdown_pivot.csv"))
 
-save_as_docx('Pretty_observed_IR_results_endodx_prostate' = Pretty_observed_IR_results_endodx_prostate, path=here("3_IRR", "Pretty_observed_IR_results_endodx_prostate.docx"))
+save_as_docx('Pretty_observed_IR_results_endodx_prostate' = Pretty_observed_IR_results_endodx_prostate, path=here(output.folder6, "Pretty_observed_IR_results_endodx_prostate.docx"))
 
 
 

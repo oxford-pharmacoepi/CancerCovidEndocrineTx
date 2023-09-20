@@ -143,7 +143,7 @@ for (y in 1:length(outcome2)){
 
 rateratios_TamoxifenGnRHAgonistsAntagonists <- rateratios$`Tamoxifen with GnRH Agonists Or Antagonists`
 
-# FUNCTION TO EXTRACT ALL THE IRR AND CIS FROM THE LIST FOR TAMOXIFEN WITH GNRH WITH ONLY 5 PERIODS
+# FUNCTION TO EXTRACT ALL THE IRR AND CIS FROM THE LIST FOR TAMOXIFEN WITH GNRH WITH ONLY 2 PERIODS
 
 get_IR_df_function2 <- function(yourrateratiosname, title){
   
@@ -171,11 +171,11 @@ get_IR_df_function2 <- function(yourrateratiosname, title){
 
 IRR_Tamoxifen_with_GNRH <- get_IR_df_function2(rateratios_TamoxifenGnRHAgonistsAntagonists, "Tamoxifen with GnRH Agonists Or Antagonists") 
 # ADD COLUMNS FOR MISSING PERIODS, WITH NAS
-IRR_Tamoxifen_with_GNRH$`Second lockdown` <- c("NA")
-IRR_Tamoxifen_with_GNRH$`Third lockdown` <- c("NA")
-IRR_Tamoxifen_with_GNRH$`Post-lockdown1` <- c("NA")
-IRR_Tamoxifen_with_GNRH$`Easing of restrictions` <- c("NA")
-IRR_Tamoxifen_with_GNRH$`Legal restrictions removed` <- c("NA")
+IRR_Tamoxifen_with_GNRH$`Second lockdown` <- c(NA)
+IRR_Tamoxifen_with_GNRH$`Third lockdown` <- c(NA)
+IRR_Tamoxifen_with_GNRH$`Post-lockdown1` <- c(NA)
+IRR_Tamoxifen_with_GNRH$`Easing of restrictions` <- c(NA)
+IRR_Tamoxifen_with_GNRH$`Legal restrictions removed` <- c(NA)
 # JOIN THE TABLES
 IRR_table_breast_endo <- rbind(IRR_AIs_with_GNRH, IRR_AIs, IRR_Tamoxifen_with_GNRH, IRR_Tamoxifen)
 # REMOVE PRE-covid COLUMN
@@ -189,15 +189,15 @@ IRR_table_breast_endo <- IRR_table_breast_endo[c(2,1,4,3),]
 
 
 #### Save IRR
-write.csv(IRR_table_breast_endo, file=here::here("3_IRR", "IRR_table_breast_endo.csv"))
-save(IRR_table_breast_endo, file=here::here("3_IRR", "IRR_table_breast_endo.Rdata"))
+write.csv(IRR_table_breast_endo, file=here::here(output.folder3, "IRR_table_breast_endo.csv"))
+save(IRR_table_breast_endo, file=here::here(output.folder3, "IRR_table_breast_endo.Rdata"))
 
 #### Make pretty table
 Pretty_IRR_table_breast_endo <- flextable(IRR_table_breast_endo) %>% theme_vanilla() %>% 
   set_caption(caption = "Incidence rate ratios of endocrine treatments in breast cancer patients over the lockdown periods compared to pre-COVID period") %>% 
   width(width = 1.4) 
 
-save_as_docx('Pretty_IRR_table_breast_endo' = Pretty_IRR_table_breast_endo, path=here("3_IRR", "Pretty_IRR_table_breast_endo.docx"))
+save_as_docx('Pretty_IRR_table_breast_endo' = Pretty_IRR_table_breast_endo, path=here(output.folder3, "Pretty_IRR_table_breast_endo.docx"))
 
 
 
@@ -253,7 +253,7 @@ get_n_events_pd_function2 <- function(yourrateratiosname, title){
   neventspd <- neventspd %>%  mutate_if(is.numeric, round, digits=2)
   
   # remove last row of totals
-  neventspd <- neventspd[-8,]
+  neventspd <- neventspd[-3,]
   # add a column to indicate the covid period
   neventspd <- cbind(periods2, neventspd)
   
@@ -278,14 +278,14 @@ get_n_events_pd_function2 <- function(yourrateratiosname, title){
   return(neventspd_t)
 }
 
-N_EVENTS_PD_Tamoxifen_with_GNRH <- get_IR_df_function2(rateratios_TamoxifenGnRHAgonistsAntagonists, "Tamoxifen with GnRH Agonists Or Antagonists")
+N_EVENTS_PD_Tamoxifen_with_GNRH <- get_n_events_pd_function2(rateratios_TamoxifenGnRHAgonistsAntagonists, "Tamoxifen with GnRH Agonists Or Antagonists") 
 
 # ADD COLUMNS FOR MISSING PERIODS, WITH NAS
-N_EVENTS_PD_Tamoxifen_with_GNRH$`Second lockdown` <- c("NA")
-N_EVENTS_PD_Tamoxifen_with_GNRH$`Third lockdown` <- c("NA")
-N_EVENTS_PD_Tamoxifen_with_GNRH$`Post-lockdown1` <- c("NA")
-N_EVENTS_PD_Tamoxifen_with_GNRH$`Easing of restrictions` <- c("NA")
-N_EVENTS_PD_Tamoxifen_with_GNRH$`Legal restrictions removed` <- c("NA")
+N_EVENTS_PD_Tamoxifen_with_GNRH$`Second lockdown` <- c(NA)
+N_EVENTS_PD_Tamoxifen_with_GNRH$`Third lockdown` <- c(NA)
+N_EVENTS_PD_Tamoxifen_with_GNRH$`Post-lockdown1` <- c(NA)
+N_EVENTS_PD_Tamoxifen_with_GNRH$`Easing of restrictions` <- c(NA)
+N_EVENTS_PD_Tamoxifen_with_GNRH$`Legal restrictions removed` <- c(NA)
 
 
 # JOIN THE TABLES
@@ -295,15 +295,15 @@ N_EVENTS_PD_table_endoTx_breast <- tibble::rownames_to_column(N_EVENTS_PD_table_
 
 
 #### Save n EVENTS AND PERSON DAYS
-write.csv(N_EVENTS_PD_table_endoTx_breast, file=here::here("3_IRR", "N_EVENTS_PD_table_endoTx_breast.csv"))
-save(N_EVENTS_PD_table_endoTx_breast, file=here::here("3_IRR", "N_EVENTS_PD_table_endoTx_breast.Rdata"))
+write.csv(N_EVENTS_PD_table_endoTx_breast, file=here::here(output.folder3, "N_EVENTS_PD_table_endoTx_breast.csv"))
+save(N_EVENTS_PD_table_endoTx_breast, file=here::here(output.folder3, "N_EVENTS_PD_table_endoTx_breast.Rdata"))
 
 #### Make pretty table
 Pretty_N_EVENTS_PD_table_endoTx_breast <- flextable(N_EVENTS_PD_table_endoTx_breast) %>% theme_vanilla() %>% 
   set_caption(caption = "Number of events and person days of endocrine treatments in breast cancer patients over the lockdown periods compared to pre-COVID period") %>% 
   width(width = 1.4) 
 
-save_as_docx('Pretty_N_EVENTS_PD_table_endoTx_breast' = Pretty_N_EVENTS_PD_table_endoTx_breast, path=here("3_IRR", "Pretty_N_EVENTS_PD_table_endoTx_breast.docx"))
+save_as_docx('Pretty_N_EVENTS_PD_table_endoTx_breast' = Pretty_N_EVENTS_PD_table_endoTx_breast, path=here(output.folder3, "Pretty_N_EVENTS_PD_table_endoTx_breast.docx"))
 
 
 
@@ -391,8 +391,8 @@ IRR_FOREST_ENDO_BREAST_PLOT
 
 # Save
 
-ggsave(here("3_IRR", "IRR_FOREST_ENDO_BREAST_PLOT.tiff"), IRR_FOREST_ENDO_BREAST_PLOT, dpi=600, scale = 1.3,  width = 10, height = 8)
-ggsave(here("3_IRR", "IRR_FOREST_ENDO_BREAST_PLOT.jpg"), IRR_FOREST_ENDO_BREAST_PLOT, dpi=600, scale = 1.3,  width = 10, height = 8)
+ggsave(here(output.folder3, "IRR_FOREST_ENDO_BREAST_PLOT.tiff"), IRR_FOREST_ENDO_BREAST_PLOT, dpi=600, scale = 1.3,  width = 10, height = 8)
+ggsave(here(output.folder3, "IRR_FOREST_ENDO_BREAST_PLOT.jpg"), IRR_FOREST_ENDO_BREAST_PLOT, dpi=600, scale = 1.3,  width = 10, height = 8)
 
 
 
@@ -416,10 +416,6 @@ ir_ci <- ir_ci %>%
   arrange(covid, outcome)
 
 
-write.csv(ir_ci, file=here("3_IRR", "IR_table_breast_endo.csv"))
-save(ir_ci, file=here("3_IRR", "IR_table_breast_endo.RData"))
-
-
 
 # add combined periods post-lockdown - this gives you all the IR calculated anytime after lockdown.These are not averaged but caluclated
 overall.post <-IR.overall%>% 
@@ -439,16 +435,12 @@ ir.post_ci <- ir_ci2 %>%
   arrange(covid, outcome)
 
 
-write.csv(ir.post_ci, file=here("3_IRR", "IR_table_breast_endo_with_post_lockdown.csv"))
-save(ir.post_ci, file=here("3_IRR", "IR_table_breast_endo_with_post_lockdown.RData"))
-
-
 # JOIN ALL PERIODS WITH POST-COVID
 
 ir_ci_pre_post <- rbind(ir_ci, ir.post_ci)
 
-write.csv(ir_ci_pre_post, file=here("3_IRR", "IR_table_breast_endo_with_pre_post_lockdown.csv"))
-save(ir_ci_pre_post, file=here("3_IRR", "IR_table_breast_endo_with_pre_post_lockdown.RData"))
+write.csv(ir_ci_pre_post, file=here(output.folder3, "IR_table_breast_endo_with_pre_post_lockdown.csv"))
+save(ir_ci_pre_post, file=here(output.folder3, "IR_table_breast_endo_with_pre_post_lockdown.RData"))
 
 # Change table structure to remove events and person months, and pivot the covid categories
 ir_ci_pre_post_pivot <- ir_ci_pre_post %>% dplyr::select(c(-events_t, -person_months_at_risk)) %>% tidyr::pivot_wider(names_from = covid, values_from = ir) 
@@ -469,10 +461,10 @@ Pretty_observed_IR_results_breast_endo <- flextable(ir_ci_pre_post_pivot) %>% th
   set_caption(caption = "Incidence rates of endocrine treatments in breast cancer patients in each of the time periods") %>% 
   width(width = 1.4) 
 
-save(ir_ci_pre_post_pivot, file=here("3_IRR", "IR_table_breast_endo_with_pre_post_lockdown_pivot.RData"))
-write.csv(ir_ci_pre_post_pivot, file=here("3_IRR", "IR_table_breast_endo_with_pre_post_lockdown_pivot.csv"))
+save(ir_ci_pre_post_pivot, file=here(output.folder3, "IR_table_breast_endo_with_pre_post_lockdown_pivot.RData"))
+write.csv(ir_ci_pre_post_pivot, file=here(output.folder3, "IR_table_breast_endo_with_pre_post_lockdown_pivot.csv"))
 
-save_as_docx('Pretty_observed_IR_results_breast_endo' = Pretty_observed_IR_results_breast_endo, path=here("3_IRR", "Pretty_obs_IR_results_breast_endo.docx"))
+save_as_docx('Pretty_observed_IR_results_breast_endo' = Pretty_observed_IR_results_breast_endo, path=here(output.folder3, "Pretty_obs_IR_results_breast_endo.docx"))
 
 
 
@@ -584,15 +576,15 @@ IRR_table_prostate_endo <- IRR_table_prostate_endo[-1]
 IRR_table_prostate_endo <- tibble::rownames_to_column(IRR_table_prostate_endo, "Endocrine Treatment")
 
 #### Save IRR
-write.csv(IRR_table_prostate_endo, file=here::here("3_IRR", "IRR_table_prostate_endo.csv"))
-save(IRR_table_prostate_endo, file=here::here("3_IRR", "IRR_table_prostate_endo.Rdata"))
+write.csv(IRR_table_prostate_endo, file=here::here(output.folder4, "IRR_table_prostate_endo.csv"))
+save(IRR_table_prostate_endo, file=here::here(output.folder4, "IRR_table_prostate_endo.Rdata"))
 
 #### Make pretty table
 Pretty_IRR_table_prostate_endo <- flextable(IRR_table_prostate_endo) %>% theme_vanilla() %>% 
   set_caption(caption = "Incidence rate ratios of endocrine treatments in prostate cancer patients over the lockdown periods compared to pre-COVID period") %>% 
   width(width = 1.4) 
 
-save_as_docx('Pretty_IRR_table_prostate_endo' = Pretty_IRR_table_prostate_endo, path=here("3_IRR", "Pretty_IRR_table_prostate_endo.docx"))
+save_as_docx('Pretty_IRR_table_prostate_endo' = Pretty_IRR_table_prostate_endo, path=here(output.folder4, "Pretty_IRR_table_prostate_endo.docx"))
 
 
 
@@ -646,15 +638,15 @@ N_EVENTS_PD_table_endo_prostate <- tibble::rownames_to_column(N_EVENTS_PD_table_
 
 
 #### Save n EVENTS AND PERSON DAYS
-write.csv(N_EVENTS_PD_table_endo_prostate, file=here::here("3_IRR", "N_EVENTS_PD_table_endo_prostate.csv"))
-save(N_EVENTS_PD_table_endo_prostate, file=here::here("3_IRR", "N_EVENTS_PD_table_endo_prostate.Rdata"))
+write.csv(N_EVENTS_PD_table_endo_prostate, file=here::here(output.folder4, "N_EVENTS_PD_table_endo_prostate.csv"))
+save(N_EVENTS_PD_table_endo_prostate, file=here::here(output.folder4, "N_EVENTS_PD_table_endo_prostate.Rdata"))
 
 #### Make pretty table
 Pretty_N_EVENTS_PD_table_endo_prostate <- flextable(N_EVENTS_PD_table_endo_prostate) %>% theme_vanilla() %>% 
   set_caption(caption = "Number of events and person days of endocrine treatments in prostate cancer patients over the lockdown periods compared to pre-COVID period") %>% 
   width(width = 1.4) 
 
-save_as_docx('Pretty_N_EVENTS_PD_table_endo_prostate' = Pretty_N_EVENTS_PD_table_endo_prostate, path=here("3_IRR", "Pretty_N_EVENTS_PD_table_endo_prostate.docx"))
+save_as_docx('Pretty_N_EVENTS_PD_table_endo_prostate' = Pretty_N_EVENTS_PD_table_endo_prostate, path=here(output.folder4, "Pretty_N_EVENTS_PD_table_endo_prostate.docx"))
 
 
 
@@ -732,8 +724,8 @@ IRR_FOREST_ENDO_prostate_PLOT
 
 # Save
 
-ggsave(here("3_IRR", "IRR_FOREST_ENDO_prostate_PLOT.tiff"), IRR_FOREST_ENDO_prostate_PLOT, dpi=600, scale = 1.3,  width = 10, height = 8)
-ggsave(here("3_IRR", "IRR_FOREST_ENDO_prostate_PLOT.jpg"), IRR_FOREST_ENDO_prostate_PLOT, dpi=600, scale = 1.3,  width = 10, height = 8)
+ggsave(here(output.folder4, "IRR_FOREST_ENDO_prostate_PLOT.tiff"), IRR_FOREST_ENDO_prostate_PLOT, dpi=600, scale = 1.3,  width = 10, height = 8)
+ggsave(here(output.folder4, "IRR_FOREST_ENDO_prostate_PLOT.jpg"), IRR_FOREST_ENDO_prostate_PLOT, dpi=600, scale = 1.3,  width = 10, height = 8)
 
 
 
@@ -756,10 +748,6 @@ ir_ci <- ir_ci %>%
   arrange(covid, outcome)
 
 
-write.csv(ir_ci, file=here("3_IRR", "IR_table_prostate_endo.csv"))
-save(ir_ci, file=here("3_IRR", "IR_table_prostate_endo.RData"))
-
-
 
 # add combined periods post-lockdown - this gives you all the IR calculated anytime after lockdown.These are not averaged but caluclated
 overall.post <-IR.overall%>% 
@@ -779,16 +767,13 @@ ir.post_ci <- ir_ci2 %>%
   arrange(covid, outcome)
 
 
-write.csv(ir.post_ci, file=here("3_IRR", "IR_table_prostate_endo_with_post_lockdown.csv"))
-save(ir.post_ci, file=here("3_IRR", "IR_table_prostate_endo_with_post_lockdown.RData"))
-
 
 # JOIN ALL PERIODS WITH POST-COVID
 
 ir_ci_pre_post <- rbind(ir_ci, ir.post_ci)
 
-write.csv(ir_ci_pre_post, file=here("3_IRR", "IR_table_prostate_endo_with_pre_post_lockdown.csv"))
-save(ir_ci_pre_post, file=here("3_IRR", "IR_table_prostate_endo_with_pre_post_lockdown.RData"))
+write.csv(ir_ci_pre_post, file=here(output.folder4, "IR_table_prostate_endo_with_pre_post_lockdown.csv"))
+save(ir_ci_pre_post, file=here(output.folder4, "IR_table_prostate_endo_with_pre_post_lockdown.RData"))
 
 # Change table structure to remove events and person months, and pivot the covid categories
 ir_ci_pre_post_pivot <- ir_ci_pre_post %>% dplyr::select(c(-events_t, -person_months_at_risk)) %>% tidyr::pivot_wider(names_from = covid, values_from = ir) 
@@ -811,10 +796,10 @@ Pretty_observed_IR_results_prostate_endo <- flextable(ir_ci_pre_post_pivot) %>% 
   set_caption(caption = "Incidence rates of endocrine treatments in prostate cancer patients in each of the time periods") %>% 
   width(width = 1.4) 
 
-save(ir_ci_pre_post_pivot, file=here("3_IRR", "IR_table_prostate_endo_with_pre_post_lockdown_pivot.RData"))
-write.csv(ir_ci_pre_post_pivot, file=here("3_IRR", "IR_table_prostate_endo_with_pre_post_lockdown_pivot.csv"))
+save(ir_ci_pre_post_pivot, file=here(output.folder4, "IR_table_prostate_endo_with_pre_post_lockdown_pivot.RData"))
+write.csv(ir_ci_pre_post_pivot, file=here(output.folder4, "IR_table_prostate_endo_with_pre_post_lockdown_pivot.csv"))
 
-save_as_docx('Pretty_observed_IR_results_prostate_endo' = Pretty_observed_IR_results_prostate_endo, path=here("3_IRR", "Pretty_obs_IR_results_prostate_endo.docx"))
+save_as_docx('Pretty_observed_IR_results_prostate_endo' = Pretty_observed_IR_results_prostate_endo, path=here(output.folder4, "Pretty_obs_IR_results_prostate_endo.docx"))
 
 
 
