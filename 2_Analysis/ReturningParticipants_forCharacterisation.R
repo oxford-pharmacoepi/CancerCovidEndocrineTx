@@ -113,11 +113,11 @@ for(i in seq_along(IncTxBreast_overall$outcome_cohort_id) ){
   cdm$working_participants <- cdm$working_participants %>% 
     addDemographics(cdm) %>% 
     addCohortIntersectFlag(cdm = cdm,
-                           targetCohortTable = feature_disease_table_name_3,
+                           targetCohortTable = feature_disease_table_name_1,
                            window = c(-Inf, 0), 
                            nameStyle = "{cohort_name}") %>% 
     addCohortIntersectFlag(cdm = cdm,
-                           targetCohortTable = feature_medication_table_name_3,
+                           targetCohortTable = feature_medication_table_name_1,
                            window = c(-90, 0), 
                            nameStyle = "{cohort_name}") 
   
@@ -421,11 +421,11 @@ for(i in seq_along(IncTxProstate_overall$outcome_cohort_id) ){
   cdm$working_participants <- cdm$working_participants %>% 
     addDemographics(cdm) %>% 
     addCohortIntersectFlag(cdm = cdm,
-                           targetCohortTable = feature_disease_table_name_3,
+                           targetCohortTable = feature_disease_table_name_1,
                            window = c(-Inf, 0), 
                            nameStyle = "{cohort_name}") %>% 
     addCohortIntersectFlag(cdm = cdm,
-                           targetCohortTable = feature_medication_table_name_3,
+                           targetCohortTable = feature_medication_table_name_1,
                            window = c(-90, 0), 
                            nameStyle = "{cohort_name}") 
   
