@@ -50,4 +50,4 @@ Data/
 *.jar
 .Rprofile
 Old_results/
-
+*.html
