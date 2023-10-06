@@ -136,6 +136,7 @@ info(logger, "- got endocrine treatment related outcomes")
 
 
 
+<<<<<<< HEAD
 # ============================================================================ #
 #      6.  BREAST AND PROSTATE CANCER BEFORE, DURING AND AFTER LOCKDOWN        #
 # ============================================================================ #
@@ -157,13 +158,15 @@ info(logger, "- got endocrine treatment related outcomes")
 # cohortSet(cdm[[outcome_table_name_3]]) %>%  glimpse()
 # 
 # info(logger, "- got breast and prostate populations before, during and after lockdown")
+=======
+>>>>>>> f06d6a5c9e63f5710231f24964842356e417947e
 
 # ============================================================================ #
-#                 7.  DISEASES FOR CHARACTERISATION                            #
+#                 6.  DISEASES FOR CHARACTERISATION                            #
 # ============================================================================ #
 
 
-#if (table_one_analysis == TRUE) {
+if (table_one_analysis == TRUE) {
   
   
 #instantiate feature cohorts (disease)
@@ -186,7 +189,7 @@ cohortSet(cdm[[feature_disease_table_name_1]]) %>%  glimpse()
 info(logger, "- got features for diseases")
 
 # ============================================================================ #
-#                 8.  MEDICATIONS FOR CHARACTERISATION                         #
+#                 7.  MEDICATIONS FOR CHARACTERISATION                         #
 # ============================================================================ #
 
 
@@ -208,6 +211,6 @@ cohortSet(cdm[[feature_medication_table_name_1]]) %>%  glimpse()
 
 info(logger, "- got features for medications")
 
-# } else {
-#   
-#   print("Not instantiating table 1 cohorts") }
+} else {
+
+  print("Not instantiating table 1 cohorts") }

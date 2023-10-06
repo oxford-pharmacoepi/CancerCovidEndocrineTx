@@ -96,7 +96,7 @@ info(logger, "- Plotting incidence and prevalence results: endocrine tx in breas
 
 
 
-# INCIDENCE IN YEARS FOR ALL AGE STRATA WITH 0 DAYS PRIOR HISTORY AND 90 DAYS WASHOUT
+# INCIDENCE IN YEARS FOR ALL AGE STRATA 
 
 inc_yrs_plot <- IncTxBreast %>%  
   filter(denominator_cohort_id == 2) %>% # this denominator cohort is females only as males would not be prescribed these

@@ -57,8 +57,7 @@ info(logger, "- Got denominator_breast")
 print(paste0("- Getting incidence endocrine tx in breast cancer populations"))
 info(logger, "- Getting incidence endocrine tx in breast cancer populations")
 
-# THIS RETURNS THE ERROR - Error: Failed to fetch row: ERROR:  relation "inc_participants1" already exists
-# EVEN WHEN I CHANGE THE WRITE PREFIX TO SOMETHING NEW
+
 
 IncTxBreast_overall <- estimateIncidence(
   cdm = cdm,
