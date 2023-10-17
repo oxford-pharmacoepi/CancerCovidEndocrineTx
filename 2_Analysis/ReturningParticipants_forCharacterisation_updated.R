@@ -219,12 +219,12 @@ for(i in seq_along(IncTxBreast_overall$outcome_cohort_id) ){
     
     working_participants %>% 
       summarise(val = as.character(round(median(prior_observation/365.25),2))) %>% 
-      mutate(var="Median prior history (days)"),
+      mutate(var="Median prior history (years)"),
     
     working_participants %>%
       summarise(val = as.character(paste(round(quantile(prior_observation/365.25,probs=0.25),2),  " to ",
                                          round(quantile(prior_observation/365.25,probs=0.75),2))))  %>%
-      mutate(var="IQR prior history (days)"),
+      mutate(var="IQR prior history (years)"),
     
       working_participants %>% 
       summarise(val = as.character(median(charlson)))  %>% 
@@ -552,12 +552,12 @@ for(i in seq_along(IncTxProstate_overall$outcome_cohort_id) ){
     
     working_participants %>% 
       summarise(val = as.character(round(median(prior_observation/365.25),2))) %>% 
-      mutate(var="Median prior history (days)"),
+      mutate(var="Median prior history (years)"),
     
     working_participants %>%
       summarise(val = as.character(paste(round(quantile(prior_observation/365.25,probs=0.25),2),  " to ",
                                          round(quantile(prior_observation/365.25,probs=0.75),2))))  %>%
-      mutate(var="IQR prior history (days)"),
+      mutate(var="IQR prior history (years)"),
     
     working_participants %>% 
       summarise(val = as.character(median(charlson)))  %>% 
