@@ -137,6 +137,10 @@ ggsave(here("Results", db.name , "2_EndocrineTxCancer", paste0(plotname, ".tiff"
 
 # INCIDENCE IN MONTHS FOR ALL AGE STRATA
 
+break.vec <- c(as.Date("2017-01-01"),
+               seq(from = as.Date("2017-04-01"), to = as.Date("2022-04-01"),
+                   by = "3 months"),
+               as.Date("2022-07-01"))
 
 inc_months_plot <- IncTxBreast %>%  
   filter(denominator_cohort_id == 2) %>% # this denominator cohort is females only
@@ -157,7 +161,8 @@ inc_months_plot <-
   geom_errorbar(width=0) +
   #scale_y_continuous(limits = c(0, NA)) +
   facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
-  scale_x_date(date_labels="%b %Y",date_breaks  ="6 months", expand = c(0.05, 0.05)) +
+  scale_x_date(date_labels="%b %Y",breaks=dateVec, expand=c(0.05,0)) +
+#  scale_x_date(date_labels="%b %Y",date_breaks  ="3 months", expand = c(0.05, 0.05)) +
   ggtitle("Incidence Rates of Endocrine Treatments in Months in Breast Cancer Patients in the year after diagnosis \nBefore and After COVID-19 Lockdown") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100,000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
@@ -167,7 +172,7 @@ inc_months_plot <-
 
 inc_months_plot
 
-
+analysis.name <- "endocrine_inBreastPop"
 plotname <- paste0(analysis.name, db.name, "_inc_months")
 
 # Save the plot as tiff
@@ -364,6 +369,7 @@ inc_months_plot <- IncTxProstate %>%
                              outcome_cohort_name == "GNRH_Agonists" ~ "GnRH Agonists",
                              outcome_cohort_name == "GNRH_LHRH_antagonists" ~ "GnRH Antagonists",
                              outcome_cohort_name == "Second_generation_antiandrogens" ~ "Second Generation Antiandrogens")) %>% 
+filter(!outcome_cohort_name %in% c("Second_generation_antiandrogens")) %>%
   as.data.frame()
 
 
@@ -376,7 +382,7 @@ inc_months_plot <-
   geom_errorbar(width=0) +
   #scale_y_continuous(limits = c(0, 150)) +
   facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
-  scale_x_date(date_labels="%b %Y",date_breaks  ="6 months", expand = c(0.05,0.05)) +
+  scale_x_date(date_labels="%b %Y",breaks=dateVec, expand=c(0.05,0)) +
   ggtitle("Incidence Rates of Endocrine Treatments in Months in Prostate Cancer Patients in the year after diagnosis \nBefore and After COVID-19 Lockdown)") +
   labs(colour = "Endocrine Treatment", x="Time" , y="Incidence per 100,000 person-years") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
@@ -385,7 +391,7 @@ inc_months_plot <-
   theme(legend.position = "none")
 
 inc_months_plot
-
+analysis.name <- "endocrine_inProstatePop"
 plotname <- paste0(analysis.name, db.name, "_inc_months")
 
 # Save the plot as tiff
