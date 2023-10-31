@@ -1,0 +1,7 @@
+"Concept Set ID","Name","Concept ID","Concept Code","Concept Name","Domain","Vocabulary","Standard Concept","Valid Start Date","Valid End Date","Exclude","Descendants","Mapped"
+192,"First_generation_antiandrogens",1344381,"83008","bicalutamide","Drug","RxNorm","S","1970-01-01","2099-12-31","FALSE","TRUE","FALSE"
+192,"First_generation_antiandrogens",21603837,"L02BB03","bicalutamide; oral","Drug","ATC","C","1970-01-01","2099-12-31","FALSE","TRUE","FALSE"
+192,"First_generation_antiandrogens",1315286,"31805","nilutamide","Drug","RxNorm","S","1970-01-01","2099-12-31","FALSE","TRUE","FALSE"
+192,"First_generation_antiandrogens",21603836,"L02BB02","nilutamide; oral","Drug","ATC","C","1970-01-01","2099-12-31","FALSE","TRUE","FALSE"
+192,"First_generation_antiandrogens",21603835,"L02BB01","flutamide; oral","Drug","ATC","C","1970-01-01","2099-12-31","FALSE","TRUE","FALSE"
+192,"First_generation_antiandrogens",1356461,"4508","flutamide","Drug","RxNorm","S","1970-01-01","2099-12-31","FALSE","TRUE","FALSE"
