@@ -30,59 +30,37 @@ IR.overall <- inc_data %>% filter(denominator_cohort_id ==1)
 
 IR <- IR.overall
 
-periods_bis<- IR%>% filter(outcome == "Bisphosphonates") %>% dplyr::select("covid")%>%distinct()%>%pull()
 
-outcome_bis <-IR%>% filter(outcome == "Bisphosphonates") %>% dplyr::select("outcome")%>% distinct()%>%pull()
+# add post-lockdown period which combines all periods from lockdown onwards
+IR <- mutate(IR, covid2 =ifelse(covid == "Pre-COVID", "Pre-COVID", "All lockdown periods"))
+pre_post_periods <- IR%>% dplyr::select("covid2")%>% distinct()%>%pull()
+outcome <-IR%>% dplyr::select("outcome")%>% distinct()%>%pull()
 
-# EXTRACT THE  LISTS
-
-# for bisphosphonates
-
-rateratios <- vector("list",length(outcome_bis)); names(rateratios) = outcome_bis
-
-for (y in 1:length(outcome_bis)){
-  working.outcome <- outcome_bis[y]
-  vector <- data.frame(a=c(),b=c()) # a vector to place the values from the loop
-  for(z in 1:length(periods_bis)){ 
-    working.period <- periods_bis[z]
-    working.data <- IR %>% 
-      filter(outcome==working.outcome)%>%
-      filter(covid==working.period) %>%
-      mutate(ref=if_else(months.since.start < 39,0,1))%>% # 38 indicates reference OF PRE-COVID
-      group_by(ref)%>% #no function for final time period
-      summarise( events_t = sum(events),person_months_at_risk = sum(months))%>%
-      mutate(periods = paste(working.period))%>%
-      mutate(outcome= paste(working.outcome))
-    
-    events <- c(working.data%>%dplyr::select(events_t)%>%pull())
-    pt <- c(working.data%>%dplyr::select(person_months_at_risk)%>%pull())
-    
-    vector <- rbind(vector,c(events, pt))
-    
-    
-  }  
-  ifelse(dim(vector)[1] > 1,
-         rateratios[[y]] <-rateratio(as.matrix(vector, y=NULL)), # this bit of the code says that if there is a result in vector, give us the rate ratio. If no result, give us NA
-         rateratios[[y]] <- NA)
-} 
+sums_events_pre_post <- IR %>% group_by(outcome, covid2) %>% 
+  summarise(sum_events=sum(events),
+            sum_months=sum(months),
+            .groups = 'drop')
 
 
-# EXTRACT THE  LISTS
-rateratios_Bisphosphonates <- rateratios$`Bisphosphonates`
+# Rate ratios for bisphosphonates
+Bis_sums <- sums_events_pre_post %>% filter(outcome =="Bisphosphonates")
+Bis_sums <- Bis_sums[c(2,1),] # re-orders the rows so pre-covid first
+Bis_sums <- Bis_sums %>% select(c(sum_events, sum_months))
+
+rateratios_Bisphosphonates <- rateratio(as.matrix(Bis_sums, y=NULL))
 
 
 ################################################################################
 
+# FUNCTION TO EXTRACT ALL THE IRR AND CIS FROM ALL OF THE LISTS 
 
-# FUNCTION TO EXTRACT ALL THE IRR AND CIS FROM ALL OF THE LISTS FOR BISPHOSPHONATES
-
-get_IR_df_function_bis <- function(yourrateratiosname, title){
+get_IR_df_function <- function(yourrateratiosname, title){
   
   get_IR_df <- as.data.frame(yourrateratiosname[[2]])
   get_IR_df <- get_IR_df %>%  mutate_if(is.numeric, round, digits=2)
   
   # add a column to indicate the covid period
-  get_IR_df <- cbind(periods_bis, get_IR_df)
+  get_IR_df <- cbind(pre_post_periods, get_IR_df)
   
   # combine cis with the estimate
   get_IR_df <- get_IR_df %>% mutate(estimate = paste0(paste(estimate)," (", paste(lower), " to ", paste(upper), ")")) 
@@ -93,20 +71,15 @@ get_IR_df_function_bis <- function(yourrateratiosname, title){
   # transpose the table to have column headings as covid periods
   get_IR_df_t <- transpose(get_IR_df)
   #redefine row and column names
-  colnames(get_IR_df_t) <- colnames(periods_bis)
+  colnames(get_IR_df_t) <- colnames(pre_post_periods)
   names(get_IR_df_t) <- get_IR_df_t[1,]
   get_IR_df_t <- get_IR_df_t[-1,]
   rownames(get_IR_df_t) <- paste(title)
   return(get_IR_df_t)
 }
-
-
 # RUN THE FUNCTION FOR EACH OF THE RATERATIO LISTS
-IRR_Bisphosphonates <- get_IR_df_function_bis(rateratios_Bisphosphonates, "Bisphosphonates") 
 
-# ADD COLUMNS FOR MISSING PERIODS, WITH NAS
-IRR_Bisphosphonates$`Third lockdown` <- c(NA)
-IRR_Bisphosphonates<-IRR_Bisphosphonates[c(1,2,3,4,7,5,6)]
+IRR_Bisphosphonates <- get_IR_df_function(rateratios_Bisphosphonates, "Bisphosphonates") 
 
 
 # JOIN THE TABLES
@@ -116,80 +89,62 @@ IRR_table_endodx_prostate <- IRR_table_endodx_prostate[-1]
 # CONVERT THE ROWNAMES TO A NORMAL DATA COLUMN
 IRR_table_endodx_prostate <- tibble::rownames_to_column(IRR_table_endodx_prostate, "Endocrine Treatment")
 
-IRR_table_endodx_prostate_ex_bf <- IRR_table_endodx_prostate
+IRR_table_endodx_prostate_ex_bf_pre_post <- IRR_table_endodx_prostate
 #### Save IRR
-write.csv(IRR_table_endodx_prostate_ex_bf, file=here::here(output.folder6, "IRR_table_endodx_prostate_ex_bf.csv"))
-save(IRR_table_endodx_prostate_ex_bf, file=here::here(output.folder6, "IRR_table_endodx_prostate_ex_bf.Rdata"))
-
-#### Make pretty table
-Pretty_IRR_table_endodx_prostate_ex_bf <- flextable(IRR_table_endodx_prostate_ex_bf) %>% theme_vanilla() %>% 
-  set_caption(caption = "Incidence rate ratios of treatment-related outcomes in prostate cancer patients on endocrine treatments over the lockdown periods compared to pre-COVID period") %>% 
-  width(width = 1.4) 
-
-save_as_docx('Pretty_IRR_table_endodx_prostate_ex_bf' = Pretty_IRR_table_endodx_prostate_ex_bf, path=here(output.folder6, "Pretty_IRR_table_endodx_prostate_ex_bf.docx"))
+write.csv(IRR_table_endodx_prostate_ex_bf_pre_post, file=here::here(output.folder6, "IRR_table_endodx_prostate_ex_bf_pre_post.csv"))
+save(IRR_table_endodx_prostate_ex_bf_pre_post, file=here::here(output.folder6, "IRR_table_endodx_prostate_ex_bf_pre_post.Rdata"))
 
 
 
 # FUNCTION TO EXTRACT ALL THE N EVENTS AND PERSON MONTHS FROM ALL OF THE LISTS FOR BISPHOSPHONATES
 
-get_n_events_pd_function_bis <- function(yourrateratiosname, title){
+get_n_events_pm_function_bis <- function(yourrateratiosname, title){
   
-  neventspd <- as.data.frame(yourrateratiosname[[1]])
-  neventspd <- neventspd %>%  mutate_if(is.numeric, round, digits=2)
+  neventspm <- as.data.frame(yourrateratiosname[[1]])
+  neventspm <- neventspm %>%  mutate_if(is.numeric, round, digits=2)
   
   # remove last row of totals
-  neventspd <- neventspd[-6,]
+  neventspm <- neventspm[-3,]
   # add a column to indicate the covid period
-  neventspd <- cbind(periods_bis, neventspd)
+  neventspm <- cbind(pre_post_periods, neventspm)
   
   # add column names
-  names(neventspd)[1] <- "Periods"
-  names(neventspd)[2] <- "N events"
-  names(neventspd)[3] <- "Person MONTHS"
+  names(neventspm)[1] <- "Periods"
+  names(neventspm)[2] <- "N events"
+  names(neventspm)[3] <- "Person MONTHS"
   
   # combine person MONTHS with n events
-  neventspd <- neventspd %>% mutate(`n events / person MONTHS` = paste0(paste(`N events`)," (", paste(`Person MONTHS`), ")")) 
+  neventspm <- neventspm %>% mutate(`n events / person MONTHS` = paste0(paste(`N events`)," (", paste(`Person MONTHS`), ")")) 
   
   # remove superfluous columns of events and person MONTHS
-  neventspd <- neventspd[-c(2,3)]
+  neventspm <- neventspm[-c(2,3)]
   
   # transpose the table to have column headings as covid periods
-  neventspd_t <- transpose(neventspd)
+  neventspm_t <- transpose(neventspm)
   #redefine row and column names
-  colnames(neventspd_t) <- colnames(periods_bis)
-  names(neventspd_t) <- neventspd_t[1,]
-  neventspd_t <- neventspd_t[-1,]
-  rownames(neventspd_t) <- paste(title)
-  return(neventspd_t)
+  colnames(neventspm_t) <- colnames(pre_post_periods)
+  names(neventspm_t) <- neventspm_t[1,]
+  neventspm_t <- neventspm_t[-1,]
+  rownames(neventspm_t) <- paste(title)
+  return(neventspm_t)
 }
 
 
 # RUN THE FUNCTION FOR EACH OF THE RATERATIO LISTS
 
-N_EVENTS_PD_Bisphosphonates <- get_n_events_pd_function_bis(rateratios_Bisphosphonates, "Bisphosphonates") 
-
-# ADD COLUMNS FOR MISSING PERIODS, WITH NAS
-N_EVENTS_PD_Bisphosphonates$`Third lockdown` <- c(NA)
-N_EVENTS_PD_Bisphosphonates<- N_EVENTS_PD_Bisphosphonates[c(1,2,3,4,7,5,6)]
+N_EVENTS_PM_Bisphosphonates <- get_n_events_pm_function_bis(rateratios_Bisphosphonates, "Bisphosphonates") 
 
 
 
 # JOIN THE TABLES
-N_EVENTS_PD_table_endodx_prostate <- N_EVENTS_PD_Bisphosphonates
+N_EVENTS_PM_table_endodx_prostate_pre_post <- N_EVENTS_PM_Bisphosphonates
 # CONVERT THE ROWNAMES TO A NORMAL DATA COLUMN
-N_EVENTS_PD_table_endodx_prostate <- tibble::rownames_to_column(N_EVENTS_PD_table_endodx_prostate, "Endocrine Treatment-Related Outcome")
+N_EVENTS_PM_table_endodx_prostate_pre_post <- tibble::rownames_to_column(N_EVENTS_PM_table_endodx_prostate_pre_post, "Endocrine Treatment-Related Outcome")
 
 
 #### Save n EVENTS AND PERSON MONTHS
-write.csv(N_EVENTS_PD_table_endodx_prostate, file=here::here(output.folder6, "N_EVENTS_PD_table_endodx_prostate.csv"))
-save(N_EVENTS_PD_table_endodx_prostate, file=here::here(output.folder6, "N_EVENTS_PD_table_endodx_prostate.Rdata"))
-
-#### Make pretty table
-Pretty_N_EVENTS_PD_table_endodx_prostate <- flextable(N_EVENTS_PD_table_endodx_prostate) %>% theme_vanilla() %>% 
-  set_caption(caption = "Number of events and person MONTHS of treatment-related outcomes in prostate cancer patients on endocrine treatments over the lockdown periods compared to pre-COVID period") %>% 
-  width(width = 1.4) 
-
-save_as_docx('Pretty_N_EVENTS_PD_table_endodx_prostate' = Pretty_N_EVENTS_PD_table_endodx_prostate, path=here(output.folder6, "Pretty_N_EVENTS_PD_table_endodx_prostate.docx"))
+write.csv(N_EVENTS_PM_table_endodx_prostate_pre_post, file=here::here(output.folder6, "N_EVENTS_PD_table_endodx_prostate_pre_post.csv"))
+save(N_EVENTS_PM_table_endodx_prostate_pre_post, file=here::here(output.folder6, "N_EVENTS_PM_table_endodx_prostate_pre_post.Rdata"))
 
 
 # ============== CREATE FOREST PLOT OF INCIDENCE RATE RATIOS ================= #
@@ -203,7 +158,7 @@ get_IR_df_function_CIs_Sep_bis <- function(yourrateratiosname, title){
   `Endocrine Treatment` <- c(title)
   IR_CIS <- as.data.frame(yourrateratiosname[[2]])
   IR_CIS <- IR_CIS %>% mutate_if(is.numeric, round, digits=2)
-  IR_CIS <-cbind(`Endocrine Treatment`, periods_bis, IR_CIS)
+  IR_CIS <-cbind(`Endocrine Treatment`, pre_post_periods, IR_CIS)
   
   return(IR_CIS)
 }
@@ -211,67 +166,51 @@ get_IR_df_function_CIs_Sep_bis <- function(yourrateratiosname, title){
 # RUN THE FUNCTION FOR EACH OF THE RATERATIO LISTS
 IRR_Bisphosphonates_Sep <- get_IR_df_function_CIs_Sep_bis(rateratios_Bisphosphonates, "Bisphosphonates") 
 
-# ADD ROWS FOR MISSING PERIODS, WITH NAS
-new_row = c(`Endocrine Treatment` = "Bisphosphonates", periods_bis="Third lockdown", estimate = NA, lower = NA, upper = NA)
-IRR_Bisphosphonates_Sep <- rbind(IRR_Bisphosphonates_Sep,new_row)
-IRR_Bisphosphonates_Sep<- IRR_Bisphosphonates_Sep[c(1,2,3,4,7,5,6),]
-IRR_Bisphosphonates_Sep <- IRR_Bisphosphonates_Sep %>% rename("Periods" = periods_bis)
-
 # JOIN THE RATIO OUTPUTS   
 IRR_FOREST_endodx_prostate <- IRR_Bisphosphonates_Sep
 
 
 
 # filter out pre-covid 
-IRR_FOREST_endodx_prostate <- IRR_FOREST_endodx_prostate %>% filter(Periods !="Pre-COVID")
+IRR_FOREST_endodx_prostate_pre_post <- IRR_FOREST_endodx_prostate %>% filter(pre_post_periods !="Pre-COVID")
 
 # RENAME PERIODS
-IRR_FOREST_endodx_prostate <- IRR_FOREST_endodx_prostate %>% rename("Lockdown Periods" = Periods) 
-
-# RENAME POST-LOCKDOWN 1
-IRR_FOREST_endodx_prostate$`Lockdown Periods`[IRR_FOREST_endodx_prostate$`Lockdown Periods` == "Post-lockdown1"] <- "Post-first lockdown"
-
-IRR_FOREST_endodx_prostate <- IRR_FOREST_endodx_prostate  %>%
-  mutate(`Lockdown Periods` = factor(`Lockdown Periods`, levels=rev(c("Lockdown", "Post-first lockdown", "Second lockdown", 
-                                                                        "Third lockdown", "Easing of restrictions", "Legal restrictions removed"))) )
-
-save(IRR_FOREST_endodx_prostate, file=here::here(output.folder6, "IRR_FOREST_endodx_prostate.Rdata"))
-
-# up to here
-#load this
-IRR_FOREST_endodx_prostate.Rdata
+IRR_FOREST_endodx_prostate_pre_post <- IRR_FOREST_endodx_prostate_pre_post %>% rename("Lockdown Periods" = pre_post_periods) 
 
 
-# Save this as a data object so that i can combine it into the forest plot of all lockdown periods
-save(IRR_FOREST_endodx_breastAI_POST, file=here(output.folder3, "IRR_FOREST_endodx_breastAI_POST.RData"))
-
-# Then combine with the data frame for all lockdown periods from other script.
-load("~/GitHub/CancerCovidEndocrineTx/3_IRR/CPRDGold_202207_patched/OsteoDxBreast/IRR_FOREST_endodx_breastAI.RData")
-
-IRR_FOREST_endodx_breastAI_COMBINED_POST <- rbind(IRR_FOREST_endodx_breastAI, IRR_FOREST_endodx_breastAI_POST)
-
-IRR_FOREST_endodx_breastAI_COMBINED_POST <- IRR_FOREST_endodx_breastAI_COMBINED_POST  %>%
-  mutate(`Lockdown Periods` = factor(`Lockdown Periods`, levels=rev(c("Lockdown", "Post-first lockdown", "Second lockdown", 
-                                                                      "Third lockdown", "Easing of restrictions", "Legal restrictions removed", "All lockdown periods"))) )
-
-
-
-
-
+save(IRR_FOREST_endodx_prostate_pre_post, file=here::here(output.folder6, "IRR_FOREST_endodx_prostate_pre_post.Rdata"))
 
 
 # Change char to num
-IRR_FOREST_endodx_prostate = 
-  IRR_FOREST_endodx_prostate %>% mutate(
+IRR_FOREST_endodx_prostate_pre_post = 
+  IRR_FOREST_endodx_prostate_pre_post %>% mutate(
     estimate_num = as.numeric(estimate),
     lower_num = as.numeric(lower),
     upper_num = as.numeric(upper))
 
-IRR_FOREST_endodx_prostate_plot =
-  ggplot(IRR_FOREST_endodx_prostate, aes(x = `Lockdown Periods`,y = estimate_num, ymin = lower_num, ymax = upper_num ))+
+# Save this as a data object so that i can combine it into the forest plot of all lockdown periods
+save(IRR_FOREST_endodx_prostate_pre_post, file=here(output.folder6, "IRR_FOREST_endodx_prostate_pre_post.RData"))
+
+
+# Then combine with the data frame for all lockdown periods from other script.
+load("~/GitHub/CancerCovidEndocrineTx/3_IRR/CPRDGold_202207_patched/OsteoDxProstate/IRR_FOREST_endodx_prostate.Rdata")
+
+IRR_FOREST_endodx_prostate_COMBINED_POST <- rbind(IRR_FOREST_endodx_prostate, IRR_FOREST_endodx_prostate_pre_post)
+
+IRR_FOREST_endodx_prostate_COMBINED_POST <- IRR_FOREST_endodx_prostate_COMBINED_POST  %>%
+  mutate(`Lockdown Periods` = factor(`Lockdown Periods`, levels=rev(c("Lockdown", "Post-first lockdown", "Second lockdown", 
+                                                                      "Third lockdown", "Easing of restrictions", "Legal restrictions removed", "All lockdown periods"))) )
+
+# Save this as a data object so that i can combine it into the forest plot of all lockdown periods
+save(IRR_FOREST_endodx_prostate_COMBINED_POST, file=here(output.folder6, "IRR_FOREST_endodx_prostate_COMBINED_POST.RData"))
+
+
+IRR_FOREST_endodx_prostate_plot_post =
+  ggplot(IRR_FOREST_endodx_prostate_COMBINED_POST, aes(x = `Lockdown Periods`,y = estimate_num, ymin = lower_num, ymax = upper_num ))+
   geom_pointrange(aes(col=`Lockdown Periods`, shape=`Lockdown Periods`))+
   xlab('Bisphosphonate Prescriptions in Prostate Cancer Patients on Endocrine Treatments')+ ylab("Incidence Rate Ratio on Logarithmic Scale (95% Confidence Interval - Pre-Pandemic as reference)")+
   geom_hline(aes(fill=`Lockdown Periods`),yintercept =1, linetype=2)+
+  scale_shape_manual(values=c(0, 8, 9, 19, 15, 16, 17))+
   scale_y_log10() +
   geom_errorbar(aes(ymin=lower_num, ymax=upper_num,col=`Lockdown Periods`),width=0.5,cex=0.8)+ 
   theme(plot.title=element_text(size=14,face="bold"),
@@ -285,82 +224,12 @@ IRR_FOREST_endodx_prostate_plot =
   guides(color = guide_legend(reverse = TRUE), shape = guide_legend(reverse = TRUE)) +
   coord_flip()
 
-IRR_FOREST_endodx_prostate_plot
+IRR_FOREST_endodx_prostate_plot_post
 
 # Save
 
-ggsave(here(output.folder6, "IRR_FOREST_endodx_prostate_plot_ex_bf.tiff"), IRR_FOREST_endodx_prostate_plot, dpi=600, scale = 1.3,  width = 10, height = 8)
-ggsave(here(output.folder6, "IRR_FOREST_endodx_prostate_plot_ex_bf.png"), IRR_FOREST_endodx_prostate_plot, dpi=600, scale = 1.3,  width = 10, height = 8)
-
-
-
-#### INCIDENCE RATES TABLES FOR PAPER --------------------------------------- ##
-
-#This gives you all the rates calculated in each of the time periods
-overall <-IR.overall%>% group_by(covid, outcome) %>% summarise( events_t = sum(events),person_months_at_risk = sum(months),)
-
-ir <- rbind(overall)%>% arrange(covid, outcome)
-
-ir1 <-as.matrix(ir[,3:4])
-ci <- round(epi.conf(ir1, ctype = "inc.rate", method = "exact", N = 100000, design = 1, 
-                     conf.level = 0.95) * 100000,1)
-
-ir_ci <- cbind(ir, ci)
-ir_ci <- ir_ci %>% 
-  mutate(ir = paste0(paste(est),"(", paste(lower), " to ", paste(upper), ")"))%>%
-  dplyr::select(covid, outcome, events_t, person_months_at_risk, ir)%>%
-  arrange(covid, outcome)
-
-
-
-# add combined periods post-lockdown - this gives you all the IR calculated anytime after lockdown.These are not averaged but caluclated
-overall.post <-IR.overall%>% 
-  filter(months.since.start >=43)%>%
-  group_by(outcome) %>% summarise( events_t = sum(events),person_months_at_risk = sum(months),)
-
-ir_post <- bind_rows(overall.post)%>% arrange(outcome)
-ir2 <-as.matrix(ir_post[,2:3])
-ci2 <- round(epi.conf(ir2, ctype = "inc.rate", method = "exact", N = 100000, design = 1, 
-                      conf.level = 0.95) * 100000,1)
-
-ir_ci2 <- cbind(ir_post, ci2)
-ir.post_ci <- ir_ci2 %>% 
-  mutate(ir = paste0(paste(est)," (", paste(lower), " to ", paste(upper), ")"))%>%
-  mutate(covid="Post-lockdown")%>%
-  dplyr::select(covid,outcome,  events_t, person_months_at_risk, ir)%>%
-  arrange(covid, outcome)
-
-
-
-
-# JOIN ALL PERIODS WITH POST-COVID
-
-ir_ci_pre_post <- rbind(ir_ci, ir.post_ci)
-
-
-# Change table structure to remove events and person months, and pivot the covid categories
-ir_ci_pre_post_pivot <- ir_ci_pre_post %>% dplyr::select(c(-events_t, -person_months_at_risk)) %>% tidyr::pivot_wider(names_from = covid, values_from = ir) 
-# re-order columns
-ir_ci_pre_post_pivot <- ir_ci_pre_post_pivot[c(1, 6,4,5,7,8,2,3,9)]
-#ir_ci_pre_post_pivot <- ir_ci_pre_post_pivot[c(2,4,8,10,12,13,3,6,14,5,7,9,1,11), c(1, 2, 5, 9, 6, 7, 8, 3,4)]
-ir_ci_pre_post_pivot <- ir_ci_pre_post_pivot %>% rename("Pre-COVID (Jan 2017-Feb 2020)" = "Pre-COVID", 
-                                                        "Lockdown (March 2020-June 2020)" = "Lockdown",
-                                                        "Post-lockdown (July 2020-Dec 2021)" = "Post-lockdown", 
-                                                        "Post-first lockdown 1 (July 2020-Oct 2020)" = "Post-lockdown1",
-                                                        "Second lockdown (Nov 2020-Dec 2020)" = "Second lockdown", 
-                                                        "Third lockdown (Jan 2021-Feb 2021)" = "Third lockdown",
-                                                        "Easing of restrictions (March 2021-June 2021" = "Easing of restrictions", 
-                                                        "Legal restrictions removed (July 2021-Dec 2021)"= "Legal restrictions removed")
-
-
-Pretty_observed_IR_results_endodx_prostate <- flextable(ir_ci_pre_post_pivot) %>% theme_vanilla() %>% 
-  set_caption(caption = "Incidence rates of endocrine-treatment related outcomes in prostate cancer patients on any endocrine treatment in each of the time periods") %>% 
-  width(width = 1.4) 
-
-save(ir_ci_pre_post_pivot, file=here(output.folder6, "IR_table_endodx_prostate_with_pre_post_lockdown_pivot.RData"))
-write.csv(ir_ci_pre_post_pivot, file=here(output.folder6, "IR_table_endodx_prostate_with_pre_post_lockdown_pivot.csv"))
-
-save_as_docx('Pretty_observed_IR_results_endodx_prostate' = Pretty_observed_IR_results_endodx_prostate, path=here(output.folder6, "Pretty_observed_IR_results_endodx_prostate.docx"))
+ggsave(here(output.folder6, "IRR_FOREST_endodx_prostate_plot_post.tiff"), IRR_FOREST_endodx_prostate_plot_post, dpi=600, scale = 1.3,  width = 10, height = 8)
+ggsave(here(output.folder6, "IRR_FOREST_endodx_prostate_plot_post.png"), IRR_FOREST_endodx_prostate_plot_post, dpi=600, scale = 1.3,  width = 10, height = 8)
 
 
 

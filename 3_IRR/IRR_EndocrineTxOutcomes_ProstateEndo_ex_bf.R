@@ -138,7 +138,7 @@ get_n_events_pd_function_bis <- function(yourrateratiosname, title){
   neventspd <- neventspd %>%  mutate_if(is.numeric, round, digits=2)
   
   # remove last row of totals
-  neventspd <- neventspd[-6,]
+  neventspd <- neventspd[-7,]
   # add a column to indicate the covid period
   neventspd <- cbind(periods_bis, neventspd)
   
@@ -178,6 +178,7 @@ N_EVENTS_PD_Bisphosphonates<- N_EVENTS_PD_Bisphosphonates[c(1,2,3,4,7,5,6)]
 N_EVENTS_PD_table_endodx_prostate <- N_EVENTS_PD_Bisphosphonates
 # CONVERT THE ROWNAMES TO A NORMAL DATA COLUMN
 N_EVENTS_PD_table_endodx_prostate <- tibble::rownames_to_column(N_EVENTS_PD_table_endodx_prostate, "Endocrine Treatment-Related Outcome")
+
 
 
 #### Save n EVENTS AND PERSON MONTHS
@@ -246,6 +247,9 @@ IRR_FOREST_endodx_prostate =
     lower_num = as.numeric(lower),
     upper_num = as.numeric(upper))
 
+
+save(IRR_FOREST_endodx_prostate, file=here::here(output.folder6, "IRR_FOREST_endodx_prostate.Rdata"))
+
 IRR_FOREST_endodx_prostate_plot =
   ggplot(IRR_FOREST_endodx_prostate, aes(x = `Lockdown Periods`,y = estimate_num, ymin = lower_num, ymax = upper_num ))+
   geom_pointrange(aes(col=`Lockdown Periods`, shape=`Lockdown Periods`))+
@@ -294,7 +298,7 @@ ir_ci <- ir_ci %>%
 
 # add combined periods post-lockdown - this gives you all the IR calculated anytime after lockdown.These are not averaged but caluclated
 overall.post <-IR.overall%>% 
-  filter(months.since.start >=43)%>%
+  filter(months.since.start >=39)%>%
   group_by(outcome) %>% summarise( events_t = sum(events),person_months_at_risk = sum(months),)
 
 ir_post <- bind_rows(overall.post)%>% arrange(outcome)
@@ -324,7 +328,7 @@ ir_ci_pre_post_pivot <- ir_ci_pre_post_pivot[c(1, 6,4,5,7,8,2,3,9)]
 #ir_ci_pre_post_pivot <- ir_ci_pre_post_pivot[c(2,4,8,10,12,13,3,6,14,5,7,9,1,11), c(1, 2, 5, 9, 6, 7, 8, 3,4)]
 ir_ci_pre_post_pivot <- ir_ci_pre_post_pivot %>% rename("Pre-COVID (Jan 2017-Feb 2020)" = "Pre-COVID", 
                                                         "Lockdown (March 2020-June 2020)" = "Lockdown",
-                                                        "Post-lockdown (July 2020-Dec 2021)" = "Post-lockdown", 
+                                                        "Post-lockdown (March 2020-Dec 2021)" = "Post-lockdown", 
                                                         "Post-first lockdown 1 (July 2020-Oct 2020)" = "Post-lockdown1",
                                                         "Second lockdown (Nov 2020-Dec 2020)" = "Second lockdown", 
                                                         "Third lockdown (Jan 2021-Feb 2021)" = "Third lockdown",
