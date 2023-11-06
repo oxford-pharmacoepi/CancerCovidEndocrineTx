@@ -126,7 +126,7 @@ save_as_docx('Pretty_IRR_table_endodx_breastAI' = Pretty_IRR_table_endodx_breast
 
 
 
-# FUNCTION TO EXTRACT ALL THE N EVENTS AND PERSON DAYS FROM ALL OF THE LISTS 
+# FUNCTION TO EXTRACT ALL THE N EVENTS AND PERSON MONTHS FROM ALL OF THE LISTS 
 
 get_n_events_pd_function <- function(yourrateratiosname, title){
   
@@ -141,12 +141,12 @@ get_n_events_pd_function <- function(yourrateratiosname, title){
   # add column names
   names(neventspd)[1] <- "Periods"
   names(neventspd)[2] <- "N events"
-  names(neventspd)[3] <- "Person Days"
+  names(neventspd)[3] <- "Person MONTHS"
   
-  # combine person days with n events
-  neventspd <- neventspd %>% mutate(`n events / person days` = paste0(paste(`N events`)," (", paste(`Person Days`), ")")) 
+  # combine person MONTHS with n events
+  neventspd <- neventspd %>% mutate(`n events / person MONTHS` = paste0(paste(`N events`)," (", paste(`Person MONTHS`), ")")) 
   
-  # remove superfluous columns of events and person days
+  # remove superfluous columns of events and person MONTHS
   neventspd <- neventspd[-c(2,3)]
   
   # transpose the table to have column headings as covid periods
@@ -174,13 +174,13 @@ N_EVENTS_PD_table_endodx_breastAI <- tibble::rownames_to_column(N_EVENTS_PD_tabl
 # re-order the rows
 N_EVENTS_PD_table_endodx_breastAI <- N_EVENTS_PD_table_endodx_breastAI[c(3,4,1,2),]
 
-#### Save n EVENTS AND PERSON DAYS
+#### Save n EVENTS AND PERSON MONTHS
 write.csv(N_EVENTS_PD_table_endodx_breastAI, file=here::here(output.folder5, "N_EVENTS_PD_table_endodx_breastAI.csv"))
 save(N_EVENTS_PD_table_endodx_breastAI, file=here::here(output.folder5, "N_EVENTS_PD_table_endodx_breastAI.Rdata"))
 
 #### Make pretty table
 Pretty_N_EVENTS_PD_table_endodx_breastAI <- flextable(N_EVENTS_PD_table_endodx_breastAI) %>% theme_vanilla() %>% 
-  set_caption(caption = "Number of events and person days of treatment-related outcomes in breast cancer patients on aromatase inhibitors over the lockdown periods compared to pre-COVID period") %>% 
+  set_caption(caption = "Number of events and person MONTHS of treatment-related outcomes in breast cancer patients on aromatase inhibitors over the lockdown periods compared to pre-COVID period") %>% 
   width(width = 1.4) 
 
 save_as_docx('Pretty_N_EVENTS_PD_table_endodx_breastAI' = Pretty_N_EVENTS_PD_table_endodx_breastAI, path=here(output.folder5, "Pretty_N_EVENTS_PD_table_endodx_breastAI.docx"))
@@ -218,12 +218,26 @@ IRR_FOREST_endodx_breastAI <- IRR_FOREST_endodx_breastAI %>% filter(periods !="P
 # RENAME PERIODS
 IRR_FOREST_endodx_breastAI <- IRR_FOREST_endodx_breastAI %>% rename("Lockdown Periods" = periods) 
 
+# RENAME POST-LOCKDOWN 1
+IRR_FOREST_endodx_breastAI$`Lockdown Periods`[IRR_FOREST_endodx_breastAI$`Lockdown Periods` == "Post-lockdown1"] <- "Post-first lockdown"
 
 IRR_FOREST_endodx_breastAI <- IRR_FOREST_endodx_breastAI  %>%
-  mutate(`Lockdown Periods` = factor(`Lockdown Periods`, levels=rev(c("Lockdown", "Post-lockdown1", "Second lockdown", 
+  mutate(`Lockdown Periods` = factor(`Lockdown Periods`, levels=rev(c("Lockdown", "Post-first lockdown", "Second lockdown", 
                                                                       "Third lockdown", "Easing of restrictions", "Legal restrictions removed"))) )
+
+
 # FILTER OUT BONE FRACTURE IF NOT INCLUDING
 IRR_FOREST_endodx_breastAI <- IRR_FOREST_endodx_breastAI %>% filter(`Endocrine Treatment` !="Bone Fracture")
+
+
+# Change char to num
+IRR_FOREST_endodx_breastAI = 
+  IRR_FOREST_endodx_breastAI %>% mutate(
+    estimate_num = as.numeric(estimate),
+    lower_num = as.numeric(lower),
+    upper_num = as.numeric(upper))
+
+save(IRR_FOREST_endodx_breastAI, file=here(output.folder5, "IRR_FOREST_endodx_breastAI.RData"))
 
 
 # color blind palette
@@ -234,8 +248,9 @@ IRR_FOREST_endodx_breastAI_plot_ex_bf =
   ggplot(data=IRR_FOREST_endodx_breastAI, aes(x = `Lockdown Periods`,y = estimate, ymin = lower, ymax = upper ))+
   geom_pointrange(aes(col=`Lockdown Periods`, shape=`Lockdown Periods`))+
   geom_hline(aes(fill=`Lockdown Periods`),yintercept =1, linetype=2)+
-  xlab('Endocrine Treatment Outcome in Breast Cancer Patients on Aromatase Inhibitors')+ ylab("Incidence Rate Ratio (95% Confidence Interval - Pre-Pandemic as reference)")+
+  xlab('Endocrine Treatment Outcome in Breast Cancer Patients on Aromatase Inhibitors')+ ylab("Incidence Rate Ratio on Logarithmic Scale (95% Confidence Interval - Pre-Pandemic as reference)")+
   geom_errorbar(aes(ymin=lower, ymax=upper,col=`Lockdown Periods`),width=0.5,cex=0.8)+ 
+  scale_y_log10() +
   facet_wrap(~`Endocrine Treatment`,strip.position="left",nrow=4,scales = "free_y",labeller = label_wrap_gen()) +
   theme(plot.title=element_text(size=14,face="bold"),
         axis.text.y=element_blank(),
@@ -288,7 +303,7 @@ save(ir_ci, file=here(output.folder5, "IR_table_endodx_breastAI.RData"))
 
 # add combined periods post-lockdown - this gives you all the IR calculated anytime after lockdown.These are not averaged but caluclated
 overall.post <-IR.overall%>% 
-  filter(months.since.start >=43)%>%
+  filter(months.since.start >=39)%>%
   group_by(outcome) %>% summarise( events_t = sum(events),person_months_at_risk = sum(months),)
 
 ir_post <- bind_rows(overall.post)%>% arrange(outcome)
@@ -317,7 +332,7 @@ ir_ci_pre_post_pivot <- ir_ci_pre_post_pivot[c(1, 6,4,5,7,8,2,3,9)]
 #ir_ci_pre_post_pivot <- ir_ci_pre_post_pivot[c(2,4,8,10,12,13,3,6,14,5,7,9,1,11), c(1, 2, 5, 9, 6, 7, 8, 3,4)]
 ir_ci_pre_post_pivot <- ir_ci_pre_post_pivot %>% rename("Pre-COVID (Jan 2017-Feb 2020)" = "Pre-COVID", 
                                                         "Lockdown (March 2020-June 2020)" = "Lockdown",
-                                                        "Post-lockdown (July 2020-Dec 2021)" = "Post-lockdown", 
+                                                        "Post-lockdown (March 2020-Dec 2021)" = "Post-lockdown", 
                                                         "Post-first lockdown 1 (July 2020-Oct 2020)" = "Post-lockdown1",
                                                         "Second lockdown (Nov 2020-Dec 2020)" = "Second lockdown", 
                                                         "Third lockdown (Jan 2021-Feb 2021)" = "Third lockdown",
