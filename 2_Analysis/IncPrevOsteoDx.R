@@ -555,7 +555,6 @@ IncTxOutcomesProstate %>%
 IncTxOutcomesProstateAtt <- IncTxOutcomesProstate %>%
   incidenceAttrition()
 
-save(IncTxOutcomesBreastAI, file = here("Results", db.name, "3_OsteoDx", "IncTxOutcomesBreastAI.RData"))
 write.csv(IncTxOutcomesProstateAtt, file = here("Results", db.name, "3_OsteoDx", "IncTxOutcomesProstateAtt_attrition_estimates.csv"))
 
 
@@ -682,7 +681,7 @@ inc_months_plot <-
                               ymax = incidence_100000_pys_95CI_upper, color=outcome, group=outcome)) +
   geom_point() + geom_line() +
   geom_errorbar(width=0) +
-  #scale_y_continuous(limits = c(0, 150)) +
+  scale_y_continuous(limits = c(0, NA)) +
   scale_x_date(date_labels="%b %Y",breaks=dateVec, expand=c(0.05,0)) +
   facet_wrap(~outcome, nrow=2, scales = "free_y", labeller = label_wrap_gen()) +
   ggtitle("Incidence Rates of Endocrine Treatment-Related Outcomes in Months in Prostate Cancer Patients one year after diagnosis \non Endocrine Treatment Before and After COVID-19 Lockdown") +
