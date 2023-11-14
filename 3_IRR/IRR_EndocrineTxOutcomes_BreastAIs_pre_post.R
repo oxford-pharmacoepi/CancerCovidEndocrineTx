@@ -226,7 +226,7 @@ IRR_FOREST_endodx_breastAI_plot_POST =
   geom_pointrange(aes(col=`Lockdown Periods`, shape=`Lockdown Periods`))+
   scale_shape_manual(values=c(0, 8, 9, 19, 15, 16, 17))+
   geom_hline(aes(fill=`Lockdown Periods`),yintercept =1, linetype=2)+
-  xlab('Endocrine Treatment')+ ylab("Incidence Rate Ratio on Logarithmic Scale (95% Confidence Interval - Pre-Pandemic as reference)")+
+  xlab('Endocrine Treatment Outcomes in Breast Cancer Patients on Aromatase Inhibitors')+ ylab("Incidence Rate Ratio on Logarithmic Scale (95% Confidence Interval - Pre-Pandemic as reference)")+
   geom_errorbar(aes(ymin=lower_num, ymax=upper_num,col=`Lockdown Periods`),width=0.5,cex=0.8)+ 
  scale_y_log10() +
   facet_wrap(~`Endocrine Treatment`,strip.position="left",nrow=4,scales = "free_y",labeller = label_wrap_gen()) +
